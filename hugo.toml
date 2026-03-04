@@ -1,0 +1,60 @@
+baseURL = "https://tenrec.ai/"
+languageCode = "en-us"
+title = "TenRec"
+theme = "tenrec-theme"
+
+# Enable Hugo stats for Tailwind CSS class scanning
+[build]
+  [build.buildStats]
+    enable = true
+  [[build.cachebusters]]
+    source = 'assets/notwatching/hugo_stats\.json'
+    target = 'css'
+  [[build.cachebusters]]
+    source = '(postcss|tailwind)\.config\.js'
+    target = 'css'
+
+# Mount hugo_stats.json as an asset for Tailwind
+[module]
+  [[module.mounts]]
+    source = 'assets'
+    target = 'assets'
+  [[module.mounts]]
+    disableWatch = true
+    source = 'hugo_stats.json'
+    target = 'assets/notwatching/hugo_stats.json'
+
+# Navigation
+[menu]
+  [[menu.main]]
+    name = "Research"
+    url = "/blog/"
+    weight = 1
+  [[menu.main]]
+    name = "About"
+    url = "/about/"
+    weight = 2
+  [[menu.main]]
+    name = "Contact"
+    url = "/contact/"
+    weight = 3
+
+[taxonomies]
+  category = "categories"
+  tag = "tags"
+
+# Markup: syntax highlighting + math passthrough
+[markup]
+  [markup.highlight]
+    style = "dracula"
+    lineNos = false
+    guessSyntax = true
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+    [markup.goldmark.extensions]
+      [markup.goldmark.extensions.passthrough]
+        enable = true
+        [markup.goldmark.extensions.passthrough.delimiters]
+          block = [["$$", "$$"]]
+          inline = [["$", "$"], ["\\(", "\\)"]]

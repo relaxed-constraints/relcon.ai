@@ -1,0 +1,62 @@
+{{ define "main" }}
+<div class="max-w-2xl mx-auto px-6 pt-28 pb-16">
+  <h1 class="text-4xl font-display font-bold mb-4">{{ .Title }}</h1>
+
+  {{ if eq .RelPermalink "/success/" }}
+  <div class="rounded-xl border border-dark-border bg-dark-surface/50 p-8 mt-8">
+    <p class="text-xl mb-4 text-white">Message sent successfully.</p>
+    <p class="text-gray-400 mb-6">Thank you for reaching out. We'll get back to you as soon as possible.</p>
+    <a href="/"
+      class="px-6 py-2.5 border border-gray-600 hover:border-accent text-white text-sm font-medium rounded-lg transition-colors inline-block">
+      Return Home
+    </a>
+  </div>
+  {{ else }}
+  <p class="text-gray-400 mb-8">Have a question or want to collaborate? We'd love to hear from you.</p>
+
+  <form name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/success/"
+    class="space-y-6">
+
+    <div class="hidden">
+      <label for="bot-field">Don't fill this out if you're human</label>
+      <input type="text" id="bot-field" name="bot-field">
+    </div>
+
+    <div>
+      <label for="name" class="block text-sm font-medium text-gray-300 mb-2">Name</label>
+      <input type="text" id="name" name="name" required
+        class="w-full px-4 py-2.5 rounded-lg bg-dark-surface border border-dark-border text-off-white
+               focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-colors">
+    </div>
+
+    <div>
+      <label for="email" class="block text-sm font-medium text-gray-300 mb-2">Email</label>
+      <input type="email" id="email" name="email" required
+        class="w-full px-4 py-2.5 rounded-lg bg-dark-surface border border-dark-border text-off-white
+               focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-colors">
+    </div>
+
+    <div>
+      <label for="subject" class="block text-sm font-medium text-gray-300 mb-2">Subject</label>
+      <input type="text" id="subject" name="subject" required
+        class="w-full px-4 py-2.5 rounded-lg bg-dark-surface border border-dark-border text-off-white
+               focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-colors">
+    </div>
+
+    <div>
+      <label for="message" class="block text-sm font-medium text-gray-300 mb-2">Message</label>
+      <textarea id="message" name="message" rows="5" required
+        class="w-full px-4 py-2.5 rounded-lg bg-dark-surface border border-dark-border text-off-white
+               focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-colors"></textarea>
+    </div>
+
+    <div class="flex justify-end">
+      <button type="submit"
+        class="px-8 py-2.5 bg-accent hover:bg-accent-dark text-white text-sm font-medium rounded-lg transition-colors">
+        Send Message
+      </button>
+    </div>
+  </form>
+  {{ end }}
+</div>
+{{ end }}

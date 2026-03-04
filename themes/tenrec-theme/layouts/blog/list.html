@@ -1,0 +1,39 @@
+{{ define "main" }}
+<div class="max-w-3xl mx-auto px-6 pt-28 pb-16">
+  <h1 class="text-4xl md:text-5xl font-display font-bold mb-4">Research</h1>
+  <p class="text-gray-400 mb-12">Our latest thoughts on AI research, engineering, and safety.</p>
+
+  {{ $paginator := .Paginate .Pages 10 }}
+  {{ range $paginator.Pages }}
+  <a href="{{ .RelPermalink }}" class="block py-6 border-b border-dark-border group">
+    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1 mb-2">
+      <h2 class="text-lg font-display font-semibold group-hover:text-accent transition-colors mt-0 mb-0">{{ .Title }}</h2>
+      <time class="text-sm text-gray-500 shrink-0">{{ .Date.Format "Jan 2, 2006" }}</time>
+    </div>
+    {{ with .Params.description }}
+    <p class="text-gray-400 text-sm mb-0">{{ . }}</p>
+    {{ end }}
+    {{ with .Params.tags }}
+    <div class="flex flex-wrap gap-2 mt-2">
+      {{ range . }}
+      <span class="text-xs text-gray-500 border border-dark-border rounded px-2 py-0.5">{{ . }}</span>
+      {{ end }}
+    </div>
+    {{ end }}
+  </a>
+  {{ end }}
+
+  {{/* Pagination */}}
+  {{ if gt $paginator.TotalPages 1 }}
+  <div class="flex justify-center gap-4 mt-12 text-sm">
+    {{ if $paginator.HasPrev }}
+    <a href="{{ $paginator.Prev.URL }}" class="text-accent hover:text-accent-light transition-colors">&larr; Newer</a>
+    {{ end }}
+    <span class="text-gray-500">Page {{ $paginator.PageNumber }} of {{ $paginator.TotalPages }}</span>
+    {{ if $paginator.HasNext }}
+    <a href="{{ $paginator.Next.URL }}" class="text-accent hover:text-accent-light transition-colors">Older &rarr;</a>
+    {{ end }}
+  </div>
+  {{ end }}
+</div>
+{{ end }}

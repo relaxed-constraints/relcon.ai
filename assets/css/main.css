@@ -1,0 +1,113 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+@source "hugo_stats.json";
+@config "./tailwind.config.js";
+
+@theme {
+  --font-display: "Space Grotesk", sans-serif;
+  --font-body: "Inter", sans-serif;
+}
+
+a {
+  transition: color 0.2s ease-in-out;
+}
+
+@layer base {
+  body {
+    @apply bg-dark text-off-white;
+  }
+
+  h1 {
+    @apply text-4xl md:text-5xl font-display font-bold mb-6;
+  }
+
+  h2 {
+    @apply text-3xl font-display font-bold mb-4 mt-8;
+  }
+
+  h3 {
+    @apply text-xl font-display font-semibold mb-3 mt-6;
+  }
+
+  h4 {
+    @apply text-lg font-body font-semibold mb-2 mt-4 text-gray-300;
+  }
+
+  p {
+    @apply mb-4 font-body leading-relaxed;
+  }
+
+  a {
+    @apply hover:text-accent-light font-body transition-colors;
+  }
+}
+
+/* Animated gradient background for hero */
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.hero-gradient {
+  background: linear-gradient(
+    135deg,
+    #0a0a0f 0%,
+    #0a1a2a 20%,
+    #0f2a3a 40%,
+    #0a1a2a 60%,
+    #1a0a2a 80%,
+    #0a0a0f 100%
+  );
+  background-size: 400% 400%;
+  animation: gradient-shift 20s ease infinite;
+}
+
+/* Gradient text */
+.text-gradient {
+  background: linear-gradient(135deg, #14b8a6, #06b6d4, #8b5cf6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Glow effect for cards on hover */
+.glow-hover {
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+.glow-hover:hover {
+  box-shadow: 0 0 30px rgba(20, 184, 166, 0.1), 0 0 60px rgba(20, 184, 166, 0.05);
+  border-color: rgba(20, 184, 166, 0.3);
+}
+
+/* Prose styling for blog content */
+.prose {
+  @apply text-gray-300 leading-relaxed;
+}
+.prose h1, .prose h2, .prose h3, .prose h4 {
+  @apply text-off-white;
+}
+.prose a {
+  @apply text-accent hover:text-accent-light underline;
+}
+.prose blockquote {
+  @apply border-l-4 border-accent/40 pl-4 italic text-gray-400 my-6;
+}
+.prose ul {
+  @apply list-disc list-inside mb-4 space-y-1;
+}
+.prose ol {
+  @apply list-decimal list-inside mb-4 space-y-1;
+}
+.prose pre {
+  @apply rounded-lg my-6 overflow-x-auto;
+}
+.prose code:not(pre code) {
+  @apply bg-dark-surface text-accent-light px-1.5 py-0.5 rounded text-sm;
+}
+.prose img {
+  @apply rounded-lg my-6;
+}
+.prose hr {
+  @apply border-dark-border my-8;
+}

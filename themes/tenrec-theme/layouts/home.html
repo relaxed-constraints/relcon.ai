@@ -1,0 +1,108 @@
+{{ define "main" }}
+
+{{/* Hero Section */}}
+<section class="hero-gradient min-h-[70vh] flex items-center justify-center relative overflow-hidden -mt-[68px] pt-[68px]">
+  {{/* Decorative glow orb */}}
+  <div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-accent/5 rounded-full blur-3xl pointer-events-none"></div>
+
+  <div class="max-w-6xl mx-auto px-6 text-center relative z-10">
+    <h1 class="text-6xl md:text-8xl lg:text-9xl font-display font-bold tracking-tight mb-6">
+      <span class="text-gradient">TenRec</span>
+    </h1>
+    <p class="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto mb-10 font-body font-light leading-relaxed">
+      {{ .Params.hero_subtitle | default "Building the next generation of intelligent systems." }}
+    </p>
+    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+      <a href="/blog/"
+        class="px-8 py-3 bg-accent hover:bg-accent-dark text-white font-medium rounded-lg transition-colors text-sm">
+        Read Our Research
+      </a>
+      <a href="/about/"
+        class="px-8 py-3 border border-gray-600 hover:border-accent text-white rounded-lg transition-colors text-sm">
+        Learn More
+      </a>
+    </div>
+  </div>
+</section>
+
+{{/* Focus Areas */}}
+<section class="py-24">
+  <div class="max-w-6xl mx-auto px-6">
+    <h2 class="text-3xl md:text-4xl font-display font-bold text-center mb-4">What We Do</h2>
+    <p class="text-gray-400 text-center max-w-2xl mx-auto mb-16">
+      Advancing AI through rigorous research, practical applications, and a commitment to safety.
+    </p>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+
+      <div class="p-6 rounded-xl border border-dark-border bg-dark-surface/50 glow-hover">
+        <div class="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center mb-4">
+          <svg class="w-5 h-5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 0 1-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 0 1 4.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0 1 12 15a9.065 9.065 0 0 0-6.23.693L5 14.5m14.8.8 1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0 1 12 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5" />
+          </svg>
+        </div>
+        <h3 class="text-lg font-display font-semibold mb-2 text-white">Research</h3>
+        <p class="text-gray-400 text-sm leading-relaxed">Advancing the frontier of AI through fundamental research in machine learning, reasoning, and representation.</p>
+      </div>
+
+      <div class="p-6 rounded-xl border border-dark-border bg-dark-surface/50 glow-hover">
+        <div class="w-10 h-10 rounded-lg bg-cyan/10 flex items-center justify-center mb-4">
+          <svg class="w-5 h-5 text-cyan" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 7.5l3 2.25-3 2.25m4.5 0h3m-9 8.25h13.5A2.25 2.25 0 0 0 21 18V6a2.25 2.25 0 0 0-2.25-2.25H5.25A2.25 2.25 0 0 0 3 6v12a2.25 2.25 0 0 0 2.25 2.25z" />
+          </svg>
+        </div>
+        <h3 class="text-lg font-display font-semibold mb-2 text-white">Products</h3>
+        <p class="text-gray-400 text-sm leading-relaxed">Translating research breakthroughs into practical tools and APIs that benefit people and organizations.</p>
+      </div>
+
+      <div class="p-6 rounded-xl border border-dark-border bg-dark-surface/50 glow-hover">
+        <div class="w-10 h-10 rounded-lg bg-violet/10 flex items-center justify-center mb-4">
+          <svg class="w-5 h-5 text-violet" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
+          </svg>
+        </div>
+        <h3 class="text-lg font-display font-semibold mb-2 text-white">Safety</h3>
+        <p class="text-gray-400 text-sm leading-relaxed">Ensuring AI systems are aligned, robust, and developed responsibly for long-term benefit.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{{/* Latest Research Posts */}}
+<section class="py-24 border-t border-dark-border">
+  <div class="max-w-6xl mx-auto px-6">
+    <h2 class="text-3xl md:text-4xl font-display font-bold text-center mb-16">Latest Research</h2>
+    <div class="max-w-3xl mx-auto">
+      {{ range first 3 (where site.RegularPages "Type" "blog") }}
+      <a href="{{ .RelPermalink }}" class="block py-6 border-b border-dark-border group">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1 mb-2">
+          <h3 class="text-lg font-display font-semibold group-hover:text-accent transition-colors">{{ .Title }}</h3>
+          <time class="text-sm text-gray-500 shrink-0">{{ .Date.Format "Jan 2, 2006" }}</time>
+        </div>
+        {{ with .Params.description }}
+        <p class="text-gray-400 text-sm">{{ . }}</p>
+        {{ end }}
+      </a>
+      {{ end }}
+    </div>
+    <div class="text-center mt-12">
+      <a href="/blog/" class="text-accent hover:text-accent-light transition-colors text-sm">View all posts &rarr;</a>
+    </div>
+  </div>
+</section>
+
+{{/* Contact CTA */}}
+<section class="py-24">
+  <div class="max-w-6xl mx-auto px-6 text-center">
+    <h2 class="text-3xl md:text-4xl font-display font-bold mb-4">Get in Touch</h2>
+    <p class="text-gray-400 max-w-xl mx-auto mb-8">
+      Interested in collaborating or learning more about our work?
+    </p>
+    <a href="/contact/"
+      class="px-8 py-3 bg-accent hover:bg-accent-dark text-white font-medium rounded-lg transition-colors inline-block text-sm">
+      Contact Us
+    </a>
+  </div>
+</section>
+
+{{ end }}

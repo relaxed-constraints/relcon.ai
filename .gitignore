@@ -1,0 +1,41 @@
+build/
+dist/
+
+# Local Netlify folder
+.netlify
+public/
+resources/
+
+# Hugo default output directory
+/public/
+/resources/_gen/
+/assets/jsconfig.json
+hugo_stats.json
+
+# Hugo cache/lock
+/.hugo_build.lock
+.hugo_build.lock
+
+# Node modules
+node_modules/
+npm-debug.log*
+
+# macOS
+.DS_Store
+._*
+
+# Editor
+.vscode/*
+!.vscode/settings.json
+*.code-workspace
+*~
+*.swp
+*.swo
+
+# Environment
+.env
+.env.local
+.env*.local
+
+# Logs
+*.log
