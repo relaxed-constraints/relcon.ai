@@ -1,10 +1,11 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Manrope:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
 @source "hugo_stats.json";
 @config "./tailwind.config.js";
 
 @theme {
-  --font-display: "Space Grotesk", sans-serif;
+  --font-hero: "Outfit", sans-serif;
+  --font-display: "Manrope", sans-serif;
   --font-body: "Inter", sans-serif;
 }
 
@@ -22,11 +23,11 @@ a {
   }
 
   h2 {
-    @apply text-3xl font-display font-bold mb-4 mt-8;
+    @apply text-3xl font-display font-bold mb-4 mt-12;
   }
 
   h3 {
-    @apply text-xl font-display font-semibold mb-3 mt-6;
+    @apply text-xl font-display font-semibold mb-3 mt-8;
   }
 
   h4 {
@@ -42,25 +43,24 @@ a {
   }
 }
 
-/* Animated gradient background for hero */
-@keyframes gradient-shift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+/* Hero background with topographic contour lines */
+.hero-gradient {
+  background-color: #080c14;
+  position: relative;
 }
 
-.hero-gradient {
-  background: linear-gradient(
-    135deg,
-    #0a0a0f 0%,
-    #0a1a2a 20%,
-    #0f2a3a 40%,
-    #0a1a2a 60%,
-    #1a0a2a 80%,
-    #0a0a0f 100%
-  );
-  background-size: 400% 400%;
-  animation: gradient-shift 20s ease infinite;
+/* Typing cursor — hidden by default, blinks only while typing */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+.typing-cursor {
+  opacity: 0;
+  color: #14b8a6;
+  font-weight: 300;
+}
+.typing-cursor.blinking {
+  animation: blink 0.7s step-end infinite;
 }
 
 /* Gradient text */
@@ -100,7 +100,8 @@ a {
   @apply list-decimal list-inside mb-4 space-y-1;
 }
 .prose pre {
-  @apply rounded-lg my-6 overflow-x-auto;
+  @apply rounded-lg my-6 overflow-x-auto p-4 border border-dark-border;
+  background-color: #0c0c14 !important;
 }
 .prose code:not(pre code) {
   @apply bg-dark-surface text-accent-light px-1.5 py-0.5 rounded text-sm;

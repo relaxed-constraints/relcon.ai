@@ -10,7 +10,7 @@ export default {
     extend: {
       colors: {
         // Base dark palette
-        'dark': '#0a0a0f',
+        'dark': '#080c14',
         'dark-surface': '#12121a',
         'dark-border': '#1e1e2e',
 
@@ -25,7 +25,7 @@ export default {
 
         // Neutrals
         'white': '#ffffff',
-        'off-white': '#e8e8f0',
+        'off-white': '#d0d0dc',
         'gray-100': '#f0f0f5',
         'gray-200': '#d8d8e0',
         'gray-300': '#b0b0be',

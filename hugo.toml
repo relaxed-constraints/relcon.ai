@@ -46,15 +46,9 @@ theme = "tenrec-theme"
 # Markup: syntax highlighting + math passthrough
 [markup]
   [markup.highlight]
-    style = "dracula"
+    style = "xcode-dark"
     lineNos = false
     guessSyntax = true
   [markup.goldmark]
     [markup.goldmark.renderer]
       unsafe = true
-    [markup.goldmark.extensions]
-      [markup.goldmark.extensions.passthrough]
-        enable = true
-        [markup.goldmark.extensions.passthrough.delimiters]
-          block = [["$$", "$$"]]
-          inline = [["$", "$"], ["\\(", "\\)"]]
