@@ -4,7 +4,7 @@ title: "About"
 
 ## Who We Are
 
-TenRec is an AI research lab dedicated to developing safe, beneficial artificial intelligence. Founded in 2026, we bring together researchers from machine learning, computer science, and related fields to tackle some of the most important problems in AI.
+Relaxed Constraints is an AI research lab dedicated to developing safe, beneficial artificial intelligence. Founded in 2026, we bring together researchers from machine learning, computer science, and related fields to tackle some of the most important problems in AI.
 
 ## Our Approach
 

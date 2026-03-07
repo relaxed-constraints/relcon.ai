@@ -1,8 +1,8 @@
 {
-  "name": "tenrec-website",
+  "name": "relaxed-constraints-website",
   "version": "1.0.0",
   "private": true,
-  "description": "TenRec AI Research Lab website",
+  "description": "Relaxed Constraints AI Research Lab website",
   "devDependencies": {
     "@tailwindcss/cli": "^4.0.16",
     "tailwindcss": "^4.0.16"

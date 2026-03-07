@@ -1,16 +1,19 @@
 <nav class="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-dark/80 border-b border-dark-border">
   <div class="max-w-6xl mx-auto px-6 py-4">
     <div class="flex items-center justify-between">
-      <a href="/" class="flex items-center gap-2 text-xl text-off-white font-display font-bold tracking-wider hover:text-off-white">
-        <img src="/images/tenrec.png" alt="TenRec logo" class="h-14 w-14 object-contain -my-4 -mt-5 -scale-x-100">
-        TenRec AI
+      <a href="/" class="flex items-center gap-2 text-xl text-off-white font-display font-semibold tracking-wider hover:text-off-white">
+        <img src="/images/relcon-logo-white.svg" alt="Relaxed Constraints logo" class="h-7 w-7 object-contain opacity-80">
+        Relaxed Constraints
       </a>
       <div class="hidden md:flex items-center space-x-8">
+        {{ $hasBlog := gt (len (where site.RegularPages "Type" "blog")) 0 }}
         {{ range site.Menus.main }}
+        {{ if or $hasBlog (ne .URL "/blog/") }}
         <a href="{{ .URL }}"
           class="text-gray-400 hover:text-white text-sm font-medium tracking-wide transition-colors">
           {{ .Name }}
         </a>
+        {{ end }}
         {{ end }}
       </div>
       <button class="md:hidden text-white" id="menu-toggle" aria-label="Toggle menu">
@@ -21,8 +24,11 @@
     </div>
     <div class="md:hidden hidden" id="mobile-menu">
       <div class="mt-4 pb-4 space-y-2">
+        {{ $hasBlog := gt (len (where site.RegularPages "Type" "blog")) 0 }}
         {{ range site.Menus.main }}
+        {{ if or $hasBlog (ne .URL "/blog/") }}
         <a href="{{ .URL }}" class="block py-2 text-gray-400 hover:text-white transition-colors">{{ .Name }}</a>
+        {{ end }}
         {{ end }}
       </div>
     </div>

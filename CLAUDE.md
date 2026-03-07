@@ -1,6 +1,6 @@
-# TenRec Website
+# Relaxed Constraints Website
 
-Hugo static site for TenRec AI research lab. Hosted on Netlify.
+Hugo static site for Relaxed Constraints AI research lab. Hosted on Netlify.
 
 ## Stack
 - Hugo (static site generator)
@@ -18,7 +18,7 @@ npm install              # Install Tailwind dependencies
 
 ## Structure
 - `content/` — Markdown content (blog posts, pages)
-- `themes/tenrec-theme/layouts/` — All templates
+- `themes/relcon-theme/layouts/` — All templates
 - `assets/css/main.css` — Tailwind entry point + custom CSS
 - `tailwind.config.js` — Color palette (edit here to retheme)
 - `hugo.toml` — Site config, menus, markup settings

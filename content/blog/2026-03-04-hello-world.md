@@ -1,14 +1,14 @@
 ---
-title: "Introducing TenRec"
+title: "Introducing Relaxed Constraints"
 date: 2026-03-04
-draft: false
+draft: true
 type: "blog"
 description: "We're building the next generation of intelligent systems. Here's what we're working on and why."
 tags: ["announcement", "research"]
 categories: ["General"]
 ---
 
-We're excited to introduce TenRec, an AI research lab focused on developing safe, beneficial artificial intelligence.
+We're excited to introduce Relaxed Constraints, an AI research lab focused on developing safe, beneficial artificial intelligence.
 
 ## Our Mission
 

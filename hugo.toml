@@ -1,7 +1,7 @@
-baseURL = "https://tenrec.ai/"
+baseURL = "https://relcon.ai/"
 languageCode = "en-us"
-title = "TenRec"
-theme = "tenrec-theme"
+title = "Relaxed Constraints"
+theme = "relcon-theme"
 
 # Enable Hugo stats for Tailwind CSS class scanning
 [build]

@@ -5,26 +5,28 @@
   <canvas id="dot-grid" class="absolute inset-0 w-full h-full pointer-events-none" style="z-index:0"></canvas>
 
   <div class="w-full relative z-10">
-    <div class="max-w-6xl mx-auto px-6 md:pl-[10%]">
+    <div class="max-w-6xl mx-auto px-6 flex flex-col items-center">
       <div class="relative mb-6" id="hero-typer">
-        {{/* Line 1: Ten... */}}
-        <div class="text-6xl md:text-8xl lg:text-9xl font-hero font-bold tracking-tight whitespace-nowrap text-left">
-          <span class="text-accent">Ten</span><span class="text-[#0a262a]" id="ten-suffix"></span><span class="typing-cursor" id="ten-cursor">|</span>
+        {{/* Line 1: Rel... */}}
+        <div class="text-6xl md:text-8xl lg:text-9xl font-hero font-bold tracking-tight whitespace-nowrap">
+          <span class="text-accent">Rel</span><span class="text-[#1a5c63]" id="rel-suffix"></span><span class="typing-cursor" id="rel-cursor">|</span>
         </div>
-        {{/* Line 2: Rec... */}}
-        <div class="text-6xl md:text-8xl lg:text-9xl font-hero font-bold tracking-tight whitespace-nowrap text-left mt-1">
-          <span class="text-violet">Rec</span><span class="text-[#1c1836]" id="rec-suffix"></span><span class="typing-cursor" id="rec-cursor">|</span>
+        {{/* Line 2: Con... */}}
+        <div class="text-6xl md:text-8xl lg:text-9xl font-hero font-bold tracking-tight whitespace-nowrap mt-1">
+          <span class="text-violet">Con</span><span class="text-[#3d2d6b]" id="con-suffix"></span><span class="typing-cursor" id="con-cursor">|</span>
         </div>
       </div>
-      <p class="text-lg md:text-xl text-gray-200 mb-16 font-body font-light leading-relaxed">
+      <p class="text-lg md:text-xl text-gray-200 mb-16 font-body font-light leading-relaxed text-center">
         {{ .Params.hero_subtitle | default "Building the next generation of intelligent systems." }}
       </p>
     </div>
     <div class="flex flex-col sm:flex-row gap-4 justify-center px-6 mt-2 mb-6">
+      {{ if gt (len (where site.RegularPages "Type" "blog")) 0 }}
       <a href="/blog/"
         class="px-8 py-3 bg-accent hover:bg-accent-dark text-white font-medium rounded-lg transition-colors text-sm">
         Read Our Research
       </a>
+      {{ end }}
       <a href="/about/"
         class="px-8 py-3 border border-gray-600 hover:border-accent text-white rounded-lg transition-colors text-sm">
         Learn More
@@ -35,58 +37,71 @@
 
 <script>
 (function() {
-  // Ten + adjective/modifier suffixes
-  const tenWords = [
-    'acious',       // Tenacious
-    'fold',         // Tenfold
-    'able',         // Tenable
-    'der',          // Tender
-    'tative',       // Tentative
-    'ured',         // Tenured
-    'sile',         // Tensile
+  // Rel + adjective/modifier suffixes (positive words only)
+  const relWords = [
+    'axed',         // Relaxed
+    'evant',        // Relevant
+    'iable',        // Reliable
+    'iant',         // Reliant
+    'entless',      // Relentless
+    'atable',       // Relatable
+    'ished',        // Relished
+    'ucent',        // Relucent
+    'ative',        // Relative
+    'ayed',         // Relayed
+    'eased',        // Released
+    'ished',        // Relished
   ];
-  // Rec + noun suffixes
-  const recWords = [
-    'ursion',       // Recursion
-    'overy',        // Recovery
-    'ognition',     // Recognition
-    'ord',          // Record
-    'ourse',        // Recourse
-    'ollection',    // Recollection
-    'onnection',    // Reconnection
-    'iprocity',     // Reciprocity
-    'urrence',      // Recurrence
-    'onstruction',  // Reconstruction
-    'lamation',     // Reclamation
-    'onciliation',  // Reconciliation
-    'ommendation',  // Recommendation
-    'onfiguration', // Reconfiguration
-    'ruitment',     // Recruitment
-    'ompense',      // Recompense
-    'titude',       // Rectitude
-    'reation',      // Recreation
-    'koning',       // Reckoning
+  // Con + noun suffixes (positive words only)
+  const conWords = [
+    'straints',     // Constraints
+    'nection',      // Connection
+    'vergence',     // Convergence
+    'fidence',      // Confidence
+    'sciousness',   // Consciousness
+    'stellation',   // Constellation
+    'tinuity',      // Continuity
+    'sensus',       // Consensus
+    'text',         // Context
+    'cept',         // Concept
+    'tribution',    // Contribution
+    'viction',      // Conviction
+    'cord',         // Concord
+    'fluence',      // Confluence
+    'gruence',      // Congruence
+    'stancy',       // Constancy
+    'sonance',      // Consonance
+    'tent',         // Content
+    'sideration',   // Consideration
+    'centration',   // Concentration
+    'versation',    // Conversation
+    'duction',      // Conduction
+    'naissance',    // Connaissance
   ];
 
-  const container = document.getElementById('hero-typer');
-  const tenSuffix = document.getElementById('ten-suffix');
-  const recSuffix = document.getElementById('rec-suffix');
-  const tenCursor = document.getElementById('ten-cursor');
-  const recCursor = document.getElementById('rec-cursor');
+  // Index of the "home" words (Relaxed / Constraints)
+  var HOME_REL = 0;  // 'axed'
+  var HOME_CON = 0;  // 'straints'
+
+  var container = document.getElementById('hero-typer');
+  var relSuffix = document.getElementById('rel-suffix');
+  var conSuffix = document.getElementById('con-suffix');
+  var relCursor = document.getElementById('rel-cursor');
+  var conCursor = document.getElementById('con-cursor');
 
   // Pre-measure the widest word in each row to lock the container width
   function lockWidth() {
     var maxW = container.offsetWidth;
-    tenWords.forEach(function(w) {
-      tenSuffix.textContent = w;
+    relWords.forEach(function(w) {
+      relSuffix.textContent = w;
       if (container.offsetWidth > maxW) maxW = container.offsetWidth;
     });
-    tenSuffix.textContent = '';
-    recWords.forEach(function(w) {
-      recSuffix.textContent = w;
+    relSuffix.textContent = '';
+    conWords.forEach(function(w) {
+      conSuffix.textContent = w;
       if (container.offsetWidth > maxW) maxW = container.offsetWidth;
     });
-    recSuffix.textContent = '';
+    conSuffix.textContent = '';
     container.style.minWidth = maxW + 'px';
   }
   lockWidth();
@@ -95,26 +110,26 @@
     lockWidth();
   });
 
-  const TYPE_SPEED = 100;
-  const FADE_DURATION = 1200;
-  const PAUSE_AFTER_TYPE = 2000;
-  const PAUSE_BETWEEN_LINES = 600;
-  const PAUSE_BEFORE_NEXT = 800;
-  const FADE_STAGGER = 600;
+  var TYPE_SPEED = 100;
+  var FADE_DURATION = 1200;
+  var PAUSE_AFTER_TYPE = 2000;
+  var PAUSE_BETWEEN_LINES = 600;
+  var INITIAL_HOLD = 5000;
+  var FADE_STAGGER = 600;
 
-  var lastTen = -1, lastRec = -1;
+  var lastRel = -1, lastCon = -1;
   function pick(arr, last) {
-    let i;
+    var i;
     do { i = Math.floor(Math.random() * arr.length); } while (i === last && arr.length > 1);
     return i;
   }
 
   function typeText(el, text, cursor, cb) {
-    let i = 0;
+    var i = 0;
     cursor.style.opacity = '1';
     cursor.classList.add('blinking');
     el.style.opacity = '1';
-    const iv = setInterval(function() {
+    var iv = setInterval(function() {
       i++;
       el.textContent = text.slice(0, i);
       if (i >= text.length) {
@@ -136,36 +151,35 @@
     }, FADE_DURATION);
   }
 
-  // Initial cycle: type both from scratch
+  // Initial: show "Relaxed" + "Constraints" immediately, then hold for 5 seconds
   function start() {
-    lastTen = pick(tenWords, lastTen);
-    lastRec = pick(recWords, lastRec);
+    lastRel = HOME_REL;
+    lastCon = HOME_CON;
 
-    typeText(tenSuffix, tenWords[lastTen], tenCursor, function() {
-      setTimeout(function() {
-        typeText(recSuffix, recWords[lastRec], recCursor, function() {
-          setTimeout(loop, PAUSE_AFTER_TYPE);
-        });
-      }, PAUSE_BETWEEN_LINES);
-    });
+    relSuffix.textContent = relWords[HOME_REL];
+    relSuffix.style.opacity = '1';
+    relCursor.style.opacity = '0';
+    conSuffix.textContent = conWords[HOME_CON];
+    conSuffix.style.opacity = '1';
+    conCursor.style.opacity = '0';
+
+    setTimeout(loop, INITIAL_HOLD);
   }
 
-  // Continuous loop: fade out and type in with overlap so something is always visible
+  // Continuous loop: fade out and type in with overlap
   function loop() {
-    var nextTen = pick(tenWords, lastTen);
-    var nextRec = pick(recWords, lastRec);
-    lastTen = nextTen;
-    lastRec = nextRec;
+    var nextRel = pick(relWords, lastRel);
+    var nextCon = pick(conWords, lastCon);
+    lastRel = nextRel;
+    lastCon = nextCon;
 
-    // Fade Ten, then type new Ten (Rec still visible)
-    fadeOut(tenSuffix, function() {
-      typeText(tenSuffix, tenWords[nextTen], tenCursor, function() {});
+    fadeOut(relSuffix, function() {
+      typeText(relSuffix, relWords[nextRel], relCursor, function() {});
     });
 
-    // Stagger: fade Rec, then type new Rec (new Ten already typing/visible)
     setTimeout(function() {
-      fadeOut(recSuffix, function() {
-        typeText(recSuffix, recWords[nextRec], recCursor, function() {
+      fadeOut(conSuffix, function() {
+        typeText(conSuffix, conWords[nextCon], conCursor, function() {
           setTimeout(loop, PAUSE_AFTER_TYPE);
         });
       });
@@ -405,12 +419,14 @@
   </div>
 </section>
 
-{{/* Latest Research Posts */}}
+{{/* Latest Research Posts — only shown when non-draft blog posts exist */}}
+{{ $blogPages := where site.RegularPages "Type" "blog" }}
+{{ if gt (len $blogPages) 0 }}
 <section class="py-12 border-t border-dark-border">
   <div class="max-w-6xl mx-auto px-6">
     <h2 class="text-3xl md:text-4xl font-display font-bold text-center mb-12">Latest Research</h2>
     <div class="max-w-3xl mx-auto">
-      {{ range first 3 (where site.RegularPages "Type" "blog") }}
+      {{ range first 3 $blogPages }}
       <a href="{{ .RelPermalink }}" class="block py-6 border-b border-dark-border group">
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1 mb-2">
           <h3 class="text-lg font-display font-semibold group-hover:text-accent transition-colors">{{ .Title }}</h3>
@@ -427,6 +443,7 @@
     </div>
   </div>
 </section>
+{{ end }}
 
 {{/* Contact CTA */}}
 <section class="py-12">

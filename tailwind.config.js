@@ -4,7 +4,7 @@ export default {
     "./layouts/**/*.html",
     "./content/**/*.md",
     "./content/**/*.html",
-    "./themes/tenrec-theme/layouts/**/*.html"
+    "./themes/relcon-theme/layouts/**/*.html"
   ],
   theme: {
     extend: {
