@@ -14,7 +14,7 @@ AI is moving so fast that it's become genuinely difficult to keep up, even if yo
 
 ## We Are the Bottleneck
 
-Coding agents have gotten scarily good. Opus 4.6 is my personal favourite. I routinely get the feeling that it has to dumb things down for me. I am clearly becoming the bottleneck. Its _reasoning_ capabilities, whatever that is exactly, are definitely good enough now for most use cases. Better than most humans reasoning, anyway. 
+Coding agents have gotten scarily good. Opus 4.6 is my personal favourite. I routinely get the feeling that it has to dumb things down for me. I am clearly becoming the bottleneck. Its _reasoning_ capabilities, whatever that is exactly, are definitely good enough now for most use cases. Better than most human reasoning, anyway. 
 
 My former boss once told me I had the ability to hold a lot of state in my mind. I think I finally understand what he meant, because that's exactly what these models do, except better. You can tell they follow and anticipate your train of thought, turning scattered rambling into coherent, well-formulated ideas. You can walk them through the most complex architecture refactors, complete with scope creep and half-formed intentions, and they capture everything perfectly. They even fill in the gaps you didn't notice were there. That is a genuinely powerful thing.
 
