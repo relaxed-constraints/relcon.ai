@@ -39,6 +39,10 @@ theme = "relcon-theme"
     url = "/contact/"
     weight = 3
 
+[params]
+  description = "Independent research lab at the intersection of machine learning, data systems, and agentic reasoning."
+  image = "/images/og-default.png"
+
 [taxonomies]
   category = "categories"
   tag = "tags"

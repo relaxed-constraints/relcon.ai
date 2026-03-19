@@ -1,0 +1,25 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#080c14"/>
+
+  <!-- Logo (scaled to ~120px, centred) -->
+  <g transform="translate(540, 160) scale(0.3)">
+    <path d="M279.628 80L343.628 0H400V80H279.628Z" fill="white"/>
+    <path d="M177.178 80H0V0H241.178L177.178 80Z" fill="white"/>
+    <path d="M258.471 294L194.471 214H400V294H258.471Z" fill="white"/>
+    <path d="M156.022 294H0V214H92.0218L156.022 294Z" fill="white"/>
+    <path d="M344.071 401L280.071 321H400V401H344.071Z" fill="white"/>
+    <path d="M241.621 401H0V321H177.622L241.621 401Z" fill="white"/>
+    <path d="M194.027 187L258.027 107H400V187H194.027Z" fill="white"/>
+    <path d="M91.5781 187H0V107H155.578L91.5781 187Z" fill="white"/>
+  </g>
+
+  <!-- Site name -->
+  <text x="600" y="440" text-anchor="middle" font-family="Inter, Manrope, -apple-system, sans-serif" font-size="42" font-weight="700" fill="white">Relaxed Constraints</text>
+
+  <!-- Tagline -->
+  <text x="600" y="490" text-anchor="middle" font-family="Inter, -apple-system, sans-serif" font-size="22" fill="#14b8a6">The Residual</text>
+
+  <!-- Accent line -->
+  <rect x="500" y="510" width="200" height="2" rx="1" fill="#14b8a6" opacity="0.4"/>
+</svg>
