@@ -1,0 +1,18 @@
+{{- $name := .Get "name" -}}
+{{- $light := .Get "light" -}}
+{{- $dark := .Get "dark" -}}
+{{- $var := .Get "var" | default "" -}}
+<div class="inline-flex flex-col items-center gap-1.5 mb-4" style="min-width:100px;">
+  {{/* Split swatch: light half | dark half */}}
+  <svg width="96" height="64" viewBox="0 0 96 64" class="rounded-lg border border-dark-border overflow-hidden" style="display:block;">
+    <rect x="0" y="0" width="48" height="64" fill="{{ $light }}" />
+    <rect x="48" y="0" width="48" height="64" fill="{{ $dark }}" />
+    {{/* Divider line */}}
+    <line x1="48" y1="0" x2="48" y2="64" stroke="rgba(128,128,128,0.3)" stroke-width="1" />
+    {{/* L / D labels */}}
+    <text x="24" y="54" text-anchor="middle" fill="{{ if (ge (len $light) 4) }}{{ $dark }}{{ else }}#888{{ end }}" font-size="9" font-family="Inter, sans-serif" opacity="0.6">L</text>
+    <text x="72" y="54" text-anchor="middle" fill="{{ if (ge (len $dark) 4) }}{{ $light }}{{ else }}#888{{ end }}" font-size="9" font-family="Inter, sans-serif" opacity="0.6">D</text>
+  </svg>
+  <span class="text-xs font-medium text-off-white text-center leading-tight">{{ $name }}</span>
+  <span class="text-xs text-gray-500 font-mono text-center leading-tight">{{ $light }}<br>{{ $dark }}</span>
+</div>

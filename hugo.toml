@@ -27,7 +27,7 @@ theme = "relcon-theme"
 # Navigation
 [menu]
   [[menu.main]]
-    name = "Research"
+    name = "Blog"
     url = "/blog/"
     weight = 1
   [[menu.main]]
@@ -46,9 +46,14 @@ theme = "relcon-theme"
 # Markup: syntax highlighting + math passthrough
 [markup]
   [markup.highlight]
-    style = "xcode-dark"
+    noClasses = false
     lineNos = false
     guessSyntax = true
   [markup.goldmark]
     [markup.goldmark.renderer]
       unsafe = true
+    [markup.goldmark.extensions.passthrough]
+      enable = true
+      [markup.goldmark.extensions.passthrough.delimiters]
+        block = [['$$', '$$']]
+        inline = [['$', '$']]

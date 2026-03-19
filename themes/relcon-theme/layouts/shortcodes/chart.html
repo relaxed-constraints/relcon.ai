@@ -1,0 +1,68 @@
+{{- $id := printf "chart-%s" (substr (md5 .Inner) 0 8) -}}
+{{- $width := .Get "width" | default "100%" -}}
+{{- $height := .Get "height" | default "300px" -}}
+{{- $caption := .Get "caption" -}}
+
+{{/* Mark page as needing Chart.js */}}
+{{- .Page.Store.Set "hasCharts" true -}}
+
+<figure class="my-8">
+  <div style="width: {{ $width }}; height: {{ $height }}; margin: 0 auto;">
+    <canvas id="{{ $id }}"></canvas>
+  </div>
+  {{- with $caption }}
+  <figcaption class="text-center text-sm text-gray-500 mt-2">{{ . }}</figcaption>
+  {{- end }}
+</figure>
+
+<script>
+(function() {
+  function getThemeColors() {
+    var isDark = document.documentElement.classList.contains('dark');
+    return {
+      text: isDark ? '#d1d5db' : '#4a4a5e',
+      grid: isDark ? 'rgba(75, 85, 99, 0.3)' : 'rgba(160, 160, 180, 0.25)',
+      tick: isDark ? '#9ca3af' : '#6a6a7e'
+    };
+  }
+
+  function initChart() {
+    var colors = getThemeColors();
+    var ctx = document.getElementById('{{ $id }}').getContext('2d');
+    var config = {{ .Inner | safeJS }};
+    // Apply theme defaults
+    if (!config.options) config.options = {};
+    if (!config.options.plugins) config.options.plugins = {};
+    if (!config.options.plugins.legend) config.options.plugins.legend = {};
+    if (!config.options.plugins.legend.labels) config.options.plugins.legend.labels = {};
+    config.options.plugins.legend.labels.color = config.options.plugins.legend.labels.color || colors.text;
+    if (!config.options.scales) config.options.scales = {};
+    for (var key in config.options.scales) {
+      var scale = config.options.scales[key];
+      if (!scale.ticks) scale.ticks = {};
+      scale.ticks.color = scale.ticks.color || colors.tick;
+      if (!scale.grid) scale.grid = {};
+      scale.grid.color = scale.grid.color || colors.grid;
+      if (scale.title) {
+        scale.title.color = colors.tick;
+      }
+    }
+    // Also theme annotation labels
+    if (config.options.plugins.annotation && config.options.plugins.annotation.annotations) {
+      for (var aKey in config.options.plugins.annotation.annotations) {
+        var ann = config.options.plugins.annotation.annotations[aKey];
+        ann.borderColor = colors.text;
+        if (ann.label) {
+          ann.label.color = colors.text;
+        }
+      }
+    }
+    new Chart(ctx, config);
+  }
+  if (window.Chart) {
+    initChart();
+  } else {
+    document.addEventListener('chartjs:loaded', initChart);
+  }
+})();
+</script>
