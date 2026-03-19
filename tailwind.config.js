@@ -21,9 +21,9 @@ export default {
         'accent-light': 'var(--c-accent-light)',
         'accent-dark': 'var(--c-accent-dark)',
 
-        // Static accents (don't change with theme)
-        'cyan': '#06b6d4',
-        'violet': '#8b5cf6',
+        // Secondary teal tones
+        'teal-light': '#5eead4',
+        'teal-muted': '#2dd4bf',
 
         // Neutrals — theme-aware
         'white': '#ffffff',

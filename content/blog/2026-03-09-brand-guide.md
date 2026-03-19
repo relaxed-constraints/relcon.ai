@@ -3,6 +3,9 @@ title: "Brand & Style Guide"
 date: 2026-03-09T00:00:00
 draft: false
 type: "blog"
+_build:
+  list: never
+  render: always
 description: "Color palette, typography, and component reference for the Relaxed Constraints visual identity across light and dark themes."
 tags: ["brand", "design"]
 categories: ["Design"]

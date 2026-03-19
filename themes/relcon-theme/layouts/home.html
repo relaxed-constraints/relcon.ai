@@ -9,11 +9,11 @@
       <div class="relative mb-6" id="hero-typer">
         {{/* Line 1: Rel... */}}
         <div class="text-6xl md:text-8xl lg:text-9xl font-hero font-bold tracking-tight whitespace-nowrap">
-          <span class="text-accent">Rel</span><span class="hero-suffix-rel" id="rel-suffix"></span><span class="typing-cursor" id="rel-cursor">|</span>
+          <span class="text-[#F2A74B]">Rel</span><span class="hero-suffix-rel" id="rel-suffix"></span><span class="typing-cursor" id="rel-cursor">|</span>
         </div>
         {{/* Line 2: Con... */}}
         <div class="text-6xl md:text-8xl lg:text-9xl font-hero font-bold tracking-tight whitespace-nowrap mt-1">
-          <span class="text-violet">Con</span><span class="hero-suffix-con" id="con-suffix"></span><span class="typing-cursor" id="con-cursor">|</span>
+          <span class="text-[#0d9488]">Con</span><span class="hero-suffix-con" id="con-suffix"></span><span class="typing-cursor" id="con-cursor">|</span>
         </div>
       </div>
       <p class="text-lg md:text-xl text-gray-200 mb-16 font-body font-light leading-relaxed text-center">
@@ -345,13 +345,13 @@
         if (alpha > alphaMax) alpha = alphaMax;
 
         // === COLOR ===
-        // Base: teal center → violet edges
+        // Monochrome teal — slightly lighter at edges
         var tealAmt = 1 - Math.min(dist * 1.5, 1);
-        var cr = 20 + 119 * (1 - tealAmt);
-        var cg = 184 * tealAmt + 92 * (1 - tealAmt);
-        var cb = 166 * tealAmt + 246 * (1 - tealAmt);
+        var cr = 20 + 25 * (1 - tealAmt);
+        var cg = 184 + 28 * (1 - tealAmt);
+        var cb = 166 + 46 * (1 - tealAmt);
 
-        // Mouse heat shifts toward bright cyan/white
+        // Mouse heat shifts toward bright teal/white
         if (mouseHeat > 0) {
           cr = cr + (220 - cr) * mouseHeat * 0.6;
           cg = cg + (255 - cg) * mouseHeat * 0.5;
@@ -388,10 +388,7 @@
 {{/* Focus Areas */}}
 <section class="pt-8 pb-12 border-t border-dark-border">
   <div class="max-w-6xl mx-auto px-6">
-    <h2 class="text-3xl md:text-4xl font-display font-bold text-center mb-4">What We Do</h2>
-    <p class="text-gray-400 text-center max-w-3xl mx-auto mb-16">
-      We study how AI systems can learn to reason over structured and semi-structured data, combining advances in generative modeling with principled approaches to data management.
-    </p>
+    <h2 class="text-3xl md:text-4xl font-display font-bold text-center mb-16">What We Do</h2>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
 
       <div class="p-6 rounded-xl border border-dark-border card-surface glow-hover">
@@ -403,41 +400,54 @@
           </div>
           <h3 class="text-lg font-display font-semibold text-off-white leading-none !m-0">Data Systems</h3>
         </div>
-        <p class="text-gray-400 text-sm leading-relaxed">Rethinking how databases and data pipelines work in an era of learned representations, from query optimization to schema understanding.</p>
+        <p class="text-gray-400 text-sm leading-relaxed">Learned components for document databases: query optimization, cardinality estimation, index selection, and schema design for systems where data doesn't fit neatly into rows and columns.</p>
       </div>
 
       <div class="p-6 rounded-xl border border-dark-border card-surface glow-hover">
         <div class="flex items-center gap-3 mb-3">
-          <div class="w-10 h-10 rounded-lg bg-cyan/10 flex items-center justify-center shrink-0">
-            <svg class="w-5 h-5 text-cyan" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+          <div class="w-10 h-10 rounded-lg bg-[#F2A74B]/10 flex items-center justify-center shrink-0">
+            <svg class="w-5 h-5 text-[#F2A74B]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
               <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z" />
             </svg>
           </div>
           <h3 class="text-lg font-display font-semibold text-off-white leading-none !m-0">Generative Models</h3>
         </div>
-        <p class="text-gray-400 text-sm leading-relaxed">Building generative systems that produce structured outputs — from synthetic data and code to complex query plans and schema transformations.</p>
+        <p class="text-gray-400 text-sm leading-relaxed">Neural architectures that work natively with hierarchical, semi-structured data — learning to predict, generate, and embed JSON documents without flattening them into tables first.</p>
       </div>
 
       <div class="p-6 rounded-xl border border-dark-border card-surface glow-hover">
         <div class="flex items-center gap-3 mb-3">
-          <div class="w-10 h-10 rounded-lg bg-violet/10 flex items-center justify-center shrink-0">
-            <svg class="w-5 h-5 text-violet" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+          <div class="w-10 h-10 rounded-lg bg-[#06b6d4]/10 flex items-center justify-center shrink-0">
+            <svg class="w-5 h-5 text-[#06b6d4]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
               <path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z" />
             </svg>
           </div>
-          <h3 class="text-lg font-display font-semibold text-off-white leading-none !m-0">Structured Reasoning</h3>
+          <h3 class="text-lg font-display font-semibold text-off-white leading-none !m-0">AI-Assisted Research</h3>
         </div>
-        <p class="text-gray-400 text-sm leading-relaxed">Teaching models to reason over tables, graphs, and semi-structured formats — bridging the gap between natural language and formal data representations.</p>
+        <p class="text-gray-400 text-sm leading-relaxed">Building tools and methods for AI-augmented scientific research: experiment tracking designed for AI agents, reproducible workflows, and infrastructure that lets researchers and AI collaborate effectively.</p>
       </div>
 
     </div>
   </div>
 </section>
 
+{{/* How We Work */}}
+<section class="py-8">
+  <div class="max-w-3xl mx-auto px-6">
+    <h2 class="text-3xl md:text-4xl font-display font-bold text-center mb-12">How We Work</h2>
+    <p class="text-gray-400 leading-relaxed mb-6">
+      We practice what we research. Our lab runs on automated pipelines that triage issues, route tasks to AI agents, and track experiments with minimal human intervention. The same infrastructure we build as research tools powers the lab itself.
+    </p>
+    <p class="text-gray-400 leading-relaxed">
+      Every process that can be delegated to an agent is. Humans drive prioritization, design decisions, and interpretation — the mechanical work of running experiments, reviewing code, and managing workflows is handled by the systems we build. This isn't a future aspiration; it's how we operate today.
+    </p>
+  </div>
+</section>
+
 {{/* Latest Research Posts — only shown when non-draft blog posts exist */}}
 {{ $blogPages := where site.RegularPages "Type" "blog" }}
 {{ if gt (len $blogPages) 0 }}
-<section class="py-12 border-t border-dark-border">
+<section class="py-8">
   <div class="max-w-6xl mx-auto px-6">
     <h2 class="text-3xl md:text-4xl font-display font-bold text-center mb-12">Latest Research</h2>
     <div class="max-w-3xl mx-auto">

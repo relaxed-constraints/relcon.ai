@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Manrope:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
 @source "hugo_stats.json";
 @config "./tailwind.config.js";
@@ -9,31 +9,31 @@
 /* ===== Theme custom properties ===== */
 /* Light theme (default values) */
 :root {
-  --c-bg: #f8f9fc;
+  --c-bg: #f0f4f3;
   --c-surface: #ffffff;
-  --c-border: #dfe1ea;
+  --c-border: #c8d4d2;
   --c-text: #1a1a2e;
   --c-gray-200: #3a3a4e;
-  --c-gray-300: #444458;
-  --c-gray-400: #5e5e72;
-  --c-gray-500: #8a8a9e;
+  --c-gray-300: #555568;
+  --c-gray-400: #6e6e82;
+  --c-gray-500: #9898a8;
   --c-gray-600: #c8c8d4;
   --c-accent: #0d9488;
   --c-accent-light: #14b8a6;
   --c-accent-dark: #0a7a70;
   /* Code blocks */
-  --c-code-bg: #f4f4f8;
-  --c-code-border: #e0e0e8;
-  --c-code-text: #1a1a2e;
-  --c-code-line-nr: #9898a8;
-  --c-code-hl: #e8e8f0;
+  --c-code-bg: #e8efed;
+  --c-code-border: #c8d4d2;
+  --c-code-text: #0A2326;
+  --c-code-line-nr: #7a9e9c;
+  --c-code-hl: #dce6e4;
 }
 
 /* Dark theme */
 .dark {
   --c-bg: #080c14;
-  --c-surface: #12121a;
-  --c-border: #1e1e2e;
+  --c-surface: #12181e;
+  --c-border: #275959;
   --c-text: #d0d0dc;
   --c-gray-200: #d8d8e0;
   --c-gray-300: #b0b0be;
@@ -44,11 +44,11 @@
   --c-accent-light: #2dd4bf;
   --c-accent-dark: #0d9488;
   /* Code blocks */
-  --c-code-bg: #0c0c14;
-  --c-code-border: #1e1e2e;
-  --c-code-text: #ffffff;
-  --c-code-line-nr: #606078;
-  --c-code-hl: #1e1e2e;
+  --c-code-bg: #060a12;
+  --c-code-border: #275959;
+  --c-code-text: #D2D9D8;
+  --c-code-line-nr: #4a7a7a;
+  --c-code-hl: #163C40;
 }
 
 /* Theme transition for smooth switching */
@@ -61,8 +61,8 @@ canvas, .chroma, .chroma *, .prose pre, .prose pre * {
 }
 
 @theme {
-  --font-hero: "Outfit", sans-serif;
-  --font-display: "Manrope", sans-serif;
+  --font-hero: "Geist", sans-serif;
+  --font-display: "Geist", sans-serif;
   --font-body: "Inter", sans-serif;
 }
 
@@ -105,7 +105,7 @@ a {
 
 /* Header backdrop — needs explicit rgba since Tailwind can't do opacity with CSS vars */
 .header-backdrop {
-  background-color: rgba(248, 249, 252, 0.8);
+  background-color: rgba(240, 244, 243, 0.8);
 }
 .dark .header-backdrop {
   background-color: rgba(8, 12, 20, 0.8);
@@ -116,7 +116,7 @@ a {
   background-color: rgba(255, 255, 255, 0.5);
 }
 .dark .card-surface {
-  background-color: rgba(18, 18, 26, 0.5);
+  background-color: rgba(18, 24, 30, 0.5);
 }
 
 /* Hero background */
@@ -127,16 +127,16 @@ a {
 
 /* Hero suffix text colors */
 .hero-suffix-rel {
-  color: #a8dcd6;
+  color: rgba(242, 167, 75, 0.5);
 }
 .dark .hero-suffix-rel {
-  color: #1a5c63;
+  color: #7a5528;
 }
 .hero-suffix-con {
-  color: #b8a0e0;
+  color: rgba(13, 148, 136, 0.5);
 }
 .dark .hero-suffix-con {
-  color: #3d2d6b;
+  color: #0a5c55;
 }
 
 /* Typing cursor — hidden by default, blinks only while typing */
@@ -155,7 +155,7 @@ a {
 
 /* Gradient text */
 .text-gradient {
-  background: linear-gradient(135deg, #14b8a6, #06b6d4, #8b5cf6);
+  background: linear-gradient(135deg, #0d9488, #14b8a6, #5eead4);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
