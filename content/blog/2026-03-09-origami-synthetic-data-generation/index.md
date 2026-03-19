@@ -8,9 +8,10 @@ tags: ["research", "synthetic-data", "origami"]
 categories: ["Research", "Synthetic Data", "JSON"]
 ---
 
-Synthetic data lets you provision realistic QA environments, train ML models, and share data across teams, all without exposing real user records. It preserves the statistical properties of production data, which is particularly important for database optimization and machine learning. The problem is that every tool in the space, whether it's based on GANs, VAEs, diffusion, or language models, assumes the input is a flat table with fixed columns, one type per column. 
+Teams need realistic data for testing, development environments, and ML training, but without exposing actual user records. For simple tabular data, there are decent tools and algorithms to generate synthetic records, spanning various architecture families: [GANs and VAEs](https://arxiv.org/abs/1907.00503), [diffusion models](https://arxiv.org/abs/2410.20626), and more recently [LLMs](https://arxiv.org/abs/2210.06280). But if your data has nested objects, optional fields, or variable-length arrays (typical application layer data and API payloads), the only  recourse is to flatten everything into tables during preprocessing. This flattening process is lossy, creates extremely wide sparse tables, and leads to poor quality synthetic data.
 
-That works if your data is a single, dense spreadsheet. But for semi-structured data without fixed schema, with nested objects, variable-length arrays, and missing keys, there's nothing that handles it natively.
+Origami skips that entire pipeline. It’s the first synthesizer, to our knowledge, designed to handle semi-structured data end-to-end: learning the structure, the sparsity patterns, and the statistical relationships directly from JSON.
+
 
 ## Application data looks different
 
@@ -42,7 +43,7 @@ Nested objects, variable-length arrays, keys that show up in some records but no
 To use any existing synthesizer on data like this, you first have to flatten it into a table. `categories` becomes `categories.0`, `categories.1`, `categories.2`, one column per array slot. `hours.Monday` and `attributes.WiFi` become top-level columns. Records missing a key get a blank cell. This process is lossy and creates
 wide sparse tables, which many ML algorithms struggle with.
 
-We flattened 150,000 Yelp business records this way. The result was a table with **266 columns and 38% empty cells**. What started as a reasonably small dataset about businesses turned into a sparse matrix where over a third of the values are missing.
+We flattened 500,000 records from the public Github IssueEvent API this way. The result was a table with **889 columns and 48% empty cells**. What started as a reasonably small dataset turned into a sparse matrix where nearly half of the values are missing.
 
 ## The problem with mixed types
 
@@ -54,45 +55,51 @@ Both camps compromise. Origami sidesteps this by using a dual-head architecture:
 
 ## What breaks with sparsity
 
-We benchmarked six synthesizers from all the major architecture families on five datasets, ranging from standard dense benchmarks to large-scale JSON collections. As the data gets less tabular and sparser, three things go wrong.
+We benchmarked synthesizers from all the major architecture families on six datasets, ranging from standard dense benchmarks to large-scale JSON collections. As the data gets less tabular and sparser, three things go wrong.
 
-First, many methods simply can't run. TVAE and CTGAN one-hot encode categorical values. On Yelp, that's 27,000 unique values across 261 categorical columns, and they run out of memory. GReaT and Tabby default to GPT-2 under the hood, which has a 1,024-token context window. Flattened Yelp records need around 2,900 tokens with standard sub-word tokenizers. On our largest dataset (1 million medical records, 230 columns after flattening), only two of six baselines could even start training on a single V100 GPU with 16GB of memory.
+First, many methods simply can't run. TVAE and CTGAN one-hot encode categorical values. On Yelp, that's 27,000 unique values across 261 categorical columns, and they simply cannot fit in memory. GReaT and Tabby default to GPT-2 under the hood, which has a 1,024-token context window. Flattened Yelp records need around 2,900 tokens with standard sub-word tokenizers. On our largest dataset (1 million medical records, 230 columns after flattening), only two of six baselines could even start training on a single V100 GPU with 16GB of memory.
 
 Second, imputation corrupts sparse columns. The standard approach to fill missing numeric values is to replace them with the column mean. But if 95% of a column's values are missing, the model learns a distribution dominated by that artificial spike rather than the actual data. A classifier trained to detect synthetic data picks this up immediately.
 
-{{< figure src="kde_electric_vehicles.png" caption="Density visualisations comparing real vs. synthetic data distributions for electric vehicle records." >}}
-
 Third, discretizing continuous values into bins introduces its own artifacts. In one case, a single bin spanned 71,000 units, and a few clustered outliers got smeared into a uniform distribution. Again, trivial to detect.
+
+The figure below shows density visualizations comparing real vs. synthetic data distributions for the `electric_vehicles` dataset, a tabular dataset with a modest 11% sparsity. But already the baselines start to struggle. The TabDiff distributions are dominated by the imputed mean value, while TabularARGN and REaLTabformer show discretization artifacts. Origami's distribution is the closest to the real data. 
+
+{{< figure-theme dark="kde_electric_vehicles_dark.png" light="kde_electric_vehicles_light.png" alt="KDE plot" caption="Density visualisations comparing real vs. synthetic data distributions for electric vehicle records." >}}
 
 ## Working with the structure
 
 The Origami architecture is designed to skip flattening altogether. It reads JSON records directly and generates JSON records directly. A few things make this work.
 
 Each record is tokenized into a sequence of keys, values, and structural markers (things like "object starts here" or "array ends here"). Nesting and optional keys are just part of the sequence, so there's nothing to flatten or pad.
+These sequences are trained with transformers, the same architecture family powering modern LLMs.
 
-The trickier problem is position encoding. Language models usually number their tokens sequentially: in simple terms, they see tokens in order, token 1, token 2, and so on. But in JSON, `{"name": "Alice", "age": 30}` and `{"age": 30, "name": "Alice"}` are the same record. The key order doesn't matter. So instead of sequential positions, Origami encodes each token's *path* through the document tree. The value `30` gets tagged as "the value at position `age`," not "the fifth token." We call this Key-Value Position Encoding (KVPE), and it's what lets the model tell apart identically named fields at different locations — `user.name` versus `company.name`, for instance.
+{{<figure-theme dark="tokenization_dark.png" light="tokenization_light.png" alt="Origami architecture diagram" caption="Tokenization of nested JSON records into a sequence of keys, values, and structural markers." width="80%">}}
+
+The trickier problem is position encoding. Language models usually number their tokens sequentially: in simple terms, they see tokens in order, token 1, token 2, and so on. But in JSON, `{"name": "Alice", "age": 30}` and `{"age": 30, "name": "Alice"}` are the same record. The key order doesn't matter. So instead of sequential positions, Origami encodes each token's *path* through the document tree. The value `30` gets tagged as "the value at the `age` position" not "the fifth token." We call this Key-Value Position Encoding (KVPE), and it's what lets the model tell apart identically named fields at different locations — `user.name` versus `company.name`, for instance.
 
 Origami handles high-cardinality numbers as continuous values by predicting the parameters of a Gaussian mixture distribution. Categories and strings go through a standard token prediction head. Both work in their native representation.
 
 To make sure every generated record is actually valid JSON, a pushdown automaton tracks the grammar state during generation. At each step, any token that would break the syntax gets masked out. A second layer of constraints, compiled from the training data's schema, restricts which keys can appear and what values are legal for each key. The output is guaranteed to be valid, well-typed JSON. Not because of post-processing, but because the model literally cannot produce anything else.
 
-One last piece that makes this work even for small datasets: since JSON keys have no defined order, we shuffle them randomly every time a training record is seen. This is a surprisingly effective regularizer. Without it, the model starts memorizing training records. With shuffling, we can
+<!-- One last piece that makes this work even for small datasets: since JSON keys have no defined order, we shuffle them randomly every time a training record is seen. This is a surprisingly effective regularizer. Without it, the model starts memorizing training records. With shuffling, we can
 effectively scale up the dataset to the point where the model
-never sees the same record twice, and it learns to generalize the structure and relationships rather than memorizing specific examples.
+never sees the same record twice, and it learns to generalize the structure and relationships rather than memorizing specific examples. -->
 
 ## Results
 
-We evaluated on five datasets with increasing complexity: Adult and Diabetes (standard dense benchmarks), Electric Vehicles (11% sparsity), and two JSON datasets — Yelp (38% sparsity, 150K records) and DDXPlus (35% sparsity, over 1 million records).
+We evaluated on six datasets with increasing complexity: Adult and Diabetes (standard dense benchmarks), Electric Vehicles (11% sparsity), and two JSON datasets — Yelp (38% sparsity, 150K records), DDXPlus (35% sparsity, over 1 million records), Github Issues (48% sparsity, 500K records). 
 
 The first thing to look at is which methods could run at all:
 
-| | TVAE | CTGAN | Tabby | REaLTab | TabularARGN | TabDiff | Origami |
+| | Tabby | TVAE | CTGAN | REaLTabformer | TabularARGN | TabDiff | Origami |
 |---|---|---|---|---|---|---|---|
 | Adult | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
-| Diabetes | ✓ | ✓ | OOM | ✓ | ✓ | ✓ | ✓ |
+| Diabetes | OOM | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | Electric | OOM | OOM | OOM | ✓ | ✓ | ✓ | ✓ |
 | Yelp | OOM | OOM | OOM | ✓ | ✓ | ✓ | ✓ |
 | DDXPlus | OOM | OOM | OOM | OOM | ✓ | ✓ | ✓ |
+| Github | OOM | OOM | OOM | OOM | ✓ | ✓ | ✓ |
 
 By the third dataset, half the baselines are out.
 

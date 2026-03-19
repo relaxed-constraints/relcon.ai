@@ -1,0 +1,5 @@
+<figure class="my-8"{{ with .Get "width" }} style="max-width: {{ . }}; margin-left: auto; margin-right: auto;"{{ end }}>
+  <img src="{{ .Get "dark" }}" alt="{{ .Get "alt" }}" class="hidden dark:block rounded-lg w-full">
+  <img src="{{ .Get "light" }}" alt="{{ .Get "alt" }}" class="block dark:hidden rounded-lg w-full">
+  {{ with .Get "caption" }}<figcaption class="text-sm text-gray-500 text-center mt-3">{{ . }}</figcaption>{{ end }}
+</figure>
