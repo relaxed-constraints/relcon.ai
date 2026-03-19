@@ -23,5 +23,9 @@
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3/dist/chartjs-plugin-annotation.min.js"
     onload="document.dispatchEvent(new Event('chartjs:loaded'))"></script>
   {{- end }}
+  {{ if hugo.IsProduction }}
+  <script data-goatcounter="https://relconai.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
+  {{ end }}
 </body>
 </html>
