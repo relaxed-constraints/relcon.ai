@@ -1,6 +1,15 @@
 <!DOCTYPE html>
-<html lang="{{ site.Language.LanguageCode }}" dir="{{ or site.Language.LanguageDirection `ltr` }}">
+<html lang="{{ site.Language.LanguageCode }}" dir="{{ or site.Language.LanguageDirection `ltr` }}" class="dark">
 <head>
+  {{/* Theme init — runs before render to prevent flash */}}
+  <script>
+    (function() {
+      var theme = localStorage.getItem('theme');
+      if (theme === 'light') {
+        document.documentElement.classList.remove('dark');
+      }
+    })();
+  </script>
   {{ partial "head.html" . }}
 </head>
 <body class="min-h-screen flex flex-col bg-dark text-off-white font-body">
@@ -9,5 +18,10 @@
     {{ block "main" . }}{{ end }}
   </main>
   {{ partial "footer.html" . }}
+  {{- if .Store.Get "hasCharts" }}
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3/dist/chartjs-plugin-annotation.min.js"
+    onload="document.dispatchEvent(new Event('chartjs:loaded'))"></script>
+  {{- end }}
 </body>
 </html>

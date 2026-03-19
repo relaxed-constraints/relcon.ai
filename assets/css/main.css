@@ -3,6 +3,63 @@
 @source "hugo_stats.json";
 @config "./tailwind.config.js";
 
+/* Use class-based dark mode (not media query) */
+@variant dark (&:where(.dark, .dark *));
+
+/* ===== Theme custom properties ===== */
+/* Light theme (default values) */
+:root {
+  --c-bg: #f8f9fc;
+  --c-surface: #ffffff;
+  --c-border: #dfe1ea;
+  --c-text: #1a1a2e;
+  --c-gray-200: #3a3a4e;
+  --c-gray-300: #444458;
+  --c-gray-400: #5e5e72;
+  --c-gray-500: #8a8a9e;
+  --c-gray-600: #c8c8d4;
+  --c-accent: #0d9488;
+  --c-accent-light: #14b8a6;
+  --c-accent-dark: #0a7a70;
+  /* Code blocks */
+  --c-code-bg: #f4f4f8;
+  --c-code-border: #e0e0e8;
+  --c-code-text: #1a1a2e;
+  --c-code-line-nr: #9898a8;
+  --c-code-hl: #e8e8f0;
+}
+
+/* Dark theme */
+.dark {
+  --c-bg: #080c14;
+  --c-surface: #12121a;
+  --c-border: #1e1e2e;
+  --c-text: #d0d0dc;
+  --c-gray-200: #d8d8e0;
+  --c-gray-300: #b0b0be;
+  --c-gray-400: #8888a0;
+  --c-gray-500: #606078;
+  --c-gray-600: #404058;
+  --c-accent: #14b8a6;
+  --c-accent-light: #2dd4bf;
+  --c-accent-dark: #0d9488;
+  /* Code blocks */
+  --c-code-bg: #0c0c14;
+  --c-code-border: #1e1e2e;
+  --c-code-text: #ffffff;
+  --c-code-line-nr: #606078;
+  --c-code-hl: #1e1e2e;
+}
+
+/* Theme transition for smooth switching */
+body, body * {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+/* Exclude elements where transition causes visual issues */
+canvas, .chroma, .chroma *, .prose pre, .prose pre * {
+  transition: none !important;
+}
+
 @theme {
   --font-hero: "Outfit", sans-serif;
   --font-display: "Manrope", sans-serif;
@@ -43,10 +100,43 @@ a {
   }
 }
 
-/* Hero background with topographic contour lines */
+/* ===== Theme-aware component classes ===== */
+@layer components {
+
+/* Header backdrop — needs explicit rgba since Tailwind can't do opacity with CSS vars */
+.header-backdrop {
+  background-color: rgba(248, 249, 252, 0.8);
+}
+.dark .header-backdrop {
+  background-color: rgba(8, 12, 20, 0.8);
+}
+
+/* Card surface with transparency */
+.card-surface {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+.dark .card-surface {
+  background-color: rgba(18, 18, 26, 0.5);
+}
+
+/* Hero background */
 .hero-gradient {
-  background-color: #080c14;
+  background-color: var(--c-bg);
   position: relative;
+}
+
+/* Hero suffix text colors */
+.hero-suffix-rel {
+  color: #a8dcd6;
+}
+.dark .hero-suffix-rel {
+  color: #1a5c63;
+}
+.hero-suffix-con {
+  color: #b8a0e0;
+}
+.dark .hero-suffix-con {
+  color: #3d2d6b;
 }
 
 /* Typing cursor — hidden by default, blinks only while typing */
@@ -56,7 +146,7 @@ a {
 }
 .typing-cursor {
   opacity: 0;
-  color: #14b8a6;
+  color: var(--c-accent);
   font-weight: 300;
 }
 .typing-cursor.blinking {
@@ -75,9 +165,13 @@ a {
 .glow-hover {
   transition: box-shadow 0.3s ease, border-color 0.3s ease;
 }
-.glow-hover:hover {
+.dark .glow-hover:hover {
   box-shadow: 0 0 30px rgba(20, 184, 166, 0.1), 0 0 60px rgba(20, 184, 166, 0.05);
   border-color: rgba(20, 184, 166, 0.3);
+}
+.glow-hover:hover {
+  box-shadow: 0 0 20px rgba(20, 184, 166, 0.08), 0 0 40px rgba(20, 184, 166, 0.04);
+  border-color: rgba(20, 184, 166, 0.25);
 }
 
 /* Prose styling for blog content */
@@ -87,7 +181,7 @@ a {
 .prose h1, .prose h2, .prose h3, .prose h4 {
   @apply text-off-white;
 }
-.prose a {
+.prose a:not([class*="bg-"]):not([class*="border "]) {
   @apply text-accent hover:text-accent-light underline;
 }
 .prose blockquote {
@@ -99,16 +193,110 @@ a {
 .prose ol {
   @apply list-decimal list-inside mb-4 space-y-1;
 }
+/* Code blocks — theme-aware */
 .prose pre {
-  @apply rounded-lg my-6 overflow-x-auto p-4 border border-dark-border;
-  background-color: #0c0c14 !important;
+  @apply rounded-lg my-6 overflow-x-auto p-4 text-sm;
+  background-color: var(--c-code-bg) !important;
+  border: 1px solid var(--c-code-border);
 }
 .prose code:not(pre code) {
-  @apply bg-dark-surface text-accent-light px-1.5 py-0.5 rounded text-sm;
+  @apply text-accent px-1.5 py-0.5 rounded text-sm;
+  background-color: var(--c-surface);
+}
+/* Light mode: inline code needs visible bg */
+:root:not(.dark) .prose code:not(pre code) {
+  background-color: #eef0f6;
 }
 .prose img {
   @apply rounded-lg my-6;
 }
+.prose figure {
+  @apply my-8;
+}
+.prose figure img {
+  @apply my-0;
+}
+.prose figcaption {
+  @apply text-sm text-gray-500 text-center mt-3;
+}
 .prose hr {
   @apply border-dark-border my-8;
 }
+.prose table {
+  @apply mx-auto my-8 border-collapse text-sm;
+}
+.prose th {
+  @apply px-4 py-2 text-left text-off-white font-semibold border-b-2 border-dark-border;
+}
+.prose td {
+  @apply px-4 py-2 border-b border-dark-border;
+}
+
+/* Form inputs — theme-aware focus ring */
+input:focus, textarea:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--c-accent);
+}
+
+} /* end @layer components */
+
+/* ===== Syntax highlighting — theme-aware Chroma ===== */
+.chroma { color:var(--c-code-text);background-color:var(--c-code-bg); }
+.chroma .err { color:#960050 }
+.chroma .lnlinks { outline:none;text-decoration:none;color:inherit }
+.chroma .lntd { vertical-align:top;padding:0;margin:0;border:0; }
+.chroma .lntable { border-spacing:0;padding:0;margin:0;border:0; }
+.chroma .hl { background-color:var(--c-code-hl) }
+.chroma .lnt { white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:var(--c-code-line-nr) }
+.chroma .ln { white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:var(--c-code-line-nr) }
+.chroma .line { display:flex; }
+
+/* --- Dark theme syntax colors --- */
+.dark .chroma .k, .dark .chroma .kd, .dark .chroma .kn,
+.dark .chroma .kp, .dark .chroma .kr, .dark .chroma .kt { color:#fc5fa3 }
+.dark .chroma .kc { color:#8b5cf6 }
+.dark .chroma .nc { color:#5dd8ff }
+.dark .chroma .nb { color:#d0a8ff }
+.dark .chroma .bp { color:#a167e6 }
+.dark .chroma .nv, .dark .chroma .vc, .dark .chroma .vg,
+.dark .chroma .vi, .dark .chroma .vm { color:#41a1c0 }
+.dark .chroma .nf, .dark .chroma .fm { color:#41a1c0 }
+.dark .chroma .s, .dark .chroma .sa, .dark .chroma .sb, .dark .chroma .sc,
+.dark .chroma .dl, .dark .chroma .sd, .dark .chroma .s2, .dark .chroma .se,
+.dark .chroma .sh, .dark .chroma .sx, .dark .chroma .sr, .dark .chroma .s1,
+.dark .chroma .ss { color:#2dd4bf }
+.dark .chroma .m, .dark .chroma .mb, .dark .chroma .mf, .dark .chroma .mh,
+.dark .chroma .mi, .dark .chroma .il, .dark .chroma .mo { color:#d0bf69 }
+.dark .chroma .c, .dark .chroma .ch, .dark .chroma .cm, .dark .chroma .c1 { color:#6c7986 }
+.dark .chroma .cs { color:#6c7986;font-style:italic }
+.dark .chroma .cp, .dark .chroma .cpf { color:#fd8f3f }
+
+/* --- Light theme syntax colors --- */
+/* Keywords — pink/magenta (darkened for light bg) */
+.chroma .k, .chroma .kd, .chroma .kn,
+.chroma .kp, .chroma .kr, .chroma .kt { color:#d6336c }
+/* Keyword constants — violet */
+.chroma .kc { color:#7c3aed }
+/* Class names — blue */
+.chroma .nc { color:#0070a8 }
+/* Builtins — purple */
+.chroma .nb { color:#7c3aed }
+.chroma .bp { color:#8b5cf6 }
+/* Variables — dark teal */
+.chroma .nv, .chroma .vc, .chroma .vg,
+.chroma .vi, .chroma .vm { color:#0d7d73 }
+/* Functions — dark teal */
+.chroma .nf, .chroma .fm { color:#0d7d73 }
+/* Strings — deep teal */
+.chroma .s, .chroma .sa, .chroma .sb, .chroma .sc,
+.chroma .dl, .chroma .sd, .chroma .s2, .chroma .se,
+.chroma .sh, .chroma .sx, .chroma .sr, .chroma .s1,
+.chroma .ss { color:#0a7a70 }
+/* Numbers — dark gold */
+.chroma .m, .chroma .mb, .chroma .mf, .chroma .mh,
+.chroma .mi, .chroma .il, .chroma .mo { color:#8a6d20 }
+/* Comments — gray */
+.chroma .c, .chroma .ch, .chroma .cm, .chroma .c1 { color:#8090a0 }
+.chroma .cs { color:#8090a0;font-style:italic }
+/* Preprocessor — orange */
+.chroma .cp, .chroma .cpf { color:#c96a20 }
