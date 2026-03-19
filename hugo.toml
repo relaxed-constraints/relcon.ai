@@ -27,7 +27,7 @@ theme = "relcon-theme"
 # Navigation
 [menu]
   [[menu.main]]
-    name = "Blog"
+    name = "Blog: The Residual"
     url = "/blog/"
     weight = 1
   [[menu.main]]
