@@ -29,6 +29,25 @@ hugo new content blog/YYYY-MM-DD-post-title.md
 ```
 Set `draft: false` when ready to publish.
 
+## Hosting & Deployment
+- Hosted on **Netlify**, auto-deploys from `main` branch on GitHub
+- Domain: `relcon.ai` (registered on Cloudflare)
+- DNS: Cloudflare with CNAME flattening → `apex-loadbalancer.netlify.com` (proxy off, DNS only)
+- SSL: Auto-provisioned by Netlify via Let's Encrypt
+- Email: iCloud custom domain (MX/TXT records managed in Cloudflare, separate from Netlify)
+
+## Contact Form
+- Uses Netlify Forms (`netlify` attribute on `<form>`)
+- Spam protection via `netlify-honeypot="bot-field"`
+- On submit, redirects to `/success` (no trailing slash — Netlify requires this)
+- Form submissions visible in Netlify dashboard under Forms
+- Email notifications configurable in Netlify: Site settings → Forms → Form notifications
+
+## Analytics
+- GoatCounter: `https://relconai.goatcounter.com`
+- Script loaded in `baseof.html`, production only (`hugo.IsProduction`)
+- Free, privacy-friendly, no cookie consent required
+
 ## Code style
 - 2-space indentation in HTML templates
 - Tailwind utility classes for all styling
