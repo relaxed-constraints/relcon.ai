@@ -6,13 +6,13 @@
 
   <div class="w-full relative z-10">
     <div class="max-w-6xl mx-auto px-6 flex flex-col items-center">
-      <div class="relative mb-6" id="hero-typer">
+      <div class="relative mb-6 pl-8" id="hero-typer">
         {{/* Line 1: Rel... */}}
-        <div class="text-6xl md:text-8xl lg:text-9xl font-hero font-bold tracking-tight whitespace-nowrap">
+        <div class="text-[clamp(3rem,10vw,8rem)] leading-none font-hero font-bold tracking-tight whitespace-nowrap">
           <span class="text-[#F2A74B]">Rel</span><span class="hero-suffix-rel" id="rel-suffix"></span><span class="typing-cursor" id="rel-cursor">|</span>
         </div>
         {{/* Line 2: Con... */}}
-        <div class="text-6xl md:text-8xl lg:text-9xl font-hero font-bold tracking-tight whitespace-nowrap mt-1">
+        <div class="text-[clamp(3rem,10vw,8rem)] leading-none font-hero font-bold tracking-tight whitespace-nowrap mt-1">
           <span class="text-[#0d9488]">Con</span><span class="hero-suffix-con" id="con-suffix"></span><span class="typing-cursor" id="con-cursor">|</span>
         </div>
       </div>
@@ -20,11 +20,11 @@
         {{ .Params.hero_subtitle | default "Building the next generation of intelligent systems." }}
       </p>
     </div>
-    <div class="flex flex-col sm:flex-row gap-4 justify-center px-6 mt-2 mb-6">
+    <div class="flex flex-row gap-4 justify-center px-6 mt-2 mb-6">
       {{ if gt (len (where site.RegularPages "Type" "blog")) 0 }}
       <a href="/blog/"
         class="px-8 py-3 bg-accent hover:bg-accent-dark text-white font-medium rounded-lg transition-colors text-sm">
-        Read Our Research
+        Read our Blog
       </a>
       {{ end }}
       <a href="/about/"
