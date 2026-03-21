@@ -16,26 +16,37 @@
         </a>
         {{ end }}
         {{ end }}
-        <button id="theme-toggle" aria-label="Toggle dark mode"
+        <button id="theme-toggle" aria-label="Toggle theme"
           class="text-gray-400 hover:text-off-white transition-colors p-1">
-          <!-- Sun icon (shown in dark mode) -->
-          <svg class="w-5 h-5 hidden dark:block" id="sun-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
-          </svg>
-          <!-- Moon icon (shown in light mode) -->
-          <svg class="w-5 h-5 block dark:hidden" id="moon-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+          <!-- Moon icon (dark mode) -->
+          <svg class="w-5 h-5 theme-icon" data-theme="dark" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
             <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
+          </svg>
+          <!-- Half-circle icon (auto mode) -->
+          <svg class="w-5 h-5 theme-icon" data-theme="auto" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" fill="none">
+            <circle cx="12" cy="12" r="9"/>
+            <clipPath id="diag-desktop"><path d="M21 3L3 21h18V3z"/></clipPath>
+            <circle cx="12" cy="12" r="9" fill="currentColor" stroke="none" clip-path="url(#diag-desktop)"/>
+          </svg>
+          <!-- Sun icon (light mode) -->
+          <svg class="w-5 h-5 theme-icon" data-theme="light" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
           </svg>
         </button>
       </div>
       <div class="flex items-center gap-3 md:hidden">
-        <button id="theme-toggle-mobile" aria-label="Toggle dark mode"
+        <button id="theme-toggle-mobile" aria-label="Toggle theme"
           class="text-gray-400 hover:text-off-white transition-colors p-1">
-          <svg class="w-5 h-5 hidden dark:block" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
-          </svg>
-          <svg class="w-5 h-5 block dark:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+          <svg class="w-5 h-5 theme-icon" data-theme="dark" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
             <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
+          </svg>
+          <svg class="w-5 h-5 theme-icon" data-theme="auto" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" fill="none">
+            <circle cx="12" cy="12" r="9"/>
+            <clipPath id="diag-mobile"><path d="M21 3L3 21h18V3z"/></clipPath>
+            <circle cx="12" cy="12" r="9" fill="currentColor" stroke="none" clip-path="url(#diag-mobile)"/>
+          </svg>
+          <svg class="w-5 h-5 theme-icon" data-theme="light" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
           </svg>
         </button>
         <button class="text-off-white" id="menu-toggle" aria-label="Toggle menu">
@@ -62,10 +73,36 @@
     document.getElementById('mobile-menu').classList.toggle('hidden');
   });
 
-  function toggleTheme() {
-    var isDark = document.documentElement.classList.toggle('dark');
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  var themeOrder = ['dark', 'light', 'auto'];
+
+  function getTheme() {
+    return localStorage.getItem('theme') || 'dark';
   }
-  document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
-  document.getElementById('theme-toggle-mobile').addEventListener('click', toggleTheme);
+
+  function applyTheme(theme) {
+    var isDark;
+    if (theme === 'auto') {
+      isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    } else {
+      isDark = theme === 'dark';
+    }
+    document.documentElement.classList.toggle('dark', isDark);
+    document.querySelectorAll('.theme-icon').forEach(function(icon) {
+      icon.style.display = icon.dataset.theme === theme ? 'block' : 'none';
+    });
+  }
+
+  function cycleTheme() {
+    var current = getTheme();
+    var next = themeOrder[(themeOrder.indexOf(current) + 1) % themeOrder.length];
+    localStorage.setItem('theme', next);
+    applyTheme(next);
+  }
+
+  applyTheme(getTheme());
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function() {
+    if (getTheme() === 'auto') applyTheme('auto');
+  });
+  document.getElementById('theme-toggle').addEventListener('click', cycleTheme);
+  document.getElementById('theme-toggle-mobile').addEventListener('click', cycleTheme);
 </script>

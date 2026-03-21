@@ -1,7 +1,7 @@
 ---
 title: "Loosening the Reins"
 date: 2026-03-19T00:00:00
-draft: false
+draft: true
 type: "blog"
 description: "AI is moving so fast that we're becoming the bottleneck. On coding agents as thought partners, the reversal of control, and where this all goes."
 tags: ["ai", "agents", "essay"]
