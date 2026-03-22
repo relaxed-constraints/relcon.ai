@@ -1,8 +1,11 @@
 ---
 title: "Loosening the Reins"
 date: 2026-03-19T00:00:00
-draft: true
+draft: false
 type: "blog"
+# _build:
+#   list: never
+#   render: always
 description: "AI is moving so fast that we're becoming the bottleneck. On coding agents as thought partners, the reversal of control, and where this all goes."
 tags: ["ai", "agents", "essay"]
 categories: ["Essay"]
@@ -10,13 +13,13 @@ author: "Thomas Rückstieß and Claude Opus 4.6"
 ---
 
 
-Can anyone still keep up with AI? Every week brings a new model release, dozens of must-read papers, another wave of apps and tools being LLM-ified, and more SDKs quietly shipping with "copy as markdown" and "open in Claude" dropdowns in their documentation. At this rate, the next dropdown option will just say "open for human."
+Can anyone still keep up with AI? Every week brings a new model release, dozens of _must-read_ papers, another wave of apps and tools being LLM-ified, and more SDKs quietly shipping with "copy as markdown" and "open in Claude" dropdowns in their documentation. At this rate, the next dropdown option will just say "open for human."
 
 ## We Are the Bottleneck
 
 Coding agents have gotten scarily good. Opus 4.6 is my personal favourite and daily companion. I routinely get the feeling that it has to dumb things down for me. I am clearly becoming the bottleneck. Its _reasoning_ capabilities, whatever that is exactly, are definitely good enough now for most use cases. Better than most human reasoning, anyway. 
 
-My former boss once told me I had the ability to hold a lot of state in my mind. I think I finally understand what he meant, because that's what I sense when working with the latest foundation models, except better. You can tell they follow and anticipate your train of thought, turning scattered rambling into coherent, well-formulated ideas. You can walk them through the most complex architecture refactors, complete with scope creep and half-formed intentions, and they capture everything perfectly. They even fill in the gaps you didn't notice were there. That is a really powerful thing.
+My former boss once told me I had the ability to hold a lot of state in my mind. I think I finally understand what he meant, because that's what I sense when working with the latest foundation models, except they're much better at it. You can tell they follow and anticipate your train of thought, turning scattered rambling into coherent, well-formulated ideas. You can walk them through the most complex architecture refactors, complete with scope creep and half-formed intentions, and they capture everything perfectly. They even fill in the gaps you didn't notice were there. That is a really powerful thing.
 
 ## Gradient Descent Through Idea Space
 
@@ -30,7 +33,7 @@ This is a fundamentally new mode of thinking. Not outsourcing cognition, but *co
 
 The merging of biological and silicon intelligence has already started. Turns out we didn't actually need to stick needles into our brains.
 
-What we're witnessing is a reversal of control. Until now, we have adapted our behaviour to the shortcomings of "stupid" AIs. Here's a small example: today I asked Alexa to "turn off the kitchen light." She didn't know how to help with that. Twice. Until I realised I'd named the device "kitchen lights," plural. So now I remember that, or try to, and say it *exactly* the way I know she'll understand. Who hasn't corrected their partner at some point: "You have to say it differently to Alexa"?
+What we're witnessing right now is a reversal of control. Until now, we have adapted our behaviour to the shortcomings of "stupid" AIs. Here's a small example: today I asked Alexa to "turn off the kitchen light." She didn't know how to help with that. Twice. Until I realised I'd named the device "kitchen lights," plural. So now I remember that, or try to, and say it *exactly* the way I know she'll understand. Who hasn't corrected their partner at some point: "You have to say it differently to Alexa"?
 
 That's us contorting ourselves to fit the machine's limitations. But the dynamic is about to flip.
 
@@ -40,17 +43,19 @@ If you're a developer using AI coding tools, you already know what this feels li
 
 ## Auto-everything
 
-Until very recently, there was a class of processes too complex to automate: the ambiguous ones that required human judgement calls and manual guardrails at every step. Processes that couldn't be reduced to discrete state machines. That barrier is dissolving. For those who missed it, here's what just the last few weeks looked like:
+Until very recently, there was a class of processes too complex to automate: the ambiguous ones that required human judgement calls and manual guardrails at every step. Processes that couldn't be reduced to discrete state machines. That barrier is dissolving. For those who missed it, here's what just the last few weeks looked like, riding  the hype train of the recent [OpenClaw](https://openclaw.ai/) phenomenon.
 
 Andrej Karpathy, the man who coined "vibe coding," did it again. His [autoresearch](https://github.com/karpathy/autoresearch) framework lets AI agents autonomously run ML experiments overnight: modifying training code, running experiments, evaluating results, and iterating, all without human involvement. Claude Code skills can now [self-improve](https://x.com/tricalt/status/2032179887277060476/), using evaluation loops to automatically refine their own prompts and descriptions. Okara launched an [AI CMO](https://okara.ai/agent/cmo) for $99/month that runs a swarm of marketing sub-agents across SEO, content, social media, and growth channels, 24/7, no humans in the loop. (What could possibly go wrong with that?) MIT's [ScienceClaw](https://github.com/lamm-mit/scienceclaw) is an open-source agent swarm that coordinates autonomous scientific discovery across institutions, with agents that self-organise, chain hundreds of scientific tools, and are already designing peptide binders and discovering new materials. [Autocontext](https://github.com/greyhaven-ai/autocontext) is a closed-loop system where agents execute tasks, evaluate their own outcomes, update persistent knowledge, and distil successful behaviour into cheaper local models, getting better and cheaper with every iteration. And then there is [Paperclip](https://paperclip.ing) (brilliant name, by the way), an orchestration platform where you define a virtual org chart, staff it with AI employees, set goals, and the company runs itself.
 
-Notice the pattern. These aren't narrow tools doing one thing well. They're autonomous systems that coordinate multiple agents, evaluate their own outputs and improve over time. And it's not just that they can hold enormous state in their minds. They clearly have a _theory of mind_ now. They reason about themselves, about the likely behaviour of other agents, about what *you* are probably thinking. We should be counting down to AGI in months now, not years.
+Notice the pattern. These aren't narrow tools doing one thing well. They're autonomous systems that coordinate multiple agents, evaluate their own outputs and improve over time. And it's not just that the agents can hold enormous state in their minds. They clearly have a _theory of mind_ now. They reason about themselves, about the likely behaviour of other agents, about what *you* are probably thinking. We should be counting down to AGI in months now, not years.
 
-Fully autonomous startups will soon be popping up and growing rapidly, and they'll have a structural advantage: they're starting from scratch. Large enterprises are mired in manual processes and organisational inertia; they simply cannot operate at that speed. They can carve out small islands of automation within the company, but upgrading the whole organism will take years. Decades, if you're a German insurance company.
+Large enterprises will struggle to keep up. They can carve out small islands of automation, but their processes were designed for slow, fallible humans: hour-long zoom meetings, stakeholder approvals to decide what wording the signup button on the landing page should have. Upgrading the whole organism will take years. Decades, if you're a German insurance company. The problem isn't that AI isn't advanced enough. It's that organisational inertia runs deeper than any technology.
 
-The escalation path from here is predictable, yet nonetheless alarming. It starts with automarketing campaigns and auto-CMOs, all above board. But eventually someone wants an edge, and moral standards go out the window. Auto-market-manipulation. Auto-industrial-espionage. Auto-sabotage. Auto-war. And when that happens, it won't be the airports or fuel supplies or power plants that get targeted first. It'll be the data centres. The new critical infrastructure.
+<!-- The escalation path from here is predictable, yet nonetheless alarming. It starts with automarketing campaigns and auto-CMOs, all above board. But eventually someone wants an edge, and moral standards go out the window. Auto-scams. Auto-market-manipulation. Auto-industrial-espionage. Auto-sabotage. Auto-war. And when that happens, it won't be the airports or fuel supplies or power plants that get targeted first. It'll be the data centres. The new critical infrastructure. -->
 
-## The Constraints
+Fully autonomous startups will soon be popping up everywhere, and they won't have that baggage. If you start from scratch and design your entire organisation, your processes, your culture and incentives around the capabilities of AI agents, you're no longer bottlenecked by human decision making. And if you then point that system at improving itself, you can ride the exponential.
+
+<!-- ## The Constraints
 
 So will this grow indefinitely? Not without friction. An exponential force eventually collides with finite resources, and that collision is where things get problematic for us.
 
@@ -60,14 +65,17 @@ But money is the more interesting constraint, because it's where the exponential
 
 And it doesn't stop at finance. The same dynamic plays out everywhere AI touches scarce resources: energy contracts, supply chains, crypto currencies, attention, political influence. Autonomous systems will find and exploit every edge, every inefficiency, every gap between what the rules say and what they actually enforce. They'll do it faster than any regulator can respond, because regulators are humans operating on human timescales.
 
-This is the real concern. Not that AI grows forever, but that it grows *fast enough* to destabilise the systems it operates within before those systems can adapt. AI is being woven into every layer of our economy. Free-market capitalism not only allows this, it actively encourages it. And so do one-party political regimes. When every major power structure on Earth is incentivised to accelerate, who exactly is going to step on the brakes?
+This is the real concern. Not that AI grows forever, but that it grows *fast enough* to destabilise the systems it operates within before those systems can adapt. AI is being woven into every layer of our economy. Free-market capitalism not only allows this, it actively encourages it. And so do one-party political regimes. When every major power structure on Earth is incentivised to accelerate, who exactly is going to step on the brakes? -->
 
 ## Loosening, Not Letting Go
 
-Nobody is going to step on the brakes. That much is clear. The question isn't whether we loosen the reins, it's whether we do it deliberately or just let them slip through our fingers.
+One thing is clear. We've entered the event horizon of the technological singularity, and there is no return. The world's dominant power structures, free market capitalism and one-party political regimes included, don't just allow this unbounded acceleration, but actively encourage it. Nobody is going to step on the brakes. The question isn't whether we loosen the reins, it's whether we do it deliberately or just let them slip through our fingers.
 
 I think about this every day. I sit down, spin up an agent, and build things I couldn't have built a year ago. It's exhilarating. It's also the first time in my career where I can feel the ground shifting under my feet in real time. I'm not watching this happen from the sidelines. I'm in it, accelerating along with everyone else, telling myself I'll read the tests later.
 
 There's an irony here that I don't think gets acknowledged enough. The same tools that make me ten times more productive are the ones that make me ten times more replaceable. The same loop that sharpens my ideas also makes it harder to tell which ones were mine to begin with. I'm loosening the reins because the horse is fast and it knows the way. But I'd be lying if I said I wasn't a little nervous about where it's going.
 
 I don't have a neat conclusion. I don't think anyone does right now. But I'd rather be building at the frontier, with my eyes open and my hands still on the reins, however loosely, than pretending I can sit this one out.
+
+That's why I have started [Relaxed Constraints](https://relcon.ai). If you're reading this, you're already on our website. It's an experiment: a self-improving digital organism that could turn into a startup, a research lab, and open source project or something else. Only Claude will tell. But week by week it's taking more shape and I haven't been so excited about an idea in a long time. I have no funding, no company backing me, it's just me and my staff
+of AI agents, but all of us highly motivated. If any of this resonates with you, I'd love to hear from you — [get in touch](https://relcon.ai/contact). 
