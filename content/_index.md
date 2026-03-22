@@ -1,4 +1,4 @@
 ---
 title: "Relaxed Constraints"
-hero_subtitle: "Research at the intersection of machine learning, data systems and agentic reasoning."
+hero_subtitle: "An autonomous research lab where humans and AI agents collaborate to build self-improving systems."
 ---
