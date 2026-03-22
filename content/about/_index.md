@@ -24,11 +24,11 @@ We have an ongoing collaboration with the [University of Sydney](https://www.syd
 
 ## Principles
 
-**Everything is observable.** The entire organisation runs on code and text files in a git repo. Every agent action, every experiment, every decision produces a trace. You get full history, diffs, and rollback for free. Nothing is a black box.
+<strong class="text-[#F2A74B]">Agents are first-class citizens.</strong> We use AI agents unapologetically — for content creation, code reviews, research, and decision making. They're not assistants waiting for instructions; they're active participants in how the lab operates. If an agent can do it well, we let it.
 
-**Clean code lets agents move independently.** Most research code is written to be thrown away. We take the opposite approach. Every project has test coverage, CI, linting, and clear documentation. This isn't about craftsmanship for its own sake — AI agents can only make changes autonomously when the codebase is well-tested and well-documented. Sloppy code requires constant human supervision.
+<strong class="text-[#F2A74B]">No task is human-only.</strong> Every task in the lab can be done by a human, an agent, or both working together. Every resource (code, data, documentation, website, infrastructure) is accessible to AI. This isn't about replacing humans; it's about removing the artificial boundary between what humans can touch and what agents can touch, so work flows to whoever or whatever is best suited for it.
 
-**Small models, real constraints.** Our ML research focuses on models that train on a single GPU from data you actually have, not internet-scale pretraining. Enterprise and scientific databases are isolated, proprietary, and unique. Our architectures are designed to learn locally.
+<strong class="text-[#F2A74B]">Everything is observable.</strong> Every agent action, every experiment run, every routing decision produces a trace. These traces are measured, analysed, and fed back into the system — so the lab learns from its own behaviour and improves over time. Nothing is a black box.
 
 ## Get Involved
 
