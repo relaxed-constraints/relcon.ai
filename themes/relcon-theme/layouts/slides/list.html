@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="{{ site.Language.LanguageCode }}" dir="{{ or site.Language.LanguageDirection `ltr` }}" class="dark">
+<head>
+  <script>
+    (function() {
+      var theme = localStorage.getItem('theme');
+      if (theme === 'light' || (theme === 'auto' && window.matchMedia('(prefers-color-scheme: light)').matches)) {
+        document.documentElement.classList.remove('dark');
+      }
+    })();
+  </script>
+  {{ partial "head.html" . }}
+</head>
+<body class="min-h-screen flex flex-col bg-dark text-off-white font-body">
+  {{ partial "header.html" . }}
+  <main class="flex-grow">
+    <div class="max-w-4xl mx-auto px-6 pt-28 pb-16">
+      <h1 class="text-4xl md:text-5xl font-display font-bold mb-4">Slides</h1>
+      <p class="text-gray-400 mb-12">Presentations, research talks, and pitches.</p>
+
+      {{ range .Pages.ByDate.Reverse }}
+      <a href="{{ .RelPermalink }}" class="block py-6 border-b border-dark-border group">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1 mb-2">
+          <h2 class="text-lg font-display font-semibold group-hover:text-accent transition-colors mt-0 mb-0">{{ .Title }}</h2>
+          <time class="text-sm text-gray-500 shrink-0">{{ .Date.Format "Jan 2, 2006" }}</time>
+        </div>
+        {{ with .Params.description }}
+        <p class="text-gray-400 text-sm mb-0">{{ . }}</p>
+        {{ end }}
+        {{ with .Params.event }}
+        <p class="text-gray-500 text-xs mt-1">{{ . }}</p>
+        {{ end }}
+      </a>
+      {{ end }}
+
+      {{ if not .Pages }}
+      <p class="text-gray-500 italic">No presentations yet.</p>
+      {{ end }}
+    </div>
+  </main>
+  {{ partial "footer.html" . }}
+  {{ if hugo.IsProduction }}
+  <script data-goatcounter="https://relconai.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
+  {{ end }}
+</body>
+</html>

@@ -31,13 +31,17 @@ theme = "relcon-theme"
     url = "/blog/"
     weight = 1
   [[menu.main]]
+    name = "Slides"
+    url = "/slides/"
+    weight = 2
+  [[menu.main]]
     name = "About"
     url = "/about/"
-    weight = 2
+    weight = 3
   [[menu.main]]
     name = "Contact"
     url = "/contact/"
-    weight = 3
+    weight = 4
 
 [params]
   description = "An autonomous research lab where humans and AI agents collaborate to build self-improving systems."
