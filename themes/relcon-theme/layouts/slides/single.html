@@ -80,9 +80,9 @@
     Reveal.initialize({
       hash: true,
       slideNumber: true,
-      width: 1920,
-      height: 1200,
-      margin: 0.02,
+      width: 1728,
+      height: 1117,
+      margin: 0.04,
       transition: '{{ with .Params.transition }}{{ . }}{{ else }}slide{{ end }}',
       plugins: [
         RevealMarkdown,
@@ -123,26 +123,30 @@
       Reveal.on('slidechanged', updateFooter);
 
       // Auto-shrink: reduce font size on slides whose content overflows.
-      // reveal.js sections have overflow:visible, so we measure the content
-      // wrapper height against the configured slide height.
-      var slideHeight = Reveal.getConfig().height || 1200;
-      var padding = 220; // vertical padding on sections + footer bar height
-      var maxContent = slideHeight - padding;
-      document.querySelectorAll('.reveal .slides > section').forEach(function(section) {
-        var targets = section.querySelector('section') ?
-          section.querySelectorAll(':scope > section') : [section];
-        targets.forEach(function(slide) {
-          if (slide.classList.contains('title-slide')) return;
-          // Temporarily constrain to measure true content height
-          slide.style.overflow = 'hidden';
-          var scale = 1;
-          while (slide.scrollHeight > maxContent && scale > 0.5) {
-            scale -= 0.05;
-            slide.style.fontSize = scale + 'em';
-          }
-          slide.style.overflow = '';
+      // Opt in via front matter: autoshrink: true
+      if ({{ if .Params.autoshrink }}true{{ else }}false{{ end }}) {
+        var slideHeight = Reveal.getConfig().height || 1200;
+        var slideWidth = Reveal.getConfig().width || 1728;
+        var padding = 220; // vertical padding on sections + footer bar height
+        var hPadding = 100; // horizontal padding
+        var maxContent = slideHeight - padding;
+        var maxWidth = slideWidth - hPadding;
+        document.querySelectorAll('.reveal .slides > section').forEach(function(section) {
+          var targets = section.querySelector('section') ?
+            section.querySelectorAll(':scope > section') : [section];
+          targets.forEach(function(slide) {
+            if (slide.classList.contains('title-slide')) return;
+            // Temporarily constrain to measure true content size
+            slide.style.overflow = 'hidden';
+            var scale = 1;
+            while (slide.scrollHeight > maxContent + 80 && scale > 0.5) {
+              scale -= 0.05;
+              slide.style.fontSize = scale + 'em';
+            }
+            slide.style.overflow = '';
+          });
         });
-      });
+      }
     });
   })();
 </script>

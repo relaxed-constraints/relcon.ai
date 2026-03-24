@@ -40,14 +40,13 @@ Here's a simplified business listing from Yelp:
 
 Nested objects, variable-length arrays, keys that show up in some records but not others. If you've worked with document databases, REST APIs, or event streams, this is familiar. It's how most application-layer data is shaped.
 
-To use any existing synthesizer on data like this, you first have to flatten it into a table. `categories` becomes `categories.0`, `categories.1`, `categories.2`, one column per array slot. `hours.Monday` and `attributes.WiFi` become top-level columns. Records missing a key get a blank cell. This process is lossy and creates
-wide sparse tables, which many ML algorithms struggle with.
+To use any existing synthesizer on data like this, you first have to flatten it into a table. `categories` becomes `categories.0`, `categories.1`, `categories.2`, one column per array slot. `hours.Monday` and `attributes.WiFi` become top-level columns. Records missing a key get a blank cell. This process is lossy (you lose the hierarchical structure) and creates wide sparse tables, which many ML algorithms struggle with.
 
 We flattened 500,000 records from the public Github IssueEvent API this way. The result was a table with **889 columns and 48% empty cells**. What started as a reasonably small dataset turned into a sparse matrix where nearly half of the values are missing.
 
 ## The problem with mixed types
 
-Even on flat tables, there's a fundamental tension in how synthesizers handle different data types. GAN, VAE, and diffusion-based methods work in continuous space, so they handle numbers naturally but need to encode categories as one-hot vectors. That's fine for a column with 5 distinct values, but falls apart when you have thousands of distinct categories. Flattened semi-structured data makes this worse: array expansion turns a single `categories` field into dozens of columns, each with its own set of values.
+Even on flat tables, there's a fundamental tension in how synthesizers handle different data types. GAN, VAE, and diffusion-based methods work in continuous space, so they handle numbers naturally but need to encode categories as one-hot vectors. That's fine for a column with 5 distinct values, but falls apart when you have thousands of distinct categories. Flattened semi-structured data makes this worse: array expansion turns a single `categories` field into dozens of columns, each with its own set of repeating values.
 
 Autoregressive and LLM-based methods have the opposite problem. They treat everything as tokens, so categories are easy. But numeric values with high precision (prices, coordinates, timestamps) would need enormous vocabularies to represent exactly, so they get discretized into bins, losing precision and ordinal structure in the process.
 
@@ -63,7 +62,7 @@ Second, imputation corrupts sparse columns. The standard approach to fill missin
 
 Third, discretizing continuous values into bins introduces its own artifacts. In one case, a single bin spanned 71,000 units, and a few clustered outliers got smeared into a uniform distribution. Again, trivial to detect.
 
-The figure below shows density visualizations comparing real vs. synthetic data distributions for the `electric_vehicles` dataset, a tabular dataset with a modest 11% sparsity. But already the baselines start to struggle. The TabDiff distributions are dominated by the imputed mean value, while TabularARGN and REaLTabformer show discretization artifacts. Origami's distribution is the closest to the real data. 
+The figure below shows density visualizations comparing real vs. synthetic data distributions for the `electric_vehicles` dataset, a tabular dataset with a modest 11% total sparsity. But already the baselines start to struggle. The TabDiff distributions are dominated by the imputed mean value, while TabularARGN and REaLTabformer show discretization artifacts. Origami's distribution is the closest to the real data. 
 
 {{< figure-theme dark="kde_electric_vehicles_dark.png" light="kde_electric_vehicles_light.png" alt="KDE plot" caption="Density visualisations comparing real vs. synthetic data distributions for electric vehicle records." >}}
 
@@ -101,7 +100,7 @@ The first thing to look at is which methods could run at all:
 | DDXPlus | OOM | OOM | OOM | OOM | ✓ | ✓ | ✓ |
 | Github | OOM | OOM | OOM | OOM | ✓ | ✓ | ✓ |
 
-By the third dataset, half the baselines are out.
+By the third dataset, half the baselines are out of memory (OOM).
 
 For the methods that did run, we measured how easy it is for an XGBoost classifier to tell real records apart from generated ones. A ROC AUC of 0.5 means the classifier can't tell the difference (ideal). A value near 1.0 means it's trivial.
 
@@ -177,11 +176,10 @@ The same pattern shows up in fidelity and utility scores. Origami has the highes
 
 Worth noting: Origami is also the smallest model at 1.7M parameters, 5x smaller than TabularARGN (9M) and 35x smaller than REaLTabFormer (59M). It trained on the Yelp dataset in 8.6 hours on a single V100.
 
-## Why it matters
+## Beyond Synthetic Data Generation
 
-Teams need realistic data for testing, development environments, and ML training — without exposing actual user records. For simple tabular data, there are decent tools. But if your data has nested objects, optional fields, or variable-length arrays (which covers most document database and API data), the current playbook is to flatten everything, run a tabular synthesizer, and then patch up the output by hand.
+Because Origami is an autoregressive model, it's also a density estimator. It assigns a probability to every record it sees. Generating synthetic data is just one thing you can do with that. Conditioning on a partial record and sampling the rest gives you data imputation and predictive modelling without needing a separate model. Scoring records by their log-likelihood gives you outlier detection for free. For database workloads specifically, the same architecture could be used for learned cardinality estimation on semi-structured data, a key component of query optimisation in databases.
 
-Origami skips that entire pipeline. It's the first synthesizer, to our knowledge, that handles semi-structured data end-to-end — learning the structure, the sparsity patterns, and the statistical relationships directly from the JSON.
 
 The paper is available on [arXiv]() and the code is on [GitHub](https://github.com/rueckstiess/origami-jsynth). Origami is published as a Python package ([`origami-ml`](https://pypi.org/project/origami-ml/)) with a Python SDK and CLI.
 
