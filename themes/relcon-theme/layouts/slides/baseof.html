@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="{{ site.Language.LanguageCode }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  {{/* Detect theme before render to prevent flash */}}
+  <script>
+    (function() {
+      var theme = localStorage.getItem('theme') || 'auto';
+      var isDark = theme === 'dark' || (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      document.documentElement.classList.add(isDark ? 'dark' : 'light');
+      window._slidesDark = isDark;
+    })();
+  </script>
+
+  {{ $title := printf "%s | %s" .Title site.Title }}
+  <title>{{ $title }}</title>
+  {{ $description := or .Description site.Params.description }}
+  <meta name="description" content="{{ $description }}">
+
+  {{/* Open Graph */}}
+  <meta property="og:title" content="{{ .Title }}">
+  <meta property="og:description" content="{{ $description }}">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="{{ .Permalink }}">
+  <meta property="og:site_name" content="{{ site.Title }}">
+
+  <link rel="icon" type="image/svg+xml" href="/images/relcon-logo-color.svg">
+
+  {{/* Fonts — same as site */}}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  {{/* reveal.js core CSS */}}
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.min.css">
+
+  {{/* Code syntax highlighting — light/dark variants */}}
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11/styles/vs.min.css" id="hl-light" media="all">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11/styles/vs2015.min.css" id="hl-dark" media="not all">
+  <script>
+    (function() {
+      var isDark = window._slidesDark;
+      document.getElementById('hl-light').media = isDark ? 'not all' : 'all';
+      document.getElementById('hl-dark').media  = isDark ? 'all' : 'not all';
+    })();
+  </script>
+
+  {{/* Custom relcon theme — replaces reveal.js built-in themes */}}
+  <style>
+    /* ===== Relcon reveal.js theme ===== */
+
+/* --- Color tokens (light default, dark override) --- */
+    :root {
+      --r-bg: #f0f4f3;
+      --r-surface: #ffffff;
+      --r-text: #1a1a2e;
+      --r-text-muted: #555568;
+      --r-text-faint: #9898a8;
+      --r-heading: #1a1a2e;
+      --r-accent: #0d9488;
+      --r-accent-light: #14b8a6;
+      --r-border: #c8d4d2;
+      --r-code-bg: #e8efed;
+      --r-code-border: #c8d4d2;
+      --r-code-text: #0A2326;
+      --r-link: #0d9488;
+      --r-link-hover: #0a7a70;
+      --r-selection-bg: rgba(13, 148, 136, 0.2);
+      --r-selection-color: #1a1a2e;
+      --r-logo: url('/images/relcon-logo-black.svg');
+      --r-dots-opacity: 1;
+    }
+    html.dark {
+      --r-bg: #080c14;
+      --r-surface: #12181e;
+      --r-text: #d0d0dc;
+      --r-text-muted: #b0b0be;
+      --r-text-faint: #606078;
+      --r-heading: #e8e8f0;
+      --r-accent: #14b8a6;
+      --r-accent-light: #2dd4bf;
+      --r-border: #275959;
+      --r-code-bg: #060a12;
+      --r-code-border: #275959;
+      --r-code-text: #D2D9D8;
+      --r-link: #14b8a6;
+      --r-link-hover: #2dd4bf;
+      --r-selection-bg: rgba(20, 184, 166, 0.3);
+      --r-selection-color: #e8e8f0;
+      --r-logo: url('/images/relcon-logo-white.svg');
+      --r-dots-opacity: 0.7;
+    }
+
+    /* --- Base --- */
+    html, body {
+      margin: 0; padding: 0; height: 100%; overflow: hidden;
+    }
+    .reveal-viewport {
+      background: var(--r-bg);
+      color: var(--r-text);
+    }
+    .reveal {
+      font-family: 'Inter', sans-serif;
+      font-size: 42px;
+      font-weight: 400;
+      color: var(--r-text);
+    }
+    .reveal ::selection {
+      background: var(--r-selection-bg);
+      color: var(--r-selection-color);
+    }
+
+    /* --- Headings --- */
+    .reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+      margin: 0 0 0.9em 0;
+      font-family: 'Geist', sans-serif;
+      font-weight: 600;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      color: var(--r-heading);
+      text-transform: none;
+      text-shadow: none;
+      word-wrap: break-word;
+    }
+    .reveal h1 { font-size: 1.8em; }
+    .reveal h2 { font-size: 1.35em; }
+    .reveal h3 { font-size: 1.1em; }
+    .reveal h4 { font-size: 0.95em; color: var(--r-text-muted); }
+
+    /* --- Slide content alignment (non-title slides) --- */
+    .reveal .slides section:not(.title-slide) {
+      text-align: left;
+      top: 0 !important;
+      padding: 1em 0em 0em 0em !important;
+    }
+
+    /* --- Paragraphs & body --- */
+    .reveal p {
+      margin: 0 0 0.6em 0;
+      line-height: 1.55;
+    }
+
+    /* --- Links --- */
+    .reveal a {
+      color: var(--r-link);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+    .reveal a:hover {
+      color: var(--r-link-hover);
+      text-shadow: none;
+    }
+
+    /* --- Lists --- */
+    .reveal ul, .reveal ol {
+      display: block;
+      text-align: left;
+      margin: 0 0 0.6em 1em;
+    }
+    .reveal li {
+      margin-bottom: 0.35em;
+      line-height: 1.5;
+    }
+    .reveal ul ul, .reveal ol ol {
+      margin-top: 0.2em;
+    }
+
+    /* --- Images --- */
+    .reveal img, .reveal video, .reveal iframe {
+      max-width: 90%;
+      max-height: 70vh;
+    }
+    .reveal section img {
+      border: none;
+      box-shadow: none;
+      background: none;
+    }
+    html.dark .reveal section img.img-invert {
+      filter: invert(1) hue-rotate(180deg);
+    }
+
+    /* --- Code --- */
+    .reveal pre {
+      width: 100%;
+      margin: 0.8em auto;
+      font-size: 0.55em;
+      line-height: 1.5;
+      box-shadow: none;
+    }
+    .reveal pre code {
+      display: block;
+      padding: 0.8em 1em;
+      max-height: 800px;
+      overflow: auto;
+      background: var(--r-code-bg);
+      border: 1px solid var(--r-code-border);
+      border-radius: 6px;
+      color: var(--r-code-text);
+    }
+    .reveal code:not(pre code) {
+      font-size: 0.85em;
+      padding: 0.15em 0.4em;
+      background: var(--r-code-bg);
+      border: 1px solid var(--r-code-border);
+      border-radius: 4px;
+      color: var(--r-accent);
+    }
+
+    /* --- Tables --- */
+    .reveal table {
+      margin: auto;
+      border-collapse: collapse;
+      font-size: 0.85em;
+    }
+    .reveal table th {
+      font-family: 'Geist', sans-serif;
+      font-weight: 600;
+      color: var(--r-heading);
+      border-bottom: 2px solid var(--r-border);
+      padding: 0.4em 0.8em;
+      text-align: left;
+    }
+    .reveal table td {
+      border-bottom: 1px solid var(--r-border);
+      padding: 0.35em 0.8em;
+    }
+
+    /* --- Blockquotes --- */
+    .reveal blockquote {
+      width: 90%;
+      margin: 0.8em auto;
+      padding: 0.4em 0 0.4em 1em;
+      font-style: italic;
+      color: var(--r-text-muted);
+      border-left: 3px solid var(--r-accent);
+      background: transparent;
+      box-shadow: none;
+    }
+
+    /* --- Horizontal rule (in case it appears inside a slide) --- */
+    .reveal hr {
+      border: none;
+      border-top: 1px solid var(--r-border);
+      margin: 1em 0;
+    }
+
+    /* --- Strong / emphasis --- */
+    .reveal strong { color: var(--r-heading); }
+    .reveal em { color: var(--r-text-muted); }
+
+    /* --- Slide numbers --- */
+    .reveal .slide-number {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      color: var(--r-text-faint);
+      background: transparent;
+      right: 16px;
+      bottom: 16px;
+    }
+
+    /* --- Progress bar --- */
+    .reveal .progress {
+      height: 5px;
+      color: var(--r-accent);
+    }
+
+    /* --- Controls --- */
+    .reveal .controls {
+      color: var(--r-accent);
+      bottom: 100px;
+      right: 40px;
+    }
+
+    /* --- Slide footer bar --- */
+    .slide-footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 50;
+      pointer-events: none;
+      border-top: 2px solid var(--r-accent);
+      background: var(--r-bg);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 52px;
+      height: 60px;
+      box-sizing: border-box;
+      transition: opacity 0.2s ease;
+    }
+    .slide-footer.hidden {
+      opacity: 0;
+    }
+    .slide-footer-left {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+    .slide-footer-logo {
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
+      display: block;
+    }
+    .slide-footer-event {
+      font-family: 'Inter', sans-serif;
+      font-size: 20px;
+      font-weight: 400;
+      color: var(--r-text-muted);
+    }
+    .slide-footer-number {
+      font-family: 'Inter', sans-serif;
+      font-size: 20px;
+      font-weight: 400;
+      color: var(--r-text-muted);
+    }
+
+    /* Hide reveal.js built-in slide number — we render our own in the footer */
+    .reveal .slide-number { display: none; }
+
+    /* ===== Title slide ===== */
+    .reveal .title-slide {
+      display: flex !important;
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: flex-start;
+      padding: 2em 3em 1em !important;
+      text-align: center;
+      height: 100% !important;
+      box-sizing: border-box;
+    }
+
+    /* Header row: logo + wordmark, left-aligned */
+    .title-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+      margin-bottom: 0.8em;
+      padding-left: 0.5em;
+    }
+    .title-logo {
+      width: 30px !important;
+      height: 30px !important;
+      max-width: 30px !important;
+      max-height: 30px !important;
+      margin: 0 !important;
+    }
+    .title-wordmark {
+      font-family: 'Geist', sans-serif;
+      font-size: 28px;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      color: var(--r-text);
+    }
+
+    /* Main panel: thin teal borders + dots background */
+    .title-panel {
+      position: relative;
+      width: 100%;
+      flex: 0 0 80%;
+      border-top: 2px solid var(--r-accent);
+      border-bottom: 2px solid var(--r-accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    /* Dots-wave tiled background */
+    .title-dots {
+      position: absolute;
+      inset: 0;
+      background-image: url('/images/dots-wave.svg');
+      background-size: 560px 560px;
+      background-repeat: repeat;
+      opacity: var(--r-dots-opacity);
+      pointer-events: none;
+    }
+
+    /* Content inside the panel */
+    .title-content {
+      position: relative;
+      z-index: 1;
+      padding: 2em 3em;
+    }
+    .reveal .title-heading {
+      font-family: 'Geist', sans-serif;
+      font-size: 2.2em !important;
+      font-weight: 700;
+      color: var(--r-accent) !important;
+      margin: 0 0 0.6em 0 !important;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+    }
+    .reveal .title-subtitle {
+      font-family: 'Inter', sans-serif;
+      font-size: 1.1em;
+      color: var(--r-heading);
+      margin: 0 0 2.5em 0;
+      line-height: 1.4;
+      font-weight: 400;
+    }
+    .reveal .title-meta {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.75em;
+      color: var(--r-heading);
+      font-weight: 300;
+      margin: 0;
+      letter-spacing: 0.02em;
+    }
+
+    /* --- Fragments --- */
+    .reveal .fragment {
+      transition: all 0.3s ease;
+    }
+
+    /* --- Print / PDF export --- */
+    @media print {
+      .reveal::after { display: none; }
+    }
+  </style>
+
+  {{ if hugo.IsProduction }}
+  <script data-goatcounter="https://relconai.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
+  {{ end }}
+</head>
+<body>
+  {{ block "main" . }}{{ end }}
+</body>
+</html>

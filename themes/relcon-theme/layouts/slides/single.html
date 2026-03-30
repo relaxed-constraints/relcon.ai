@@ -1,0 +1,153 @@
+{{ define "main" }}
+<div class="reveal">
+  <div class="slides">
+
+    {{/* Title slide — auto-generated from front matter */}}
+    <section class="title-slide">
+      <div class="title-header">
+        <img src="/images/relcon-logo-color.svg" alt="" class="title-logo">
+        <span class="title-wordmark">Relaxed Constraints</span>
+      </div>
+      <div class="title-panel">
+        <div class="title-dots"></div>
+        <div class="title-content">
+          <h1 class="title-heading">{{ .Title }}</h1>
+          {{ with .Description }}<p class="title-subtitle">{{ . }}</p>{{ end }}
+          <p class="title-meta">
+            {{- .Date.Format "January 2, 2006" -}}
+            {{- with .Params.author }} · {{ . }}{{ end -}}
+            {{- with .Params.event }} · {{ . }}{{ end -}}
+          </p>
+        </div>
+      </div>
+    </section>
+
+    {{/* Content slides — from markdown */}}
+    <section data-markdown
+             data-separator="^\n---\n"
+             data-separator-vertical="^\n----\n"
+             data-separator-notes="^Notes:">
+      <script type="text/template">
+{{ .RawContent | safeHTML }}
+      </script>
+    </section>
+
+  </div>
+</div>
+
+{{/* Footer bar — hidden on title slide */}}
+<div class="slide-footer hidden" id="slide-footer">
+  <div class="slide-footer-left">
+    <a href="/slides/" style="pointer-events: all; line-height: 0;">
+      <img src="/images/relcon-logo-color.svg" alt="Back to slides" class="slide-footer-logo">
+    </a>
+    <span class="slide-footer-event">{{ .Title }}{{ with .Params.event }} · {{ . }}{{ end }}</span>
+  </div>
+  <span class="slide-footer-number" id="slide-footer-number"></span>
+</div>
+
+{{/* reveal.js core */}}
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.min.js"></script>
+
+{{/* reveal.js plugins */}}
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5/plugin/markdown/markdown.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5/plugin/highlight/highlight.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5/plugin/notes/notes.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5/plugin/math/math.min.js"></script>
+
+<script>
+  // Pre-process: protect math from marked.js by replacing with placeholders.
+  // marked.js interprets LaTeX characters (_, *, \{, etc.) as markdown,
+  // mangling expressions before MathJax ever sees them.
+  (function() {
+    var tpl = document.querySelector('[data-markdown] script[type="text/template"]');
+    var mathStore = [];
+    var content = tpl.textContent;
+
+    // Replace display math ($$...$$, including multiline) first, then inline ($...$)
+    content = content.replace(/\$\$([\s\S]*?)\$\$/g, function(m) {
+      mathStore.push(m);
+      return 'MATH_PLACEHOLDER_' + (mathStore.length - 1);
+    });
+    content = content.replace(/\$([^\$\n]+?)\$/g, function(m) {
+      mathStore.push(m);
+      return 'MATH_PLACEHOLDER_' + (mathStore.length - 1);
+    });
+
+    tpl.textContent = content;
+
+    // After Reveal initializes (markdown → HTML), restore math in the DOM
+    Reveal.initialize({
+      hash: true,
+      slideNumber: true,
+      width: 1728,
+      height: 1117,
+      margin: 0.04,
+      transition: '{{ with .Params.transition }}{{ . }}{{ else }}slide{{ end }}',
+      plugins: [
+        RevealMarkdown,
+        RevealHighlight,
+        RevealNotes,
+        RevealMath.MathJax3
+      ],
+      mathjax3: {
+        mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js',
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          displayMath: [['$$', '$$'], ['\\[', '\\]']]
+        }
+      }
+    }).then(function() {
+      // Restore math placeholders in rendered slide HTML
+      document.querySelectorAll('.reveal .slides section').forEach(function(section) {
+        section.innerHTML = section.innerHTML.replace(/MATH_PLACEHOLDER_(\d+)/g, function(_, i) {
+          return mathStore[parseInt(i)];
+        });
+      });
+      // Re-typeset now that real math delimiters are back
+      if (window.MathJax && MathJax.typeset) {
+        MathJax.typeset();
+      }
+
+      // Footer: show/hide based on whether we're on the title slide
+      var footer = document.getElementById('slide-footer');
+      var footerNumber = document.getElementById('slide-footer-number');
+      var totalSlides = Reveal.getTotalSlides();
+      function updateFooter() {
+        var indices = Reveal.getIndices();
+        var isTitle = (indices.h === 0 && (indices.v === 0 || indices.v === undefined));
+        footer.classList.toggle('hidden', isTitle);
+        footerNumber.textContent = Reveal.getSlidePastCount() + 1 + ' / ' + totalSlides;
+      }
+      updateFooter();
+      Reveal.on('slidechanged', updateFooter);
+
+      // Auto-shrink: reduce font size on slides whose content overflows.
+      // Opt in via front matter: autoshrink: true
+      if ({{ if .Params.autoshrink }}true{{ else }}false{{ end }}) {
+        var slideHeight = Reveal.getConfig().height || 1200;
+        var slideWidth = Reveal.getConfig().width || 1728;
+        var padding = 220; // vertical padding on sections + footer bar height
+        var hPadding = 100; // horizontal padding
+        var maxContent = slideHeight - padding;
+        var maxWidth = slideWidth - hPadding;
+        document.querySelectorAll('.reveal .slides > section').forEach(function(section) {
+          var targets = section.querySelector('section') ?
+            section.querySelectorAll(':scope > section') : [section];
+          targets.forEach(function(slide) {
+            if (slide.classList.contains('title-slide')) return;
+            // Temporarily constrain to measure true content size
+            slide.style.overflow = 'hidden';
+            var scale = 1;
+            while (slide.scrollHeight > maxContent + 60 && scale > 0.6) {
+              scale -= 0.02;
+              slide.style.fontSize = scale + 'em';
+            }
+            slide.style.overflow = '';
+          });
+        });
+      }
+    });
+  })();
+</script>
+{{ end }}

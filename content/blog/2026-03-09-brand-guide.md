@@ -3,9 +3,8 @@ title: "Brand & Style Guide"
 date: 2026-03-09T00:00:00
 draft: false
 type: "blog"
-_build:
+build:
   list: never
-  render: always
 description: "Color palette, typography, and component reference for the Relaxed Constraints visual identity across light and dark themes."
 tags: ["brand", "design"]
 categories: ["Design"]
@@ -20,17 +19,17 @@ This page documents the visual identity of Relaxed Constraints. All colors, typo
 Each swatch shows light (left half) and dark (right half) values.
 
 {{< swatchrow >}}
-{{< swatch name="Background" light="#f8f9fc" dark="#080c14" >}}
-{{< swatch name="Surface" light="#ffffff" dark="#12121a" >}}
-{{< swatch name="Border" light="#dfe1ea" dark="#1e1e2e" >}}
+{{< swatch name="Background" light="#f0f4f3" dark="#080c14" >}}
+{{< swatch name="Surface" light="#ffffff" dark="#12181e" >}}
+{{< swatch name="Border" light="#c8d4d2" dark="#275959" >}}
 {{< swatch name="Text" light="#1a1a2e" dark="#d0d0dc" >}}
 {{< /swatchrow >}}
 
 | Role | Light | Dark | CSS Variable |
 |---|---|---|---|
-| Background | `#f8f9fc` | `#080c14` | `--c-bg` |
-| Surface | `#ffffff` | `#12121a` | `--c-surface` |
-| Border | `#dfe1ea` | `#1e1e2e` | `--c-border` |
+| Background | `#f0f4f3` | `#080c14` | `--c-bg` |
+| Surface | `#ffffff` | `#12181e` | `--c-surface` |
+| Border | `#c8d4d2` | `#275959` | `--c-border` |
 | Text (primary) | `#1a1a2e` | `#d0d0dc` | `--c-text` |
 
 ### Accent Colors
@@ -39,8 +38,7 @@ Each swatch shows light (left half) and dark (right half) values.
 {{< swatch name="Accent" light="#0d9488" dark="#14b8a6" >}}
 {{< swatch name="Accent Light" light="#14b8a6" dark="#2dd4bf" >}}
 {{< swatch name="Accent Dark" light="#0a7a70" dark="#0d9488" >}}
-{{< swatch name="Cyan" light="#06b6d4" dark="#06b6d4" >}}
-{{< swatch name="Violet" light="#8b5cf6" dark="#8b5cf6" >}}
+{{< swatch name="Amber" light="#F2A74B" dark="#F2A74B" >}}
 {{< /swatchrow >}}
 
 | Role | Light | Dark | CSS Variable |
@@ -48,54 +46,53 @@ Each swatch shows light (left half) and dark (right half) values.
 | Accent | `#0d9488` | `#14b8a6` | `--c-accent` |
 | Accent Light | `#14b8a6` | `#2dd4bf` | `--c-accent-light` |
 | Accent Dark | `#0a7a70` | `#0d9488` | `--c-accent-dark` |
-| Cyan (static) | `#06b6d4` | `#06b6d4` | — |
-| Violet (static) | `#8b5cf6` | `#8b5cf6` | — |
+| Amber (static) | `#F2A74B` | `#F2A74B` | — |
 
 ### Gray Scale
 
 {{< swatchrow >}}
 {{< swatch name="Gray 200" light="#3a3a4e" dark="#d8d8e0" >}}
-{{< swatch name="Gray 300" light="#444458" dark="#b0b0be" >}}
-{{< swatch name="Gray 400" light="#5e5e72" dark="#8888a0" >}}
-{{< swatch name="Gray 500" light="#8a8a9e" dark="#606078" >}}
+{{< swatch name="Gray 300" light="#555568" dark="#b0b0be" >}}
+{{< swatch name="Gray 400" light="#6e6e82" dark="#8888a0" >}}
+{{< swatch name="Gray 500" light="#9898a8" dark="#606078" >}}
 {{< swatch name="Gray 600" light="#c8c8d4" dark="#404058" >}}
 {{< /swatchrow >}}
 
 | Role | Light | Dark | CSS Variable |
 |---|---|---|---|
 | Gray 200 | `#3a3a4e` | `#d8d8e0` | `--c-gray-200` |
-| Gray 300 | `#444458` | `#b0b0be` | `--c-gray-300` |
-| Gray 400 | `#5e5e72` | `#8888a0` | `--c-gray-400` |
-| Gray 500 | `#8a8a9e` | `#606078` | `--c-gray-500` |
+| Gray 300 | `#555568` | `#b0b0be` | `--c-gray-300` |
+| Gray 400 | `#6e6e82` | `#8888a0` | `--c-gray-400` |
+| Gray 500 | `#9898a8` | `#606078` | `--c-gray-500` |
 | Gray 600 | `#c8c8d4` | `#404058` | `--c-gray-600` |
 
 ### Code Block Colors
 
 {{< swatchrow >}}
-{{< swatch name="Code BG" light="#f4f4f8" dark="#0c0c14" >}}
-{{< swatch name="Code Border" light="#e0e0e8" dark="#1e1e2e" >}}
-{{< swatch name="Code Text" light="#1a1a2e" dark="#ffffff" >}}
-{{< swatch name="Line Numbers" light="#9898a8" dark="#606078" >}}
+{{< swatch name="Code BG" light="#e8efed" dark="#060a12" >}}
+{{< swatch name="Code Border" light="#c8d4d2" dark="#275959" >}}
+{{< swatch name="Code Text" light="#0A2326" dark="#D2D9D8" >}}
+{{< swatch name="Line Numbers" light="#7a9e9c" dark="#4a7a7a" >}}
 {{< /swatchrow >}}
 
 | Role | Light | Dark | CSS Variable |
 |---|---|---|---|
-| Code BG | `#f4f4f8` | `#0c0c14` | `--c-code-bg` |
-| Code Border | `#e0e0e8` | `#1e1e2e` | `--c-code-border` |
-| Code Text | `#1a1a2e` | `#ffffff` | `--c-code-text` |
-| Line Numbers | `#9898a8` | `#606078` | `--c-code-line-nr` |
+| Code BG | `#e8efed` | `#060a12` | `--c-code-bg` |
+| Code Border | `#c8d4d2` | `#275959` | `--c-code-border` |
+| Code Text | `#0A2326` | `#D2D9D8` | `--c-code-text` |
+| Line Numbers | `#7a9e9c` | `#4a7a7a` | `--c-code-line-nr` |
 
 ## Typography
 
 ### Heading Hierarchy
 
-# Heading 1 — Outfit or Manrope, Bold
+# Heading 1 — Geist, Semibold
 
-## Heading 2 — Manrope, Bold
+## Heading 2 — Geist, Semibold
 
-### Heading 3 — Manrope, Semibold
+### Heading 3 — Geist, Semibold
 
-#### Heading 4 — Inter, Semibold
+#### Heading 4 — Geist, Semibold
 
 Body text uses **Inter** at regular weight with relaxed line height. This is how standard paragraph content renders across the site — optimized for long-form reading on both light and dark backgrounds.
 
@@ -103,8 +100,7 @@ Body text uses **Inter** at regular weight with relaxed line height. This is how
 
 | Usage | Font | Weights |
 |---|---|---|
-| Hero display | Outfit | 700–900 |
-| Headings | Manrope | 600–800 |
+| Headings | Geist | 600–900 |
 | Body text | Inter | 300–700 |
 
 ## Inline Elements
@@ -168,7 +164,7 @@ print(f"Loaded {len(results)} records")  # Loaded 347 records
       {
         label: 'Model B',
         data: [0.65, 0.74, 0.79, 0.85],
-        backgroundColor: 'rgba(139, 92, 246, 0.7)'
+        backgroundColor: 'rgba(242, 167, 75, 0.7)'
       },
       {
         label: 'Baseline',
@@ -205,8 +201,8 @@ print(f"Loaded {len(results)} records")  # Loaded 347 records
       {
         label: 'Validation Loss',
         data: [2.5, 1.7, 1.25, 0.98, 0.82, 0.73, 0.68, 0.66, 0.65],
-        borderColor: '#8b5cf6',
-        backgroundColor: 'rgba(139, 92, 246, 0.05)',
+        borderColor: '#F2A74B',
+        backgroundColor: 'rgba(242, 167, 75, 0.05)',
         fill: true,
         tension: 0.3
       }
