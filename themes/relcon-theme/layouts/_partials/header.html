@@ -8,8 +8,9 @@
       </a>
       <div class="hidden md:flex items-center space-x-8">
         {{ $hasBlog := gt (len (where site.RegularPages "Type" "blog")) 0 }}
+        {{ $hasSlides := gt (len (where site.RegularPages "Type" "slides")) 0 }}
         {{ range site.Menus.main }}
-        {{ if or $hasBlog (ne .URL "/blog/") }}
+        {{ if and (or $hasBlog (ne .URL "/blog/")) (or $hasSlides (ne .URL "/slides/")) }}
         <a href="{{ .URL }}"
           class="text-gray-400 hover:text-off-white text-sm font-medium tracking-wide transition-colors">
           {{ .Name }}
@@ -59,8 +60,9 @@
     <div class="md:hidden hidden" id="mobile-menu">
       <div class="mt-4 pb-4 space-y-2">
         {{ $hasBlog := gt (len (where site.RegularPages "Type" "blog")) 0 }}
+        {{ $hasSlides := gt (len (where site.RegularPages "Type" "slides")) 0 }}
         {{ range site.Menus.main }}
-        {{ if or $hasBlog (ne .URL "/blog/") }}
+        {{ if and (or $hasBlog (ne .URL "/blog/")) (or $hasSlides (ne .URL "/slides/")) }}
         <a href="{{ .URL }}" class="block py-2 text-gray-400 hover:text-off-white transition-colors">{{ .Name }}</a>
         {{ end }}
         {{ end }}
