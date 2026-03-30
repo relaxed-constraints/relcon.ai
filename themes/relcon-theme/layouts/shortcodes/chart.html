@@ -2,12 +2,13 @@
 {{- $width := .Get "width" | default "100%" -}}
 {{- $height := .Get "height" | default "300px" -}}
 {{- $caption := .Get "caption" -}}
+{{- $invert := eq (.Get "invert") "true" -}}
 
 {{/* Mark page as needing Chart.js */}}
 {{- .Page.Store.Set "hasCharts" true -}}
 
 <figure class="my-8">
-  <div style="width: {{ $width }}; height: {{ $height }}; margin: 0 auto;">
+  <div style="width: {{ $width }}; height: {{ $height }}; margin: 0 auto;" {{ if $invert }}class="dark:[filter:invert(1)_hue-rotate(180deg)]"{{ end }}>
     <canvas id="{{ $id }}"></canvas>
   </div>
   {{- with $caption }}
@@ -17,12 +18,13 @@
 
 <script>
 (function() {
+  var forceBlack = {{ if $invert }}true{{ else }}false{{ end }};
   function getThemeColors() {
-    var isDark = document.documentElement.classList.contains('dark');
+    var isDark = !forceBlack && document.documentElement.classList.contains('dark');
     return {
-      text: isDark ? '#d1d5db' : '#4a4a5e',
+      text: forceBlack ? '#000000' : (isDark ? '#d1d5db' : '#4a4a5e'),
       grid: isDark ? 'rgba(75, 85, 99, 0.3)' : 'rgba(160, 160, 180, 0.25)',
-      tick: isDark ? '#9ca3af' : '#6a6a7e'
+      tick: forceBlack ? '#000000' : (isDark ? '#9ca3af' : '#6a6a7e')
     };
   }
 

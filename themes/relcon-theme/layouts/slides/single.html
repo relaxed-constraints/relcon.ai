@@ -139,8 +139,8 @@
             // Temporarily constrain to measure true content size
             slide.style.overflow = 'hidden';
             var scale = 1;
-            while (slide.scrollHeight > maxContent + 80 && scale > 0.5) {
-              scale -= 0.05;
+            while (slide.scrollHeight > maxContent + 60 && scale > 0.6) {
+              scale -= 0.02;
               slide.style.fontSize = scale + 'em';
             }
             slide.style.overflow = '';

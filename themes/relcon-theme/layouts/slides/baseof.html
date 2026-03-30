@@ -7,7 +7,7 @@
   {{/* Detect theme before render to prevent flash */}}
   <script>
     (function() {
-      var theme = localStorage.getItem('theme') || 'dark';
+      var theme = localStorage.getItem('theme') || 'auto';
       var isDark = theme === 'dark' || (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches);
       document.documentElement.classList.add(isDark ? 'dark' : 'light');
       window._slidesDark = isDark;
@@ -176,6 +176,9 @@
       border: none;
       box-shadow: none;
       background: none;
+    }
+    html.dark .reveal section img.img-invert {
+      filter: invert(1) hue-rotate(180deg);
     }
 
     /* --- Code --- */
