@@ -6,6 +6,7 @@ type: "blog"
 description: "Every synthetic data generation tool assumes flat tables. Real-world application data is often nested JSON with optional fields and variable-length arrays. The ORiGAMi architecture is the first to handle semi-structured data natively."
 tags: ["research", "synthetic-data", "origami"]
 categories: ["Research", "Synthetic Data", "JSON"]
+author: "Thomas Rückstieß"
 ---
 
 Teams need realistic data for testing, development environments, database optimization and ML training, but without exposing actual user records. For simple tabular data, there are decent tools and algorithms to generate synthetic records, spanning various architecture families: [GANs and VAEs](https://arxiv.org/abs/1907.00503), [diffusion models](https://arxiv.org/abs/2410.20626), and more recently [LLMs](https://arxiv.org/abs/2210.06280). But if your data has nested objects, optional fields, or variable-length arrays (typical application layer data and API payloads), the only recourse is to flatten everything into tables during preprocessing. This flattening process is lossy, creates extremely wide sparse tables, and leads to poor quality synthetic data.
