@@ -168,7 +168,7 @@ Arrays expose a different failure mode. When a tabular synthesizer generates val
 
 ## Beyond Synthetic Data Generation
 
-Because ORiGAMi is an autoregressive model, it's also a density estimator. It assigns a probability to every record it sees. Generating synthetic data is just one thing you can do with that. Conditioning on a partial record and sampling the rest gives you data imputation and predictive modeling without needing a separate model. Scoring records by their log-likelihood gives you outlier detection for free. For database workloads specifically, the same architecture could be used for learned cardinality estimation on semi-structured data, a key component of query optimization in databases.
+Because ORiGAMi is an autoregressive model, it's also a density estimator. It assigns a probability to every record it sees. Generating synthetic data is just one thing you can do with that. Conditioning on a partial record and sampling the rest gives you data imputation and predictive modeling without needing a separate model. Scoring records by their log-likelihood gives you outlier detection for free. For database workloads specifically, the same architecture could be used for learned cardinality estimation on semi-structured data, a key component of query optimization in databases. We'll explore these capabilities in future work. 
 
 
 The paper preprint is available on [arXiv](https://arxiv.org/abs/2603.01444) and the code is on [GitHub](https://github.com/rueckstiess/origami-jsynth). ORiGAMi is additionally published as a Python package ([`origami-ml`](https://pypi.org/project/origami-ml/)) with a Python SDK and CLI.
