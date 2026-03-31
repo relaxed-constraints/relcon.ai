@@ -412,6 +412,10 @@
       letter-spacing: 0.02em;
     }
 
+    /* --- Manual size classes (apply via <!-- .slide: class="small" --> in markdown) --- */
+    .reveal .slides section.small { font-size: 0.90em; }
+    .reveal .slides section.smaller { font-size: 0.80em; }
+
     /* --- Fragments --- */
     .reveal .fragment {
       transition: all 0.3s ease;
@@ -422,6 +426,9 @@
       .reveal::after { display: none; }
     }
   </style>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3/dist/chartjs-plugin-annotation.min.js"></script>
 
   {{ if hugo.IsProduction }}
   <script data-goatcounter="https://relconai.goatcounter.com/count"

@@ -122,31 +122,39 @@
       updateFooter();
       Reveal.on('slidechanged', updateFooter);
 
-      // Auto-shrink: reduce font size on slides whose content overflows.
-      // Opt in via front matter: autoshrink: true
-      if ({{ if .Params.autoshrink }}true{{ else }}false{{ end }}) {
-        var slideHeight = Reveal.getConfig().height || 1200;
-        var slideWidth = Reveal.getConfig().width || 1728;
-        var padding = 220; // vertical padding on sections + footer bar height
-        var hPadding = 100; // horizontal padding
-        var maxContent = slideHeight - padding;
-        var maxWidth = slideWidth - hPadding;
-        document.querySelectorAll('.reveal .slides > section').forEach(function(section) {
-          var targets = section.querySelector('section') ?
-            section.querySelectorAll(':scope > section') : [section];
-          targets.forEach(function(slide) {
-            if (slide.classList.contains('title-slide')) return;
-            // Temporarily constrain to measure true content size
-            slide.style.overflow = 'hidden';
-            var scale = 1;
-            while (slide.scrollHeight > maxContent + 60 && scale > 0.6) {
-              scale -= 0.02;
-              slide.style.fontSize = scale + 'em';
-            }
-            slide.style.overflow = '';
-          });
+      // Initialize Chart.js charts declared via <div class="chart-config" data-chart="canvasId">
+      if (window.Chart) {
+        var isDark = document.documentElement.classList.contains('dark');
+        var chartText = isDark ? '#d0d0dc' : '#1a1a2e';
+        var chartGrid = isDark ? 'rgba(75,85,99,0.3)' : 'rgba(160,160,180,0.25)';
+        document.querySelectorAll('div.chart-config[data-chart]').forEach(function(el) {
+          var canvas = document.getElementById(el.getAttribute('data-chart'));
+          if (!canvas) return;
+          var config = JSON.parse(el.textContent);
+          // Apply theme colors to axes and legend
+          if (!config.options) config.options = {};
+          if (!config.options.plugins) config.options.plugins = {};
+          if (!config.options.plugins.legend) config.options.plugins.legend = {};
+          if (!config.options.plugins.legend.labels) config.options.plugins.legend.labels = {};
+          config.options.plugins.legend.labels.color = config.options.plugins.legend.labels.color || chartText;
+          config.options.plugins.legend.labels.font = config.options.plugins.legend.labels.font || { size: 30 };
+          if (config.options.scales) {
+            Object.values(config.options.scales).forEach(function(scale) {
+              if (!scale.ticks) scale.ticks = {};
+              scale.ticks.color = scale.ticks.color || chartText;
+              scale.ticks.font = scale.ticks.font || { size: 26 };
+              if (!scale.grid) scale.grid = {};
+              scale.grid.color = scale.grid.color || chartGrid;
+              if (scale.title) {
+                scale.title.color = scale.title.color || chartText;
+                scale.title.font = scale.title.font || { size: 30, weight: 'normal' };
+              }
+            });
+          }
+          new Chart(canvas, config);
         });
       }
+
     });
   })();
 </script>
