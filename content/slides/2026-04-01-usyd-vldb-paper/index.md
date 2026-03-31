@@ -1,7 +1,7 @@
 ---
 title: "Autoregressive Synthesis of Sparse and Semi-Structured Mixed-Type Data"
-date: 2026-03-31
-draft: true
+date: 2026-04-01T00:00:00+11:00
+draft: false
 type: "slides"
 description: "To be submitted to VLDB 2027, joint work with Robin Vujanic (MongoDB)"
 transition: "none"
@@ -286,14 +286,13 @@ We argue that this sparsity is a **property of the data** and should be modelled
 - Can be trained on commodity hardware (laptops, single GPUs) in a reasonable time frame (hours to days) <!-- .element: class="fragment" -->  
 <br>
 
----
-<!-- .slide: data-visibility="hidden" -->
+----
 
 # Tokenisation
 
 ![Tokenisation](tokenization_light.png) <!-- .element: style="width: 80%;" -->
 
----
+----
 
 # Tokenisation
 
@@ -323,7 +322,7 @@ ORiGAMi tokenisation: 19 Tokens, Vocabulary size: ~ 1k-10k (dataset dependent)
 
 </span>
 
----
+----
 
 # Grammar & schema constraints
 
