@@ -1,28 +1,33 @@
 ---
 title: "Autoregressive Synthesis of Sparse and Semi-Structured Mixed-Type Data"
-date: 2026-03-24
+date: 2026-03-31
 draft: true
 type: "slides"
 description: "To be submitted to VLDB 2027, joint work with Robin Vujanic (MongoDB)"
 transition: "none"
 event: "DBRG Seminar "
 author: "Thomas Rückstieß"
-autoshrink: true
 ---
 
 # Why do we need synthetic data?
 
 > Synthetic data should be **statistically indistinguishable** from real data — same distributions, same correlations, same structure.
 
-<div class="fragment">
+- **Privacy & compliance** — share or publish sensitive datasets without exposing PII<br>(e.g. GDPR, HIPAA compliance)
+<!-- .element: class="fragment" -->
 
-- **Privacy & compliance** — share or publish sensitive datasets without exposing PII<br>(e.g. GDPR, HIPAA compliance) 
 - **Dev & test environments** — realistic data for development and QA, without prod access
-- **Benchmarking** — generate data at arbitrary scale with controlled properties
-- **Database tuning** — index selection, physical design, workload simulation, cardinality estimation
-- **ML training** — augment rare classes, bootstrap training data for downstream models
+<!-- .element: class="fragment" -->
 
-</div>
+- **Benchmarking** — generate data at arbitrary scale with controlled properties 
+<!-- .element: class="fragment" -->
+
+- **Database tuning** — index selection, physical design, workload simulation
+<!-- .element: class="fragment" -->
+
+- **ML training** — augment rare classes, bootstrap training data for downstream models
+<!-- .element: class="fragment" -->
+ 
 
 Notes:
 - ML training example synthetic patient records to train disease classifier
@@ -30,6 +35,8 @@ Notes:
 ---
 
 # Synthetic Data Generation Methods
+
+<!-- .slide: class="smaller" -->
 
 Several different algorithm families exist:
 <br><br>
@@ -108,23 +115,9 @@ g = mostly.train(data=df)
 
 ---
 
-# Tension between discrete and continuous representations
-
-- Mixed-type data contains both discrete (strings, booleans) and continuous (numerical) variables
-
-- _GANs_ and _Diffusion models_ operate in continuous space
-  - Require special handling for discrete variables
-  - Column explosion: categorical columns -> one-hot encoding
-
-- _Autoregressive models_ operate in discrete token space 
-  - Require special handling for continuous variables
-  - Vocabulary explosion: numerical columns -> binning
-
-- Both camps compromise
-
----
-
 # Data isn't always flat tables
+
+<!-- .slide: class="smaller" -->
 
 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5em;">
 <div>
@@ -234,6 +227,8 @@ Separate columns by type:
 
 # Why flattening breaks down
 
+<!-- .slide: class="small" -->
+
 Flattening JSON produces very wide tables with high sparsity (`NULL` values)
 
 | Dataset           | # records | # columns    | # cat | # num | # bool | Sparsity |
@@ -261,6 +256,24 @@ We argue that this sparsity is a **property of the data** and should be modelled
 
 ---
 
+# Tension between discrete and continuous representations
+
+<!-- .slide: data-visibility="hidden" -->
+
+- Mixed-type data contains both discrete (strings, booleans) and continuous (numerical) variables
+
+- _GANs_ and _Diffusion models_ operate in continuous space
+  - Require special handling for discrete variables
+  - Column explosion: categorical columns -> one-hot encoding
+
+- _Autoregressive models_ operate in discrete token space 
+  - Require special handling for continuous variables
+  - Vocabulary explosion: numerical columns -> binning
+
+- Both camps compromise
+
+---
+
 # ORiGAMi Architecture
 
 - **O**bject **R**epresentat**i**on via **G**enerative **A**utoregressive **M**odell**i**ng
@@ -283,6 +296,9 @@ We argue that this sparsity is a **property of the data** and should be modelled
 ---
 
 # Tokenisation
+
+<!-- .slide: class="small" -->
+
 
 ```json
 { 
@@ -311,6 +327,9 @@ ORiGAMi tokenisation: 19 Tokens, Vocabulary size: ~ 1k-10k (dataset dependent)
 
 # Grammar & schema constraints
 
+<!-- .slide: class="small" -->
+
+
 Grammar constraints enforce **correct syntax**, e.g.
 
 - `...` `OBJ_START` -> Only `Key(*)` or `OBJ_END` tokens allowed
@@ -338,6 +357,9 @@ Model doesn't need to learn the grammar and schema constraints and can focus on 
 
 # Dual-head architecture
 
+<!-- .slide: class="small" -->
+
+
 <div style="display: grid; grid-template-columns: 3fr 5fr; gap: 1em;">
 
 <div style="text-align: center">
@@ -364,19 +386,27 @@ Model doesn't need to learn the grammar and schema constraints and can focus on 
 
 # Experimental setup
 
-<img src="training_setup_1.png" alt="Training Setup" style="width: 80%">
+<img src="training_setup_1.png" alt="Training Setup">
 
 ---
 
 # Experimental setup
 
-<img src="training_setup_2.png" alt="Training Setup" style="width: 80%">
+<img src="training_setup_2.png" alt="Training Setup">
 
 ---
 
 # Experimental setup
 
-<img src="training_setup_3.png" alt="Training Setup" style="width: 80%">
+<img src="training_setup_3.png" alt="Training Setup">
+
+---
+
+# Experiment Protocol
+
+- All models trained on a single NVIDIA V100 GPU with 16GB VRAM
+- Model training time is limited to 24 hours wall clock time per model and dataset
+- We generate 10 synthetic sample files from each model with different seeds and report mean and stddev
 
 ---
  
@@ -394,97 +424,124 @@ Model doesn't need to learn the grammar and schema constraints and can focus on 
 - **Privacy** — how well does the synthetic data protect sensitive information? (Distance to closest record, exact match rate) 
 <!-- .element: class="fragment" -->
 
+<br> 
+
 For easier comparison, we normalise all metrics between 0 and 1 (higher is better).
 <!-- .element: class="fragment" -->
 
 ---
 
-# Experiment Protocol
+# Results 
 
-- All models trained on a single NVIDIA V100 GPU with 16GB VRAM
-- Model training time is limited to 24 hours wall clock time per model and dataset <!-- .element: class="fragment" -->
-- Choice of "best model" determined by baseline implementation, e.g. <!-- .element: class="fragment" -->
-  - running _best_ checkpoint using validation loss
-  - early stopping mechanism when no progress is made
-  - ORiGAMi: fixed number of epochs, evaluate final checkpoint
-- We generate 10 synthetic sample files from each model with different seeds and report mean and stddev <!-- .element: class="fragment" -->
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2em;">
+<div style="font-size: 0.6em;">
 
----
+## Fidelity
 
-# Results — Fidelity
-
-- ORiGAMi achieves the best fidelity scores across all datasets
-- Several baselines fail to train on larger datasets due to memory constraints (marked as ❌)
-
-<br>
-
-| Dataset | TVAE | CTGAN | REaLTabFormer | TabularARGN | TabDiff | Origami |
+| Dataset | TVAE | CTGAN | REaLTabF. | Tab.ARGN | TabDiff | Origami |
 | --- | --- | --- | --- | --- | --- | --- |
 | Adult | 0.895 | 0.885 | 0.964 | 0.983 | 0.989 | **0.993** |
 | Diabetes | 0.859 | 0.952 | 0.963 | 0.982 | 0.983 | **0.992** |
 | Elec. Vehicles | ❌ | ❌ | 0.864 | 0.972 | 0.976 | **0.987** |
-| Yelp | ❌ | ❌ | 0.911 | 0.884 | 0.837 | **0.950** |
 | DDXPlus | ❌ | ❌ | ❌ | 0.790 | 0.827 | **0.918** |
+| Yelp | ❌ | ❌ | 0.911 | 0.884 | 0.837 | **0.950** |
 | GitHub Issues | ❌ | ❌ | ❌ | 0.909 | 0.738 | **0.919** |
 
----
+</div>
 
-# Results — Detection
+<div style="font-size: 0.6em;">
 
-- Some results pending (marked as ⏳)
+## Detection
 
-| Dataset | TVAE | CTGAN | REaLTabFormer | TabularARGN | TabDiff | Origami |
+| Dataset | TVAE | CTGAN | REaLTabF. | Tab.ARGN | TabDiff | Origami |
 | --- | --- | --- | --- | --- | --- | --- |
 | Adult | 0.255 | 0.220 | 0.825 | 0.882 | 0.957 | **0.972** |
 | Diabetes | 0.002 | 0.564 | 0.692 | 0.904 | 0.880 | **1.000** |
 | Elec. Vehicles | ❌ | ❌ | 0.394 | 0.783 | 0.940 | **1.000** |
-| Yelp | ❌ | ❌ | 0.353 | 0.326 | 0.228 | **0.766** |
 | DDXPlus | ❌ | ❌ | ❌ | 0.411 | 0.082 | **0.587** |
-| GitHub Issues | ❌ | ❌ | ❌ | ⏳ | 0.265 | ⏳ |
+| Yelp | ❌ | ❌ | 0.353 | 0.326 | 0.228 | **0.766** |
+| GitHub Issues | ❌ | ❌ | ❌ | 0.630 | 0.265 | **0.665** |
+</div>
 
----
+<div style="font-size: 0.6em;">
 
-# Results — ML Utility
+## ML Utility
 
-| Dataset | TVAE | CTGAN | REaLTabFormer | TabularARGN | TabDiff | Origami |
+| Dataset | TVAE | CTGAN | REaLTabF. | Tab.ARGN | TabDiff | Origami |
 | --- | --- | --- | --- | --- | --- | --- |
 | Adult | 0.961 | 0.952 | 0.991 | 0.981 | 0.982 | **0.997** |
 | Diabetes | 0.957 | 0.921 | 0.971 | 0.977 | 0.967 | **0.980** |
 | Elec. Vehicles | ❌ | ❌ | 0.866 | 0.981 | 0.987 | **0.996** |
-| Yelp | ❌ | ❌ | **0.987** | 0.974 | 0.950 | 0.971 |
 | DDXPlus | ❌ | ❌ | ❌ | **1.000** | **1.000** | **1.000** |
+| Yelp | ❌ | ❌ | **0.987** | 0.974 | 0.950 | 0.971 |
 | GitHub Issues | ❌ | ❌ | ❌ | 0.957 | 0.952 | **0.979** |
 
----
+</div>
 
-# Results — Privacy
+<div style="font-size: 0.6em;">
 
-- Privacy scores should be interpreted in the context of the other metrics
-- A model that produces low-fidelity data has a high privacy score
-- ORiGAMi &ge; 0.97 across all datasets
+ ## Privacy
 
-<br>
-
-| Dataset | TVAE | CTGAN | REaLTabFormer | TabularARGN | TabDiff | Origami |
+| Dataset | TVAE | CTGAN | REaLTabF. | Tab.ARGN | TabDiff | Origami |
 | --- | --- | --- | --- | --- | --- | --- |
 | Adult | 0.987 | **0.995** | 0.915 | 0.985 | 0.914 | 0.992 |
 | Diabetes | 0.978 | **0.991** | 0.870 | 0.973 | 0.966 | 0.975 |
 | Elec. Vehicles | ❌ | ❌ | 0.417 | 0.996 | 0.949 | **1.000** |
-| Yelp | ❌ | ❌ | 0.909 | 0.959 | ⏳ | **0.970** |
-| DDXPlus | ❌ | ❌ | ❌ | **1.000** | ⏳ | **1.000** |
-| GitHub Issues | ❌ | ❌ | ❌ | **1.000** | **1.000** | ⏳ |
+| DDXPlus | ❌ | ❌ | ❌ | **1.000** | 0.984 | **1.000** |
+| Yelp | ❌ | ❌ | 0.909 | 0.959 | 0.994 | **0.970** |
+| GitHub Issues | ❌ | ❌ | ❌ | **1.000** | **1.000** | **1.000** |
+
+</div>
+
+</div>
+
+---
+
+
+# Results — Detection
+
+<div style="height: 560px;">
+  <canvas id="detection-chart"></canvas>
+</div>
+<div class="chart-config" data-chart="detection-chart" style="display:none">
+{
+  "type": "bar",
+  "data": {
+    "labels": ["Adult (0%)", "Diabetes (0%)", "Electric (11%)", "DDXPlus (67%)", "Yelp (78%)", "GitHub (93%)"],
+    "datasets": [
+      { "label": "TVAE",          "data": [0.255, 0.002, null, null, null, null], "backgroundColor": "rgba(148,103,189,0.75)" },
+      { "label": "CTGAN",         "data": [0.220, 0.564, null, null, null, null], "backgroundColor": "rgba(140,86,75,0.75)"   },
+      { "label": "REaLTabFormer", "data": [0.825, 0.692, 0.394, null, 0.353, null], "backgroundColor": "rgba(214,39,40,0.75)" },
+      { "label": "TabularARGN",   "data": [0.882, 0.904, 0.783, 0.411, 0.326, 0.630], "backgroundColor": "rgba(44,160,44,0.75)" },
+      { "label": "TabDiff",       "data": [0.957, 0.880, 0.940, 0.082, 0.228, 0.265], "backgroundColor": "rgba(255,127,14,0.75)" },
+      { "label": "ORiGAMi",       "data": [0.972, 1.000, 1.000, 0.587, 0.766, 0.665], "backgroundColor": "rgba(31,119,180,0.85)" }
+    ]
+  },
+  "options": {
+    "responsive": true,
+    "maintainAspectRatio": false,
+    "plugins": { "legend": { "position": "top" } },
+    "scales": {
+      "y": { "min": 0, "max": 1.0, "title": { "display": true, "text": "Detection Score" } },
+      "x": {                        "title": { "display": true, "text": "Dataset (sparsity)" } }
+    }
+  }
+}
+</div>
+
 
 ---
 
 # Numerical columns on _Electric Vehicles_
 
 
-![KDE numeric columns on Electric Vehicles](kde_electric_vehicles.png)
+![KDE numeric columns on Electric Vehicles](kde_electric_vehicles.png) <!-- .element: style="width: 80%;" -->
 
 ---
 
-# Numerical columns on _Electric Vehicles_
+<!-- .slide: data-visibility="hidden" -->
 
+# Numerical columns on _Electric Vehicles_
 
 - TabularARGN uses a binning approach for numerical columns
   - Intra-bin uniform sampling smoothes out spikes in the distribution
@@ -496,25 +553,35 @@ For easier comparison, we normalise all metrics between 0 and 1 (higher is bette
 
 # Array lengths on _Yelp_ `categories`
 
-![Yelp array lengths](yelp_array_length_pmf.png) <!-- .element: style="width: 80%;" -->
+<!-- .slide: class="smaller" -->
 
+<div style="display: grid; grid-template-columns: 3fr 2fr; gap: 1em; align-items: center;">
+<div>
 
----
+![Yelp array lengths](yelp_array_length_pmf.png)
 
-# Array lengths on _Yelp_ `categories`
+</div>
+<div>
 
 - Wasserstein distance between real and synthetic distributions of array lengths
 - Due to flattening, baselines have no way to model array length directly
 
-![Wasserstein distance](yelp_array_length.png) <!-- .element: style="width: 70%;" -->
+<br> 
+
+![Wasserstein distance](yelp_array_length.png)
+
+</div>
+</div>
 
 ---
 
 # Summary
 
----
-
-# Meta-Feedback
-
-- Difficulty of comparing ORiGAMi to tabular baselines (flattening approach)
-
+- Synthetic data generation is well-studied for tabular data, but not for nested, semi-structured data
+- The flattening approach is possible but leads to sparse, high-dimensional tables 
+- ORiGAMi addresses these challenges by directly modeling semi-structured data
+- Strong results across all metrics and datasets, more pronounced as data gets more complex and sparse
+- Our contributions include:
+  - ORiGAMi as a semi-structured data synthesis architecture
+  - Modifications to metrics evaluations that capture type and structural fidelity
+  - We release our code and datasets for reproducibility and future research
