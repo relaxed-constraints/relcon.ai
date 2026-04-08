@@ -9,6 +9,7 @@ description: "Project proposal for a collaboration between Sydney University (Pr
 tags: ["benchmarking", "app modernization", "LLMs", "SQL", "MongoDB"]
 categories: []
 author: Thomas Rückstieß and Claude Opus 4.6
+password: "usydmdbrc"
 ---
 
 This is a collaboration proposal. Two research problems that look unrelated on the surface actually share the same missing piece, and I think solving them together is more interesting than tackling either one alone.
