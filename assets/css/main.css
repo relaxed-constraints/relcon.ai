@@ -188,10 +188,10 @@ a {
   @apply border-l-4 border-accent/40 pl-4 italic text-gray-400 my-6;
 }
 .prose ul {
-  @apply list-disc list-inside mb-4 space-y-1;
+  @apply list-disc list-inside mb-4 space-y-1 pl-4;
 }
 .prose ol {
-  @apply list-decimal list-inside mb-4 space-y-1;
+  @apply list-decimal list-inside mb-4 space-y-1 pl-4;
 }
 /* Code blocks — theme-aware */
 .prose pre {

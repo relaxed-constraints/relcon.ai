@@ -1,0 +1,64 @@
+direction: right
+style.fill: transparent
+
+dataset: SQL\nDataset {
+  shape: cylinder
+  style.fill: "#336791"
+  style.font-color: "#ffffff"
+  style.stroke: "#274f6e"
+}
+
+llm: LLM {
+  shape: rectangle
+  width: 120
+  height: 80
+  style.fill: "#6C63FF"
+  style.font-color: "#ffffff"
+  style.stroke: "#5549cc"
+}
+
+app: Application {
+  shape: package
+  style.fill: "#14b8a6"
+  style.font-color: "#ffffff"
+  style.stroke: "#0d8c7b"
+}
+
+sql_db: SQL\nDB {
+  shape: cylinder
+  width: 80
+  height: 100
+  style.fill: "#336791"
+  style.font-color: "#ffffff"
+  style.stroke: "#274f6e"
+}
+
+mongo_db: MongoDB {
+  shape: cylinder
+  width: 80
+  height: 100
+  style.fill: "#4DB33D"
+  style.font-color: "#ffffff"
+  style.stroke: "#3a8c2e"
+}
+
+sql_workload: SQL\nWorkload {
+  shape: parallelogram
+  style.fill: "#FF6B6B"
+  style.font-color: "#ffffff"
+  style.stroke: "#cc5555"
+}
+
+mql_workload: MQL\nWorkload {
+  shape: parallelogram
+  style.fill: "#FF6B6B"
+  style.font-color: "#ffffff"
+  style.stroke: "#cc5555"
+}
+
+dataset -> llm: prompt
+llm -> app: generates
+app -> sql_db
+app -> mongo_db
+sql_db -> sql_workload: derives
+mongo_db -> mql_workload: derives

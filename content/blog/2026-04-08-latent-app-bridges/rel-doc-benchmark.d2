@@ -1,0 +1,45 @@
+direction: right
+style.fill: transparent
+
+sql_dataset: SQL\nDataset {
+  shape: cylinder
+  style.fill: "#336791"
+  style.font-color: "#ffffff"
+  style.stroke: "#274f6e"
+}
+
+convert: Schema\nMigration {
+  shape: rectangle
+  style.fill: "#F5A623"
+  style.font-color: "#ffffff"
+  style.stroke: "#c4851c"
+  style.border-radius: 8
+}
+
+mongo_dataset: MongoDB\nDataset {
+  shape: cylinder
+  style.fill: "#4DB33D"
+  style.font-color: "#ffffff"
+  style.stroke: "#3a8c2e"
+}
+
+llm: LLM {
+  shape: rectangle
+  width: 120
+  height: 80
+  style.fill: "#6C63FF"
+  style.font-color: "#ffffff"
+  style.stroke: "#5549cc"
+}
+
+workload: Workload {
+  shape: parallelogram
+  style.fill: "#FF6B6B"
+  style.font-color: "#ffffff"
+  style.stroke: "#cc5555"
+}
+
+sql_dataset -> convert: input
+convert -> mongo_dataset: output
+mongo_dataset -> llm: prompt
+llm -> workload: produces
