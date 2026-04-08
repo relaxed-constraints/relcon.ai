@@ -1,0 +1,28 @@
+direction: right
+style.fill: transparent
+
+dataset: MongoDB\nDataset {
+  shape: cylinder
+  style.fill: "#4DB33D"
+  style.font-color: "#ffffff"
+  style.stroke: "#3a8c2e"
+}
+
+llm: LLM {
+  shape: rectangle
+  width: 120
+  height: 80
+  style.fill: "#6C63FF"
+  style.font-color: "#ffffff"
+  style.stroke: "#5549cc"
+}
+
+workload: MQL\nWorkload {
+  shape: parallelogram
+  style.fill: "#FF6B6B"
+  style.font-color: "#ffffff"
+  style.stroke: "#cc5555"
+}
+
+dataset -> llm: prompt
+llm -> workload: produces
