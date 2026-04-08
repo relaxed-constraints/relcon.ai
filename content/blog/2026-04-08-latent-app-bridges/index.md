@@ -112,7 +112,7 @@ Each journey is parameterized (different users, products, locations) and can run
 
 This sounds like a lot of moving parts. It isn't. The whole premise depends on letting go of the assumption that writing application code is expensive and slow. With current coding agents, it's neither.
 
-We built a proof of concept on the [Beer Factory dataset](https://www.kaggle.com/datasets/ankurnapa/brewery-operations-and-market-analysis-dataset), a root beer retail operation with 7 relational tables: brands, customers, inventory, reviews, transactions, locations, and geolocations, **in under 2 hours**. 
+We built a proof of concept on the Beer Factory dataset (part of the [BIRD-SQL benchmark](https://bird-bench.github.io)), a root beer retail operation with 7 relational tables: brands, customers, inventory, reviews, transactions, locations, and geolocations, **in under 2 hours**. 
 
 {{< figure src="beer-factory-app.gif" caption="Beer Factory: a full-stack application with swappable SQL and MongoDB backends." >}}
 
