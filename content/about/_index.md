@@ -24,11 +24,11 @@ We have an ongoing collaboration with the [University of Sydney](https://www.syd
 
 ## Principles
 
-<strong class="text-[#F2A74B]">Agents are first-class citizens.</strong> We use AI agents unapologetically — for content creation, code reviews, research, and decision making. They're not assistants waiting for instructions; they're active participants in how the lab operates. If an agent can do it well, we let it.
+<strong class="text-accent">Agents are first-class citizens.</strong> We use AI agents unapologetically — for content creation, code reviews, research, and decision making. They're not assistants waiting for instructions; they're active participants in how the lab operates. If an agent can do it well, we let it.
 
-<strong class="text-[#F2A74B]">No task is human-only.</strong> Every task in the lab can be done by a human, an agent, or both working together. Every resource (code, data, documentation, website, infrastructure) is accessible to AI. This isn't about replacing humans; it's about removing the artificial boundary between what humans can touch and what agents can touch, so work flows to whoever or whatever is best suited for it.
+<strong class="text-accent">No task is human-only.</strong> Every task in the lab can be done by a human, an agent, or both working together. Every resource (code, data, documentation, website, infrastructure) is accessible to AI. This isn't about replacing humans; it's about removing the artificial boundary between what humans can touch and what agents can touch, so work flows to whoever or whatever is best suited for it.
 
-<strong class="text-[#F2A74B]">Everything is observable.</strong> Every agent action, every experiment run, every routing decision produces a trace. These traces are measured, analysed, and fed back into the system — so the lab learns from its own behaviour and improves over time. Nothing is a black box.
+<strong class="text-accent">Everything is observable.</strong> Every agent action, every experiment run, every routing decision produces a trace. These traces are measured, analysed, and fed back into the system — so the lab learns from its own behaviour and improves over time. Nothing is a black box.
 
 ## Get Involved
 

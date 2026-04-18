@@ -1,75 +1,73 @@
-<nav class="fixed top-0 left-0 right-0 z-50 backdrop-blur-md header-backdrop border-b border-dark-border">
-  <div class="max-w-6xl mx-auto px-6 py-4">
-    <div class="flex items-center justify-between">
-      <a href="/" class="flex items-center gap-2 text-xl text-off-white font-normal tracking-wide hover:text-off-white" style="font-family: var(--font-hero)">
-        <img src="/images/relcon-logo-white.svg" alt="Relaxed Constraints logo" class="h-5 w-5 object-contain hidden dark:block">
-        <img src="/images/relcon-logo-black.svg" alt="Relaxed Constraints logo" class="h-5 w-5 object-contain block dark:hidden">
-        Relaxed Constraints
+{{ $hasBlog := gt (len (where site.RegularPages "Type" "blog")) 0 }}
+{{ $hasSlides := gt (len (where site.RegularPages "Type" "slides")) 0 }}
+{{ $hasResearch := gt (len (where site.RegularPages "Type" "research")) 0 }}
+{{ $currentURL := .RelPermalink }}
+<nav class="w-full max-w-6xl mx-auto px-6 lg:px-10 py-7"
+     style="display: grid; grid-template-columns: auto 1fr auto; align-items: center; column-gap: 2rem;">
+  {{/* Mark: terracotta RC square + wordmark */}}
+  <a href="/" class="flex items-center gap-2.5 hover:text-[var(--c-text)]" style="justify-self: start;">
+    <span class="inline-grid place-items-center w-6 h-6 font-mono text-[0.68rem] font-bold tracking-normal"
+      style="background: var(--c-accent); color: var(--c-bg);">RC</span>
+    <span class="text-base font-display font-semibold tracking-tight" style="color: var(--c-text);">relcon.ai</span>
+  </a>
+  <div></div>
+  <div class="hidden md:flex items-center gap-7" style="justify-self: end;">
+    {{ range site.Menus.main }}
+    {{ if or (and (eq .URL "/blog/") (not $hasBlog)) (and (eq .URL "/slides/") (not $hasSlides)) (and (eq .URL "/research/") (not $hasResearch)) }}{{/* skip empty sections */}}{{ else }}
+      {{ $active := hasPrefix $currentURL .URL }}
+      <a href="{{ .URL }}"
+        class="font-mono text-[0.76rem] tracking-[0.1em] uppercase pb-0.5 hover:text-[var(--c-text)]"
+        style="color: {{ if $active }}var(--c-text); border-bottom: 2px solid var(--c-accent); padding-bottom: 3px;{{ else }}var(--c-gray-300);{{ end }}">
+        {{ .Name }}
       </a>
-      <div class="hidden md:flex items-center space-x-8">
-        {{ $hasBlog := gt (len (where site.RegularPages "Type" "blog")) 0 }}
-        {{ $hasSlides := gt (len (where site.RegularPages "Type" "slides")) 0 }}
-        {{ range site.Menus.main }}
-        {{ if and (or $hasBlog (ne .URL "/blog/")) (or $hasSlides (ne .URL "/slides/")) }}
-        <a href="{{ .URL }}"
-          class="text-gray-400 hover:text-off-white text-sm font-medium tracking-wide transition-colors">
-          {{ .Name }}
-        </a>
-        {{ end }}
-        {{ end }}
-        <button id="theme-toggle" aria-label="Toggle theme"
-          class="text-gray-400 hover:text-off-white transition-colors p-1">
-          <!-- Moon icon (dark mode) -->
-          <svg class="w-5 h-5 theme-icon" data-theme="dark" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
-          </svg>
-          <!-- Half-circle icon (auto mode) -->
-          <svg class="w-5 h-5 theme-icon" data-theme="auto" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" fill="none">
-            <circle cx="12" cy="12" r="9"/>
-            <clipPath id="diag-desktop"><path d="M21 3L3 21h18V3z"/></clipPath>
-            <circle cx="12" cy="12" r="9" fill="currentColor" stroke="none" clip-path="url(#diag-desktop)"/>
-          </svg>
-          <!-- Sun icon (light mode) -->
-          <svg class="w-5 h-5 theme-icon" data-theme="light" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
-          </svg>
-        </button>
-      </div>
-      <div class="flex items-center gap-3 md:hidden">
-        <button id="theme-toggle-mobile" aria-label="Toggle theme"
-          class="text-gray-400 hover:text-off-white transition-colors p-1">
-          <svg class="w-5 h-5 theme-icon" data-theme="dark" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
-          </svg>
-          <svg class="w-5 h-5 theme-icon" data-theme="auto" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" fill="none">
-            <circle cx="12" cy="12" r="9"/>
-            <clipPath id="diag-mobile"><path d="M21 3L3 21h18V3z"/></clipPath>
-            <circle cx="12" cy="12" r="9" fill="currentColor" stroke="none" clip-path="url(#diag-mobile)"/>
-          </svg>
-          <svg class="w-5 h-5 theme-icon" data-theme="light" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
-          </svg>
-        </button>
-        <button class="text-off-white" id="menu-toggle" aria-label="Toggle menu">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-        </button>
-      </div>
-    </div>
-    <div class="md:hidden hidden" id="mobile-menu">
-      <div class="mt-4 pb-4 space-y-2">
-        {{ $hasBlog := gt (len (where site.RegularPages "Type" "blog")) 0 }}
-        {{ $hasSlides := gt (len (where site.RegularPages "Type" "slides")) 0 }}
-        {{ range site.Menus.main }}
-        {{ if and (or $hasBlog (ne .URL "/blog/")) (or $hasSlides (ne .URL "/slides/")) }}
-        <a href="{{ .URL }}" class="block py-2 text-gray-400 hover:text-off-white transition-colors">{{ .Name }}</a>
-        {{ end }}
-        {{ end }}
-      </div>
-    </div>
+    {{ end }}
+    {{ end }}
+    <button id="theme-toggle" aria-label="Toggle theme"
+      class="transition-colors p-1 hover:text-[var(--c-text)]" style="color: var(--c-gray-300);">
+      <svg class="w-5 h-5 theme-icon" data-theme="dark" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
+      </svg>
+      <svg class="w-5 h-5 theme-icon" data-theme="auto" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" fill="none">
+        <circle cx="12" cy="12" r="9"/>
+        <clipPath id="diag-desktop"><path d="M21 3L3 21h18V3z"/></clipPath>
+        <circle cx="12" cy="12" r="9" fill="currentColor" stroke="none" clip-path="url(#diag-desktop)"/>
+      </svg>
+      <svg class="w-5 h-5 theme-icon" data-theme="light" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+      </svg>
+    </button>
+  </div>
+  <div class="flex items-center gap-3 md:hidden" style="justify-self: end;">
+    <button id="theme-toggle-mobile" aria-label="Toggle theme"
+      class="transition-colors p-1 hover:text-[var(--c-text)]" style="color: var(--c-gray-300);">
+      <svg class="w-5 h-5 theme-icon" data-theme="dark" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
+      </svg>
+      <svg class="w-5 h-5 theme-icon" data-theme="auto" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" fill="none">
+        <circle cx="12" cy="12" r="9"/>
+        <clipPath id="diag-mobile"><path d="M21 3L3 21h18V3z"/></clipPath>
+        <circle cx="12" cy="12" r="9" fill="currentColor" stroke="none" clip-path="url(#diag-mobile)"/>
+      </svg>
+      <svg class="w-5 h-5 theme-icon" data-theme="light" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+      </svg>
+    </button>
+    <button id="menu-toggle" aria-label="Toggle menu" style="color: var(--c-text);">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+    </button>
   </div>
 </nav>
+<div class="md:hidden hidden max-w-6xl mx-auto px-6 lg:px-10 pb-4" id="mobile-menu">
+  <div class="flex flex-col gap-2 pt-2 border-t" style="border-color: var(--c-border);">
+    {{ range site.Menus.main }}
+    {{ if or (and (eq .URL "/blog/") (not $hasBlog)) (and (eq .URL "/slides/") (not $hasSlides)) (and (eq .URL "/research/") (not $hasResearch)) }}{{/* skip */}}{{ else }}
+      <a href="{{ .URL }}" class="block py-2 font-mono text-[0.76rem] tracking-[0.1em] uppercase hover:text-[var(--c-text)]" style="color: var(--c-gray-300);">{{ .Name }}</a>
+    {{ end }}
+    {{ end }}
+  </div>
+</div>
 <script>
   document.getElementById('menu-toggle').addEventListener('click', function() {
     document.getElementById('mobile-menu').classList.toggle('hidden');

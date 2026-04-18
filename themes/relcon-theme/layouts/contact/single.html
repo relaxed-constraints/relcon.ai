@@ -1,60 +1,41 @@
 {{ define "main" }}
-<div class="max-w-2xl mx-auto px-6 pt-28 pb-16">
-  <h1 class="text-4xl font-display font-bold mb-4">{{ .Title }}</h1>
+<div class="max-w-[560px] mx-auto px-6 lg:px-0 pt-14 pb-16">
+  <h1 class="font-display font-semibold m-0" style="font-size: clamp(44px, 5.5vw, 72px); letter-spacing: -0.025em;">{{ .Title }}</h1>
 
   {{ if eq .RelPermalink "/success/" }}
-  <div class="rounded-xl border border-dark-border card-surface p-8 mt-8">
-    <p class="text-xl mb-4 text-off-white">Message sent successfully.</p>
-    <p class="text-gray-400 mb-6">Thank you for reaching out. We'll get back to you as soon as possible.</p>
-    <a href="/"
-      class="px-6 py-2.5 border border-gray-600 hover:border-accent text-off-white text-sm font-medium rounded-lg transition-colors inline-block">
-      Return Home
-    </a>
+  <div class="mt-10 p-7 card-surface">
+    <p class="font-display font-medium text-[1.32rem] mb-2" style="color: var(--c-accent);">Message received.</p>
+    <p class="mb-6" style="color: var(--c-gray-300);">Thank you for reaching out. We'll get back to you within a day or two.</p>
+    <a href="/" class="btn-ghost">Return home</a>
   </div>
   {{ else }}
-  <p class="text-gray-400 mb-8">Have a question or want to collaborate? We'd love to hear from you.</p>
+  <p class="mt-4 text-[1.04rem] leading-[1.55]" style="color: var(--c-gray-300);">
+    Collaboration, research, or just want to talk about agents? The fastest route is email &mdash; this form reaches the same inbox.
+  </p>
 
-  <form name="contact" method="POST" netlify netlify-honeypot="bot-field" action="/success"
-    class="space-y-6">
+  <form name="contact" method="POST" netlify netlify-honeypot="bot-field" action="/success" class="mt-9 flex flex-col gap-5">
 
     <div class="hidden">
       <label for="bot-field">Don't fill this out if you're human</label>
       <input type="text" id="bot-field" name="bot-field">
     </div>
 
-    <div>
-      <label for="name" class="block text-sm font-medium text-gray-300 mb-2">Name</label>
-      <input type="text" id="name" name="name" required
-        class="w-full px-4 py-2.5 rounded-lg bg-dark-surface border border-dark-border text-off-white
-               focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-colors">
-    </div>
+    {{ range slice (dict "id" "name" "type" "text") (dict "id" "email" "type" "email") (dict "id" "subject" "type" "text") }}
+    <label for="{{ .id }}" class="flex flex-col gap-1.5 font-mono text-[0.72rem] uppercase tracking-[0.14em]" style="color: var(--c-gray-300);">
+      {{ .id }}
+      <input type="{{ .type }}" id="{{ .id }}" name="{{ .id }}" required
+        class="w-full px-3.5 py-3 text-[1rem] font-body normal-case tracking-normal" style="color: var(--c-text);">
+    </label>
+    {{ end }}
+
+    <label for="message" class="flex flex-col gap-1.5 font-mono text-[0.72rem] uppercase tracking-[0.14em]" style="color: var(--c-gray-300);">
+      message
+      <textarea id="message" name="message" rows="6" required
+        class="w-full px-3.5 py-3 text-[1rem] font-body normal-case tracking-normal resize-y" style="color: var(--c-text);"></textarea>
+    </label>
 
     <div>
-      <label for="email" class="block text-sm font-medium text-gray-300 mb-2">Email</label>
-      <input type="email" id="email" name="email" required
-        class="w-full px-4 py-2.5 rounded-lg bg-dark-surface border border-dark-border text-off-white
-               focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-colors">
-    </div>
-
-    <div>
-      <label for="subject" class="block text-sm font-medium text-gray-300 mb-2">Subject</label>
-      <input type="text" id="subject" name="subject" required
-        class="w-full px-4 py-2.5 rounded-lg bg-dark-surface border border-dark-border text-off-white
-               focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-colors">
-    </div>
-
-    <div>
-      <label for="message" class="block text-sm font-medium text-gray-300 mb-2">Message</label>
-      <textarea id="message" name="message" rows="5" required
-        class="w-full px-4 py-2.5 rounded-lg bg-dark-surface border border-dark-border text-off-white
-               focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-colors"></textarea>
-    </div>
-
-    <div class="flex justify-end">
-      <button type="submit"
-        class="px-8 py-2.5 bg-accent hover:bg-accent-dark text-white text-sm font-medium rounded-lg transition-colors">
-        Send Message
-      </button>
+      <button type="submit" class="btn-primary">Send &rarr;</button>
     </div>
   </form>
   {{ end }}

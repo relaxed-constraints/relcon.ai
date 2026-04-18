@@ -10,24 +10,20 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Theme-aware colors (swap via CSS custom properties)
+        // Theme-aware surfaces (swap via CSS custom properties)
         'dark': 'var(--c-bg)',
         'dark-surface': 'var(--c-surface)',
         'dark-border': 'var(--c-border)',
         'off-white': 'var(--c-text)',
 
-        // Theme-aware accents (slightly darker in light mode for contrast)
+        // Accents
         'accent': 'var(--c-accent)',
         'accent-light': 'var(--c-accent-light)',
         'accent-dark': 'var(--c-accent-dark)',
 
-        // Secondary teal tones
-        'teal-light': '#5eead4',
-        'teal-muted': '#2dd4bf',
-
-        // Neutrals — theme-aware
+        // Neutrals — theme-aware ink tiers
         'white': '#ffffff',
-        'gray-100': '#f0f0f5',
+        'gray-100': 'var(--c-gray-200)',
         'gray-200': 'var(--c-gray-200)',
         'gray-300': 'var(--c-gray-300)',
         'gray-400': 'var(--c-gray-400)',
@@ -38,6 +34,9 @@ export default {
         'gray-700': '#2a2a3a',
         'gray-800': '#1a1a28',
         'gray-900': '#0f0f18',
+      },
+      fontFamily: {
+        'mono': ['IBM Plex Mono', 'ui-monospace', 'monospace'],
       },
     },
   },
