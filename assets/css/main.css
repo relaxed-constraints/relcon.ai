@@ -21,7 +21,7 @@
   --c-accent: #b8421e;
   --c-accent-light: #d6552d;
   --c-accent-dark: #94321a;
-  --c-accent-soft: rgba(184, 66, 30, 0.18);
+  --c-accent-soft: rgba(184, 66, 30, 0.32);
   --c-code-border: #e1d9bf;
   --c-code-text: #1a1810;
   --c-code-line-nr: #8a8672;
@@ -42,7 +42,7 @@
   --c-accent: #ff8c5a;
   --c-accent-light: #ff9f73;
   --c-accent-dark: #e67545;
-  --c-accent-soft: rgba(255, 140, 90, 0.22);
+  --c-accent-soft: rgba(255, 140, 90, 0.38);
   --c-code-border: #2a2620;
   --c-code-text: #d5cfba;
   --c-code-line-nr: #5a5443;
