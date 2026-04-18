@@ -5,9 +5,21 @@
 <nav class="w-full max-w-6xl mx-auto px-6 lg:px-10 py-7"
      style="display: grid; grid-template-columns: auto 1fr auto; align-items: center; column-gap: 2rem;">
   {{/* Mark: terracotta RC square + wordmark */}}
-  <a href="/" class="flex items-center gap-2.5 hover:text-[var(--c-text)]" style="justify-self: start;">
-    <span class="inline-grid place-items-center w-6 h-6 font-mono text-[0.68rem] font-bold tracking-normal"
-      style="background: var(--c-accent); color: var(--c-bg);">RC</span>
+  <a href="/" class="flex items-center gap-2.5 hover:text-[var(--c-text)]" style="justify-self: start; color: var(--c-text);">
+    <svg width="28" height="28" viewBox="0 0 400 401" xmlns="http://www.w3.org/2000/svg" aria-label="Relaxed Constraints">
+      <g fill="currentColor">
+        <path d="M177.178 80H0V0H241.178L177.178 80Z"/>
+        <path d="M91.5781 187H0V107H155.578L91.5781 187Z"/>
+        <path d="M156.022 294H0V214H92.0218L156.022 294Z"/>
+        <path d="M241.621 401H0V321H177.622L241.621 401Z"/>
+      </g>
+      <g fill="var(--c-accent)">
+        <path d="M279.628 80L343.628 0H400V80H279.628Z"/>
+        <path d="M194.027 187L258.027 107H400V187H194.027Z"/>
+        <path d="M258.471 294L194.471 214H400V294H258.471Z"/>
+        <path d="M344.071 401L280.071 321H400V401H344.071Z"/>
+      </g>
+    </svg>
     <span class="text-base font-display font-semibold tracking-tight" style="color: var(--c-text);">relcon.ai</span>
   </a>
   <div></div>
