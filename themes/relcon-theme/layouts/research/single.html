@@ -67,7 +67,7 @@
       {{/* Body sections */}}
       <div>
         {{ range $sections }}{{ if .show }}
-        <section id="sec-{{ .id }}" class="pt-6 mt-11" style="border-top: 1px solid var(--c-border);" data-toc-section="{{ .id }}">
+        <section id="sec-{{ .id }}" class="pt-6 mt-11" style="border-top: 1px solid var(--c-border); scroll-margin-top: 120px;" data-toc-section="{{ .id }}">
           <div class="mono-eyebrow mb-4 flex items-center gap-2.5">
             <span style="color: var(--c-accent);">&#9666;</span>{{ .label }}
           </div>
@@ -105,10 +105,14 @@
   // near the top of the viewport. Deterministic regardless of section height.
   var THRESHOLD = 120;
   var ticking = false;
-  var pendingId = null, pendingTimer;
+  // A click locks the active state to the clicked section. The lock only
+  // releases when the user initiates a scroll themselves (wheel / touch /
+  // nav keys) — NOT when the click's smooth-scroll fires scroll events.
+  // Handles pages where the last section can't scroll to the threshold.
+  var lockedId = null;
   function updateActive() {
     ticking = false;
-    if (pendingId) { setActive(pendingId); return; }
+    if (lockedId) { setActive(lockedId); return; }
     var current = sections[0];
     for (var i = 0; i < sections.length; i++) {
       if (sections[i].getBoundingClientRect().top - THRESHOLD <= 0) {
@@ -120,21 +124,20 @@
     setActive(current.dataset.tocSection);
   }
   function onScroll() {
-    if (!ticking) {
-      ticking = true;
-      requestAnimationFrame(updateActive);
-    }
+    if (!ticking) { ticking = true; requestAnimationFrame(updateActive); }
   }
-  // Clicks lock the target active for 800ms — covers cases where the page
-  // can't actually scroll (last section near page bottom), so scroll-spy
-  // wouldn't otherwise pick it.
+  function unlock() { lockedId = null; updateActive(); }
   items.forEach(function(a) {
     a.addEventListener('click', function() {
-      pendingId = this.dataset.sec;
-      setActive(pendingId);
-      clearTimeout(pendingTimer);
-      pendingTimer = setTimeout(function() { pendingId = null; updateActive(); }, 800);
+      lockedId = this.dataset.sec;
+      setActive(lockedId);
     });
+  });
+  window.addEventListener('wheel',     unlock, { passive: true });
+  window.addEventListener('touchmove', unlock, { passive: true });
+  window.addEventListener('keydown', function(e) {
+    // Space, PageUp, PageDown, End, Home, ArrowUp, ArrowDown
+    if ([32, 33, 34, 35, 36, 38, 40].indexOf(e.keyCode) !== -1) unlock();
   });
   window.addEventListener('scroll', onScroll, { passive: true });
   updateActive();
