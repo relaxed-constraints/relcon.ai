@@ -21,7 +21,7 @@ hypothesis: >
 summary: "One-sentence elevator pitch."
 
 collaborators:
-  - { who: "Name", aff: "Affiliation", role: "lab" }    # role: lab | collab | advisor
+  - { who: "Name", affiliation: "Affiliation", role: "lab" }    # role: lab | collab | advisor
 
 papers: []
   # - title: "..."
@@ -29,11 +29,11 @@ papers: []
   #   venue: "..."
   #   date: "..."
   #   links:
-  #     - { l: "PDF",   u: "/papers/…" }
-  #     - { l: "arXiv", u: "https://…" }
+  #     - { label: "PDF",   url: "/papers/…" }
+  #     - { label: "arXiv", url: "https://…" }
 
 results: []
-  # - { n: "+14%", v: "benchmark X" }
+  # - { value: "+14%", caption: "benchmark X" }
 
 post_slugs: []               # slugs under content/blog/
 deck_slugs: []               # slugs under content/slides/
@@ -42,7 +42,7 @@ repos: []
   # - { label: "relcon/slug", url: "https://github.com/…" }
 
 changelog: []
-  # - { d: "Apr 9, 2026", t: "Event." }
+  # - { date: "Apr 9, 2026", text: "Event." }
 
 related: []                  # other research slugs
 ---

@@ -9,7 +9,7 @@
   </div>
   <ol class="list-none p-0 mt-3.5 font-mono text-[0.74rem] grid gap-1" style="color: var(--c-gray-300);">
     {{ range $i, $c := $people }}
-    <li><sup style="margin-right: 6px; color: var(--c-accent);">{{ add $i 1 }}</sup>{{ $c.aff }}{{ with $c.role }} &middot; {{ . }}{{ end }}</li>
+    <li><sup style="margin-right: 6px; color: var(--c-accent);">{{ add $i 1 }}</sup>{{ $c.affiliation }}{{ with $c.role }} &middot; {{ . }}{{ end }}</li>
     {{ end }}
   </ol>
 </div>

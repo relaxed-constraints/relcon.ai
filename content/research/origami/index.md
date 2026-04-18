@@ -23,9 +23,9 @@ hypothesis: >
 summary: "A modified transformer that models JSON documents directly. Paper accepted at NeurIPS 2025."
 
 collaborators:
-  - { who: "Thomas Rückstieß",   aff: "Relaxed Constraints",   role: "lab" }
-  - { who: "Kang Han",           aff: "University of Sydney",  role: "collab" }
-  - { who: "MongoDB Research",   aff: "MongoDB",               role: "collab" }
+  - { who: "Thomas Rückstieß",   affiliation: "Relaxed Constraints" }
+  - { who: "Kang Han",           affiliation: "University of Sydney",  role: "collab" }
+  - { who: "MongoDB Research",   affiliation: "MongoDB",               role: "collab" }
 
 papers:
   - title: "ORiGAMi: Object representation via generative autoregressive modelling"
@@ -33,20 +33,20 @@ papers:
     venue: "NeurIPS 2025"
     date: "Dec 2025"
     links:
-      - { l: "PDF",    u: "#" }
-      - { l: "arXiv",  u: "#" }
-      - { l: "BibTeX", u: "#" }
+      - { label: "PDF",    url: "#" }
+      - { label: "arXiv",  url: "#" }
+      - { label: "BibTeX", url: "#" }
   - title: "Cardinality estimation on nested documents with ORiGAMi"
     authors: "T. Rückstieß, K. Han"
     venue: "Preprint"
     date: "Apr 2026"
     links:
-      - { l: "arXiv", u: "#" }
+      - { label: "arXiv", url: "#" }
 
 results:
-  - { n: "−42%", v: "KL-divergence vs. flatten-GAN" }
-  - { n: "1.8×", v: "faster training than baseline" }
-  - { n: "6/6",  v: "nested benchmarks won" }
+  - { value: "−42%", caption: "KL-divergence vs. flatten-GAN" }
+  - { value: "1.8×", caption: "faster training than baseline" }
+  - { value: "6/6",  caption: "nested benchmarks won" }
 
 post_slugs:
   - "origami-synthetic-data-generation"
@@ -58,10 +58,10 @@ repos:
   - { label: "relcon/origami", url: "https://github.com/relaxed-constraints/origami" }
 
 changelog:
-  - { d: "Apr 9, 2026",  t: "Preprint v2 — stronger baselines on nested benchmarks" }
-  - { d: "Mar 30, 2026", t: "Residual post: \"Breaking through tabular constraints\"" }
-  - { d: "Dec 12, 2025", t: "NeurIPS 2025 talk — Vancouver" }
-  - { d: "Sep 2, 2025",  t: "Paper accepted at NeurIPS 2025" }
+  - { date: "Apr 9, 2026",  text: "Preprint v2 — stronger baselines on nested benchmarks" }
+  - { date: "Mar 30, 2026", text: "Residual post: \"Breaking through tabular constraints\"" }
+  - { date: "Dec 12, 2025", text: "NeurIPS 2025 talk — Vancouver" }
+  - { date: "Sep 2, 2025",  text: "Paper accepted at NeurIPS 2025" }
 
 related: []                  # slugs of other projects (e.g. ["app-bridges"])
 ---

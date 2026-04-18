@@ -29,7 +29,7 @@
           <h3 class="font-display font-semibold m-0" style="font-size: 1.3rem; letter-spacing: -0.015em; line-height: 1.15;">{{ .Title }}</h3>
           {{ with .Params.collaborators }}
           {{ $affs := slice }}
-          {{ range . }}{{ if ne .role "lab" }}{{ $affs = $affs | append .aff }}{{ end }}{{ end }}
+          {{ range . }}{{ if ne .role "lab" }}{{ $affs = $affs | append .affiliation }}{{ end }}{{ end }}
           <div class="text-[0.78rem] mt-1 font-mono tracking-[0.04em]" style="color: var(--c-gray-300);">
             {{ if $affs }}{{ delimit ($affs | uniq) " &middot; " | safeHTML }}{{ else }}Solo{{ end }}
           </div>

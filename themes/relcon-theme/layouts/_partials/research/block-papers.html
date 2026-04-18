@@ -16,7 +16,7 @@
       {{ with $pp.links }}
       <div class="mt-2 flex flex-wrap gap-1.5">
         {{ range . }}
-        <a href="{{ .u }}" class="font-mono text-[0.66rem] tracking-[0.12em] uppercase px-2 py-[3px] hover:text-[var(--c-accent)]" style="color: var(--c-text); border: 1px solid var(--c-border);">{{ .l }}</a>
+        <a href="{{ .url }}" class="font-mono text-[0.66rem] tracking-[0.12em] uppercase px-2 py-[3px] hover:text-[var(--c-accent)]" style="color: var(--c-text); border: 1px solid var(--c-border);">{{ .label }}</a>
         {{ end }}
       </div>
       {{ end }}
