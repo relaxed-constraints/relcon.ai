@@ -421,6 +421,279 @@
       transition: all 0.3s ease;
     }
 
+    /* ===== Colloquium-compatible syntax primitives =====
+       Rows (===), columns (|||), inline footnotes (^[..]), align/size helpers.
+       Written to match colloquium's class names so the same markdown renders
+       consistently under either renderer. */
+
+    /* Slides that use rows, columns, inline footnotes, or a valign
+       directive become a fixed-height flex column. Flex is the prerequisite
+       for justify-content to do anything — without it, <!-- valign: center -->
+       is a no-op. The deck ships 1728x1117 via Reveal initialize(); sections
+       stretch to that box. box-sizing: border-box keeps total section height
+       at 1117px even after we add padding-bottom to clear the 60px fixed
+       footer bar — otherwise valign: bottom / rows / footnotes land behind
+       the footer. */
+    .reveal .slides section.has-rows,
+    .reveal .slides section.has-columns,
+    .reveal .slides section.has-footnote,
+    .reveal .slides section.valign-top,
+    .reveal .slides section.valign-center,
+    .reveal .slides section.valign-bottom {
+      display: flex !important;
+      flex-direction: column;
+      justify-content: flex-start;
+      height: 100% !important;
+      box-sizing: border-box;
+      padding-bottom: 2em !important;
+    }
+
+    .reveal .colloquium-grid {
+      display: grid;
+      gap: 1.5em;
+      width: 100%;
+    }
+    .reveal .colloquium-grid > .col {
+      min-width: 0;
+    }
+
+    /* Rows fill the remaining vertical space under the slide title. Default
+       grid align-items is "stretch", which gives each row the full height
+       of its fr-weighted track. */
+    .reveal .colloquium-rows {
+      display: grid;
+      gap: 1em;
+      width: 100%;
+      flex: 1 1 auto;
+      min-height: 0;
+    }
+    .reveal .colloquium-row {
+      min-height: 0;
+      overflow: hidden;
+    }
+    .reveal .colloquium-row.colloquium-grid {
+      display: grid;
+    }
+
+    /* Images in rows: constrain to the row's allotted track height.
+       `max-height: 100%` on <img> only resolves if the containing block has
+       a definite height. marked.js wraps standalone images in <p>, whose
+       height is content-sized — circular. Setting `display: contents` on
+       the wrapping paragraph removes it from layout, so the image becomes
+       a direct child of the row cell and sizes against the grid track. */
+    .reveal .colloquium-row > p:has(> img:only-child),
+    .reveal .colloquium-row > figure:has(> img:only-child),
+    .reveal .colloquium-row > .col > p:has(> img:only-child),
+    .reveal .colloquium-row > .col > figure:has(> img:only-child) {
+      display: contents;
+    }
+    .reveal .colloquium-row img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      display: block;
+      margin: 0 auto;
+    }
+
+    /* Inline footnote marker. */
+    .reveal .colloquium-footnote-ref {
+      font-size: 0.6em;
+      vertical-align: super;
+      line-height: 0;
+      margin-left: 0.1em;
+    }
+    .reveal .colloquium-footnote-ref a {
+      color: var(--r-accent);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    /* Footnote stack at the bottom of the slide. A flex row holds both
+       side-stacks so they share the bottom line even when both are
+       present. Section-level padding-bottom (above) clears the 60px fixed
+       footer bar. */
+    .reveal .colloquium-slide-footnotes-row {
+      margin-top: auto;
+      padding-top: 1em;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 1.5em;
+      width: 100%;
+    }
+    .reveal .colloquium-slide-footnote {
+      font-size: 0.55em;
+      line-height: 1.4;
+      color: var(--r-text-muted);
+      flex: 1 1 0;
+      min-width: 0;
+    }
+    .reveal .colloquium-slide-footnote--right { text-align: right; }
+    .reveal .colloquium-slide-footnote--left  { text-align: left; }
+    .reveal .colloquium-slide-footnote-item + .colloquium-slide-footnote-item {
+      margin-top: 0.3em;
+    }
+    .reveal .colloquium-slide-footnote-label {
+      font-weight: 600;
+      color: var(--r-accent);
+      margin-right: 0.2em;
+    }
+    .reveal .colloquium-slide-footnote-prose {
+      font-style: italic;
+    }
+
+    /* Directive-driven helpers. */
+    .reveal .slides section.align-left   { text-align: left; }
+    .reveal .slides section.align-center { text-align: center; }
+    .reveal .slides section.align-right  { text-align: right; }
+
+    .reveal .slides section.valign-top    { justify-content: flex-start; }
+    .reveal .slides section.valign-center { justify-content: center; }
+    .reveal .slides section.valign-bottom { justify-content: flex-end; }
+
+    .reveal .slides section.size-small  { font-size: 0.85em; }
+    .reveal .slides section.size-large  { font-size: 1.15em; }
+    .reveal .slides section.size-normal { font-size: 1em; }
+
+    .reveal .slides section.pad-compact { padding: 0.4em 0.6em 0 0.6em !important; }
+    .reveal .slides section.pad-wide    { padding: 1.6em 1.8em 0 1.8em !important; }
+
+    .reveal .slides section.title-hidden h1,
+    .reveal .slides section.title-hidden h2 { display: none; }
+
+    /* ===== Boxes / callouts ===== */
+    .reveal .colloquium-box {
+      border-radius: 16px;
+      padding: 0.75em 1em;
+      width: 100%;
+      box-sizing: border-box;
+      margin: 0.5em 0;
+    }
+    .reveal .colloquium-box--accent {
+      background: var(--r-accent);
+      color: #ffffff;
+    }
+    .reveal .colloquium-box--muted {
+      background: var(--r-code-bg);
+      color: var(--r-text);
+      border: 1px solid var(--r-code-border);
+    }
+    .reveal .colloquium-box--surface {
+      background: var(--r-surface);
+      color: var(--r-text);
+      border: 1px solid var(--r-border);
+    }
+    .reveal .colloquium-box--align-center { text-align: center; }
+    .reveal .colloquium-box--align-right  { text-align: right; }
+
+    .reveal .colloquium-box-title {
+      font-family: 'Geist', sans-serif;
+      font-weight: 600;
+      margin-bottom: 0.3em;
+      line-height: 1.25;
+    }
+    /* Title-only box: drop the trailing title margin so the single line is
+       visually centered between the box's top/bottom padding. */
+    .reveal .colloquium-box-title:last-child { margin-bottom: 0; }
+    .reveal .colloquium-box-content > :first-child { margin-top: 0; }
+    .reveal .colloquium-box-content > :last-child  { margin-bottom: 0; }
+
+    .reveal .colloquium-box ul,
+    .reveal .colloquium-box ol {
+      margin: 0.2em 0 0 0;
+      padding-left: 1.1em;
+    }
+    .reveal .colloquium-box li { margin-bottom: 0.2em; }
+    .reveal .colloquium-box li::marker { color: currentColor; opacity: 0.75; }
+
+    /* Accent box: keep inline markup readable on the teal background. */
+    .reveal .colloquium-box--accent a,
+    .reveal .colloquium-box--accent strong,
+    .reveal .colloquium-box--accent em {
+      color: inherit;
+    }
+    .reveal .colloquium-box--accent code {
+      background: rgba(0, 0, 0, 0.18);
+      border-color: rgba(255, 255, 255, 0.2);
+      color: inherit;
+    }
+
+    /* Compact variant — tighter spacing for dense bullet lists. */
+    .reveal .colloquium-box--compact { padding: 0.55em 0.9em; }
+    .reveal .colloquium-box--compact .colloquium-box-title { margin-bottom: 0.2em; }
+    .reveal .colloquium-box--compact .colloquium-box-content p { margin: 0.2em 0; }
+    .reveal .colloquium-box--compact ul,
+    .reveal .colloquium-box--compact ol {
+      margin-top: 0.2em;
+      padding-left: 1em;
+    }
+    .reveal .colloquium-box--compact li { margin-bottom: 0.05em; line-height: 1.2; }
+
+    /* ===== Text size utilities ===== */
+    .reveal .text-xs   { font-size: 0.65em; }
+    .reveal .text-sm   { font-size: 0.80em; }
+    .reveal .text-base { font-size: 1.00em; }
+    .reveal .text-lg   { font-size: 1.20em; }
+    .reveal .text-xl   { font-size: 1.40em; }
+    .reveal .text-2xl  { font-size: 1.70em; }
+    .reveal .text-3xl  { font-size: 2.20em; }
+    .reveal .text-4xl  { font-size: 2.80em; }
+
+    /* ===== Spacer helpers ===== */
+    .reveal .colloquium-spacer-sm { height: 0.5em; }
+    .reveal .colloquium-spacer-md { height: 1em; }
+    .reveal .colloquium-spacer-lg { height: 2em; }
+
+    /* ===== Inline secondary-text block (for caveats inside slide body) ===== */
+    .reveal .colloquium-footnote {
+      font-size: 0.75em;
+      color: var(--r-text-muted);
+      font-style: italic;
+      margin-top: 0.6em;
+    }
+
+    /* ===== Figure + caption (unnumbered; alt text → caption) ===== */
+    .reveal .colloquium-figure {
+      margin: 0.5em auto;
+      max-width: 100%;
+      width: fit-content;
+      display: block;
+    }
+    .reveal .colloquium-figure > img {
+      display: block;
+      margin: 0 auto;
+    }
+    .reveal .colloquium-figure > .colloquium-figure-caption {
+      margin-top: 0.4em;
+      font-size: 0.55em;
+      line-height: 1.35;
+      color: var(--r-text-muted);
+      text-align: center;
+    }
+
+    /* ===== Image alignment directives (slide-level) ===== */
+    .reveal .slides section.img-align-left   img { display: block; margin-left: 0;     margin-right: auto; }
+    .reveal .slides section.img-align-center img { display: block; margin-left: auto;  margin-right: auto; }
+    .reveal .slides section.img-align-right  img { display: block; margin-left: auto;  margin-right: 0; }
+
+    .reveal .slides section.img-valign-top    .col > p:has(> img:only-child),
+    .reveal .slides section.img-valign-top    .colloquium-row > p:has(> img:only-child) { align-self: start; }
+    .reveal .slides section.img-valign-center .col > p:has(> img:only-child),
+    .reveal .slides section.img-valign-center .colloquium-row > p:has(> img:only-child) { align-self: center; }
+    .reveal .slides section.img-valign-bottom .col > p:has(> img:only-child),
+    .reveal .slides section.img-valign-bottom .colloquium-row > p:has(> img:only-child) { align-self: end; }
+
+    /* img-fill: image fills the grid cell (crops as needed) */
+    .reveal .slides section.img-fill .col img,
+    .reveal .slides section.img-fill .colloquium-row img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    /* img-overflow: let images bleed outside their cell boundary */
+    .reveal .slides section.img-overflow .col,
+    .reveal .slides section.img-overflow .colloquium-row { overflow: visible !important; }
+
     /* --- Print / PDF export --- */
     @media print {
       .reveal::after { display: none; }
@@ -429,6 +702,8 @@
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3/dist/chartjs-plugin-annotation.min.js"></script>
+  {{/* YAML parser for colloquium fenced elements (box, conversation, chart) */}}
+  <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
 
   {{ if hugo.IsProduction }}
   <script data-goatcounter="https://relconai.goatcounter.com/count"
