@@ -11,6 +11,10 @@
 
       <h1 class="title-heading">{{ .Title }}</h1>
 
+      {{ with .Description }}
+      <p class="title-subtitle">{{ . }}</p>
+      {{ end }}
+
       <div class="title-eyebrow-row">
         <div class="title-eyebrow">{{ with .Params.event }}{{ . }}{{ else }}Research dispatch{{ end }}</div>
         <div class="title-accent-rule"></div>
@@ -21,10 +25,6 @@
         {{ with .Params.affiliation }}<div class="title-affiliation">{{ . }}</div>{{ end }}
         <div class="title-date">{{ .Date.Format "2 January 2006" }}</div>
       </div>
-
-      {{ with .Description }}
-      <p class="title-subtitle">{{ . }}</p>
-      {{ end }}
     </section>
 
     {{/* Content slides — from markdown */}}
