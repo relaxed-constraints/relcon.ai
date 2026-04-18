@@ -6,7 +6,6 @@ date: 2024-09-01
 
 # Project chrome
 code: "ORG-01"
-glyph: "◈"
 accent: "#b8421e"
 accent_dark: "#ff8c5a"
 status: "active"             # active | exploratory | shipped | paused

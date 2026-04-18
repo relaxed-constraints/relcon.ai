@@ -6,7 +6,6 @@ date: {{ .Date }}
 
 # Project chrome
 code: "XX-00"                # e.g. ORG-01, AB-02
-glyph: "◆"                   # single unicode char
 accent: "#b8421e"            # brand/accent for this project (light)
 accent_dark: "#ff8c5a"       # accent in dark mode (optional)
 status: "active"             # active | exploratory | shipped | paused
