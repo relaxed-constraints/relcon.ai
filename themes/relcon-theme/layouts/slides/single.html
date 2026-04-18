@@ -55,6 +55,10 @@
 <script src="https://cdn.jsdelivr.net/npm/reveal.js@5/plugin/notes/notes.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/reveal.js@5/plugin/math/math.min.js"></script>
 
+{{/* Colloquium-compatible syntax preprocessor (spike) */}}
+{{ $colloquium := resources.Get "js/colloquium-syntax.js" }}
+<script src="{{ $colloquium.RelPermalink }}"></script>
+
 <script>
   // Pre-process: protect math from marked.js by replacing with placeholders.
   // marked.js interprets LaTeX characters (_, *, \{, etc.) as markdown,
@@ -73,6 +77,13 @@
       mathStore.push(m);
       return 'MATH_PLACEHOLDER_' + (mathStore.length - 1);
     });
+
+    // Rewrite colloquium-flavoured directives (columns/rows/footnotes/…)
+    // into HTML that marked.js and reveal handle cleanly. Runs after math
+    // protection so opaque placeholders survive footnote extraction.
+    if (typeof window.preprocessColloquiumSyntax === 'function') {
+      content = window.preprocessColloquiumSyntax(content);
+    }
 
     tpl.textContent = content;
 
@@ -107,6 +118,15 @@
       // Re-typeset now that real math delimiters are back
       if (window.MathJax && MathJax.typeset) {
         MathJax.typeset();
+      }
+
+      // Apply colloquium animate: directives now that the DOM exists.
+      if (typeof window.applyColloquiumFigureCaptions === 'function') {
+        window.applyColloquiumFigureCaptions();
+      }
+      if (typeof window.applyColloquiumAnimations === 'function') {
+        window.applyColloquiumAnimations();
+        Reveal.sync();
       }
 
       // Footer: show/hide based on whether we're on the title slide
