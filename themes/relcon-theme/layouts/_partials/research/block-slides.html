@@ -1,0 +1,25 @@
+{{- /* Slide decks linked to a project. Arg: Page */ -}}
+{{- $slugs := default slice .Params.deck_slugs -}}
+{{- $accent := .Params.accent | default "#b8421e" -}}
+{{- $decks := slice -}}
+{{- range $slugs -}}
+  {{- with site.GetPage (printf "/slides/%s" .) -}}
+    {{- $decks = $decks | append . -}}
+  {{- end -}}
+{{- end -}}
+{{- if $decks }}
+<div class="grid gap-3.5" style="grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));">
+  {{ range $decks }}
+  <a href="{{ .RelPermalink }}" class="block p-3.5 card-surface hover:-translate-y-0.5 transition-transform">
+    <div class="aspect-video mb-2.5 grid place-items-center font-mono text-white text-[0.7rem] tracking-[0.15em]"
+      style="background: linear-gradient(135deg, {{ $accent }}, var(--c-gray-500));">
+      {{ with .Params.slide_count }}{{ . }} slides{{ else }}deck{{ end }}
+    </div>
+    <div class="font-display font-semibold leading-[1.25]" style="font-size: 0.96rem;">{{ .Title }}</div>
+    <div class="text-[0.78rem] mt-1" style="color: var(--c-gray-300);">
+      {{ with .Params.event }}{{ . }} &middot; {{ end }}{{ .Date.Format "Jan 2006" }}
+    </div>
+  </a>
+  {{ end }}
+</div>
+{{ end }}

@@ -1,0 +1,13 @@
+{{- /* Changelog — reverse-chronological dated entries. Arg: Page */ -}}
+{{- $items := default slice .Params.changelog -}}
+{{- if $items }}
+<ol class="list-none p-0 m-0 grid">
+  {{ range $i, $e := $items }}
+  <li class="grid items-baseline py-2.5 gap-3" style="grid-template-columns: 110px 16px 1fr; {{ if lt $i (sub (len $items) 1) }}border-bottom: 1px dashed var(--c-border);{{ end }}">
+    <div class="font-mono text-[0.72rem] tracking-[0.08em]" style="color: var(--c-gray-300);">{{ $e.d }}</div>
+    <div class="font-mono" style="font-size: 0.9rem; color: {{ if eq $i 0 }}var(--c-accent){{ else }}var(--c-gray-500){{ end }};">{{ if eq $i 0 }}&#9679;{{ else }}&#9675;{{ end }}</div>
+    <div class="text-[0.94rem] leading-[1.45]">{{ $e.t }}</div>
+  </li>
+  {{ end }}
+</ol>
+{{ end }}

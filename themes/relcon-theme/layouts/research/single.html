@@ -1,0 +1,120 @@
+{{ define "main" }}
+{{- $p := .Params -}}
+{{- $accent := $p.accent | default "#b8421e" -}}
+
+{{/* Build section list: id, label, partial, show? */}}
+{{- $sections := slice
+  (dict "id" "overview"      "label" "overview"      "partial" "research/block-overview.html"      "show" true)
+  (dict "id" "results"       "label" "key results"   "partial" "research/block-results.html"       "show" (gt (len (default slice $p.results)) 0))
+  (dict "id" "collaborators" "label" "collaborators" "partial" "research/block-collaborators.html" "show" (gt (len (default slice $p.collaborators)) 0))
+  (dict "id" "papers"        "label" "papers"        "partial" "research/block-papers.html"        "show" (gt (len (default slice $p.papers)) 0))
+  (dict "id" "posts"         "label" "residual"      "partial" "research/block-posts.html"         "show" (gt (len (default slice $p.post_slugs)) 0))
+  (dict "id" "slides"        "label" "slides"        "partial" "research/block-slides.html"        "show" (gt (len (default slice $p.deck_slugs)) 0))
+  (dict "id" "code"          "label" "code"          "partial" "research/block-repos.html"         "show" (gt (len (default slice $p.repos)) 0))
+  (dict "id" "changelog"     "label" "changelog"     "partial" "research/block-changelog.html"     "show" (gt (len (default slice $p.changelog)) 0))
+  (dict "id" "related"       "label" "related"       "partial" "research/block-related.html"       "show" (gt (len (default slice $p.related)) 0))
+-}}
+
+<article class="max-w-6xl mx-auto px-6 lg:px-10 pt-12 pb-16">
+
+  {{/* Back link */}}
+  <a href="/research/" class="inline-block font-mono text-[0.72rem] tracking-[0.14em] uppercase mb-5 hover:text-[var(--c-text)]" style="color: var(--c-gray-300);">&larr; all projects</a>
+
+  {{/* Header */}}
+  <header class="pb-6" style="border-bottom: 1px solid var(--c-border);">
+    <div class="flex items-baseline justify-between gap-5 mb-4 flex-wrap">
+      <div class="flex items-center gap-4">
+        {{ partial "research/glyph.html" (dict "glyph" ($p.glyph | default "&#9670;") "accent" $accent "size" 54) }}
+        <div>
+          <div class="font-mono text-[0.74rem] tracking-[0.2em] font-medium mb-1" style="color: {{ $accent }};">{{ $p.code }}</div>
+          <h1 class="font-display font-semibold m-0" style="font-size: clamp(36px, 4.4vw, 56px); letter-spacing: -0.025em; line-height: 1;">{{ .Title }}</h1>
+        </div>
+      </div>
+      <div class="flex gap-5 items-baseline">
+        {{ partial "research/status-pill.html" ($p.status | default "active") }}
+        {{ with $p.started }}
+        <span class="font-mono text-[0.7rem] tracking-[0.08em]" style="color: var(--c-gray-500);">{{ . }} &rarr; present</span>
+        {{ end }}
+      </div>
+    </div>
+    {{ with $p.tags }}
+    <div class="flex flex-wrap gap-1.5 mt-4">
+      {{ range . }}<span class="chip-lg">{{ . }}</span>{{ end }}
+    </div>
+    {{ end }}
+  </header>
+
+  {{/* TOC + body — 220px sticky sidebar */}}
+  <div class="grid gap-10 lg:gap-14 mt-6" style="grid-template-columns: 1fr;">
+    <div class="grid gap-10 lg:gap-14" style="grid-template-columns: 220px minmax(0, 1fr); align-items: start;">
+
+      {{/* Sticky TOC sidebar */}}
+      <aside class="sticky top-6 hidden lg:block">
+        <div class="mono-eyebrow mb-3">contents</div>
+        <nav id="research-toc" class="grid gap-px" style="border-top: 1px solid var(--c-border);">
+          {{ range $sections }}{{ if .show }}
+          <a href="#sec-{{ .id }}" data-sec="{{ .id }}"
+            class="toc-item flex justify-between items-baseline py-2.5 font-body text-[0.92rem] hover:text-[var(--c-accent)]"
+            style="border-bottom: 1px solid var(--c-border); color: var(--c-text); padding-left: 0;">
+            <span>{{ .label }}</span>
+          </a>
+          {{ end }}{{ end }}
+        </nav>
+        {{ with $p.last_touched }}
+        <div class="mt-6 font-mono text-[0.68rem] tracking-[0.08em] leading-[1.6]" style="color: var(--c-gray-500);">
+          last touched<br><span style="color: var(--c-gray-300);">{{ . }}</span>
+        </div>
+        {{ end }}
+      </aside>
+
+      {{/* Body sections */}}
+      <div>
+        {{ range $sections }}{{ if .show }}
+        <section id="sec-{{ .id }}" class="pt-6 mt-11" style="border-top: 1px solid var(--c-border);" data-toc-section="{{ .id }}">
+          <div class="mono-eyebrow mb-4 flex items-center gap-2.5">
+            <span style="color: var(--c-accent);">&#9666;</span>{{ .label }}
+          </div>
+          {{ partial .partial $ }}
+        </section>
+        {{ end }}{{ end }}
+      </div>
+
+    </div>
+  </div>
+</article>
+
+<script>
+(function() {
+  // Scroll-spy: highlight active TOC item based on which section is most in view.
+  var items = document.querySelectorAll('#research-toc .toc-item');
+  var sections = document.querySelectorAll('[data-toc-section]');
+  if (!items.length || !sections.length) return;
+
+  function setActive(id) {
+    items.forEach(function(a) {
+      if (a.dataset.sec === id) {
+        a.style.color = 'var(--c-accent)';
+        a.style.background = 'var(--c-code-bg)';
+        a.style.paddingLeft = '10px';
+      } else {
+        a.style.color = 'var(--c-text)';
+        a.style.background = 'transparent';
+        a.style.paddingLeft = '0';
+      }
+    });
+  }
+
+  var io = new IntersectionObserver(function(entries) {
+    // Pick the highest-intersecting visible section.
+    var visible = entries.filter(function(e) { return e.isIntersecting; });
+    if (visible.length) {
+      visible.sort(function(a, b) { return a.target.offsetTop - b.target.offsetTop; });
+      setActive(visible[0].target.dataset.tocSection);
+    }
+  }, { rootMargin: '-80px 0px -60% 0px', threshold: 0 });
+
+  sections.forEach(function(s) { io.observe(s); });
+  if (sections[0]) setActive(sections[0].dataset.tocSection);
+})();
+</script>
+{{ end }}

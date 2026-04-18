@@ -1,0 +1,27 @@
+{{- /* Papers block. Arg: Page */ -}}
+{{- $items := default slice .Params.papers -}}
+{{- if $items }}
+<div class="grid gap-4">
+  {{ range $i, $pp := $items }}
+  <article class="grid grid-cols-[32px_1fr] gap-4 py-3.5 items-baseline"
+    style="{{ if lt $i (sub (len $items) 1) }}border-bottom: 1px dashed var(--c-border);{{ end }}">
+    <div class="font-mono text-[0.72rem]" style="color: var(--c-accent);">[{{ add $i 1 }}]</div>
+    <div>
+      <div class="font-display font-semibold leading-[1.3]" style="font-size: 1.08rem; letter-spacing: -0.01em;">{{ $pp.title }}</div>
+      <div class="text-[0.84rem] mt-1" style="color: var(--c-gray-300);">
+        {{ with $pp.authors }}{{ . }}{{ end }}
+        {{ with $pp.venue }} &middot; <span class="font-mono text-[0.76rem]">{{ . }}</span>{{ end }}
+        {{ with $pp.date }} &middot; {{ . }}{{ end }}
+      </div>
+      {{ with $pp.links }}
+      <div class="mt-2 flex flex-wrap gap-1.5">
+        {{ range . }}
+        <a href="{{ .u }}" class="font-mono text-[0.66rem] tracking-[0.12em] uppercase px-2 py-[3px] hover:text-[var(--c-accent)]" style="color: var(--c-text); border: 1px solid var(--c-border);">{{ .l }}</a>
+        {{ end }}
+      </div>
+      {{ end }}
+    </div>
+  </article>
+  {{ end }}
+</div>
+{{ end }}

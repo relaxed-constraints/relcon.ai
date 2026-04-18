@@ -1,0 +1,12 @@
+{{- /* Code repos. Arg: Page */ -}}
+{{- $items := default slice .Params.repos -}}
+{{- if $items }}
+<div class="grid gap-2">
+  {{ range $items }}
+  <a href="{{ .url }}" class="flex justify-between items-baseline px-3.5 py-2.5 font-mono text-[0.82rem] card-surface hover:border-[var(--c-accent)]">
+    <span><span style="color: var(--c-accent);">&#9656;</span> {{ .label }}</span>
+    <span class="text-[0.7rem] tracking-[0.12em] uppercase" style="color: var(--c-gray-300);">github &#x2197;</span>
+  </a>
+  {{ end }}
+</div>
+{{ end }}

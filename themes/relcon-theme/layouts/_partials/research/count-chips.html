@@ -1,0 +1,18 @@
+{{- /* Count chips from a project page. Arg: Page */ -}}
+{{- $p := .Params -}}
+{{- $papers  := len (default slice $p.papers) -}}
+{{- $posts   := len (default slice $p.post_slugs) -}}
+{{- $decks   := len (default slice $p.deck_slugs) -}}
+{{- $repos   := len (default slice $p.repos) -}}
+{{- $results := len (default slice $p.results) -}}
+{{- $total   := add (add (add (add $papers $posts) $decks) $repos) $results -}}
+{{- if eq $total 0 -}}
+  <span class="font-mono text-[0.66rem] tracking-[0.12em] uppercase" style="color: var(--c-gray-500);">no artifacts yet</span>
+{{- else -}}
+  <div class="flex gap-1.5 flex-wrap">
+    {{- if gt $papers  0 }}<span class="chip">{{ $papers }} papers</span>{{ end -}}
+    {{- if gt $posts   0 }}<span class="chip">{{ $posts }} posts</span>{{ end -}}
+    {{- if gt $decks   0 }}<span class="chip">{{ $decks }} slides</span>{{ end -}}
+    {{- if gt $repos   0 }}<span class="chip">{{ $repos }} repos</span>{{ end -}}
+  </div>
+{{- end -}}

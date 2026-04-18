@@ -1,0 +1,16 @@
+{{- /* Collaborators block — paper-style byline + numbered affiliations. Arg: Page */ -}}
+{{- $people := default slice .Params.collaborators -}}
+{{- if $people }}
+<div>
+  <div class="flex flex-wrap items-baseline font-display text-[1rem] leading-[1.6]" style="gap: 4px 14px;">
+    {{ range $i, $c := $people }}
+    <span>{{ $c.who }}<sup class="font-mono text-[0.62rem] opacity-70" style="margin-left: 2px;">{{ add $i 1 }}</sup>{{ if lt $i (sub (len $people) 1) }}<span style="opacity: 0.45;">,</span>{{ end }}</span>
+    {{ end }}
+  </div>
+  <ol class="list-none p-0 mt-3.5 font-mono text-[0.74rem] grid gap-1" style="color: var(--c-gray-300);">
+    {{ range $i, $c := $people }}
+    <li><sup style="margin-right: 6px; color: var(--c-accent);">{{ add $i 1 }}</sup>{{ $c.aff }}{{ with $c.role }} &middot; {{ . }}{{ end }}</li>
+    {{ end }}
+  </ol>
+</div>
+{{ end }}

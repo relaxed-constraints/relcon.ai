@@ -1,0 +1,22 @@
+{{- /* Related projects. Arg: Page */ -}}
+{{- $slugs := default slice .Params.related -}}
+{{- $rel := slice -}}
+{{- range $slugs -}}
+  {{- with site.GetPage (printf "/research/%s" .) -}}
+    {{- $rel = $rel | append . -}}
+  {{- end -}}
+{{- end -}}
+{{- if $rel }}
+<div class="flex gap-3 flex-wrap">
+  {{ range $rel }}
+  {{- $accent := .Params.accent | default "#b8421e" -}}
+  <a href="{{ .RelPermalink }}" class="flex items-center gap-2.5 px-3.5 py-2.5 card-surface hover:border-[var(--c-accent)]">
+    <span class="font-mono" style="color: {{ $accent }}; font-size: 1.1rem;">{{ .Params.glyph | default "&#9670;" | safeHTML }}</span>
+    <span>
+      <div class="font-mono text-[0.66rem] tracking-[0.14em]" style="color: var(--c-gray-300);">{{ .Params.code }}</div>
+      <div class="font-display font-semibold" style="font-size: 0.96rem; letter-spacing: -0.01em;">{{ .Title }}</div>
+    </span>
+  </a>
+  {{ end }}
+</div>
+{{ end }}
