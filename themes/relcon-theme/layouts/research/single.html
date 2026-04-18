@@ -67,14 +67,18 @@
         {{ end }}
       </aside>
 
-      {{/* Body sections */}}
+      {{/* Body sections — first section has no top rule/margin so its label
+           aligns with the sidebar "contents" eyebrow. */}}
       <div>
-        {{ range $sections }}{{ if .show }}
-        <section id="sec-{{ .id }}" class="pt-6 mt-11" style="border-top: 1px solid var(--c-border); scroll-margin-top: 120px;" data-toc-section="{{ .id }}">
+        {{ range $i, $s := $sections }}{{ if $s.show }}
+        <section id="sec-{{ $s.id }}"
+          class="{{ if ne $i 0 }}pt-6 mt-11{{ end }}"
+          style="{{ if ne $i 0 }}border-top: 1px solid var(--c-border);{{ end }} scroll-margin-top: 120px;"
+          data-toc-section="{{ $s.id }}">
           <div class="mono-eyebrow mb-4 flex items-center gap-2.5">
-            <span style="color: var(--c-accent);">&#9666;</span>{{ .label }}
+            <span style="color: var(--c-accent);">&#9666;</span>{{ $s.label }}
           </div>
-          {{ partial .partial $ }}
+          {{ partial $s.partial $ }}
         </section>
         {{ end }}{{ end }}
       </div>
