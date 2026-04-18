@@ -101,17 +101,43 @@
     });
   }
 
-  var io = new IntersectionObserver(function(entries) {
-    // Pick the highest-intersecting visible section.
-    var visible = entries.filter(function(e) { return e.isIntersecting; });
-    if (visible.length) {
-      visible.sort(function(a, b) { return a.target.offsetTop - b.target.offsetTop; });
-      setActive(visible[0].target.dataset.tocSection);
+  // Pick the section whose top has most recently crossed above a threshold
+  // near the top of the viewport. Deterministic regardless of section height.
+  var THRESHOLD = 120;
+  var ticking = false;
+  var pendingId = null, pendingTimer;
+  function updateActive() {
+    ticking = false;
+    if (pendingId) { setActive(pendingId); return; }
+    var current = sections[0];
+    for (var i = 0; i < sections.length; i++) {
+      if (sections[i].getBoundingClientRect().top - THRESHOLD <= 0) {
+        current = sections[i];
+      } else {
+        break;
+      }
     }
-  }, { rootMargin: '-80px 0px -60% 0px', threshold: 0 });
-
-  sections.forEach(function(s) { io.observe(s); });
-  if (sections[0]) setActive(sections[0].dataset.tocSection);
+    setActive(current.dataset.tocSection);
+  }
+  function onScroll() {
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(updateActive);
+    }
+  }
+  // Clicks lock the target active for 800ms — covers cases where the page
+  // can't actually scroll (last section near page bottom), so scroll-spy
+  // wouldn't otherwise pick it.
+  items.forEach(function(a) {
+    a.addEventListener('click', function() {
+      pendingId = this.dataset.sec;
+      setActive(pendingId);
+      clearTimeout(pendingTimer);
+      pendingTimer = setTimeout(function() { pendingId = null; updateActive(); }, 800);
+    });
+  });
+  window.addEventListener('scroll', onScroll, { passive: true });
+  updateActive();
 })();
 </script>
 {{ end }}
