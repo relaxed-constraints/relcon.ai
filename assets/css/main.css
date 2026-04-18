@@ -181,9 +181,10 @@ body > * { position: relative; z-index: 1; }
 .prose ol { list-style: decimal; padding-left: 1.25rem; margin-bottom: 1rem; }
 .prose ul li, .prose ol li { margin-bottom: 0.25rem; }
 .prose pre {
-  @apply rounded-none my-6 overflow-x-auto p-4 text-sm;
+  @apply my-6 overflow-x-auto p-4 text-sm;
   background-color: var(--c-code-bg) !important;
   border: 1px solid var(--c-code-border);
+  border-radius: 6px;
   font-family: var(--font-mono);
 }
 .prose code:not(pre code) {
@@ -191,8 +192,9 @@ body > * { position: relative; z-index: 1; }
   font-size: 0.88em;
   color: var(--c-accent);
   background: var(--c-code-bg);
-  padding: 0.1em 0.35em;
+  padding: 0.1em 0.4em;
   border: 1px solid var(--c-border);
+  border-radius: 4px;
 }
 .prose img  { margin: 1.5rem 0; }
 .prose figure  { margin: 2rem 0; }
