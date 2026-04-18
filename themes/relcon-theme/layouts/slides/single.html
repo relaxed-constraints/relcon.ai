@@ -4,22 +4,27 @@
 
     {{/* Title slide — auto-generated from front matter */}}
     <section class="title-slide">
-      <div class="title-header">
-        <img src="/images/relcon-logo-color.svg" alt="" class="title-logo">
-        <span class="title-wordmark">Relaxed Constraints</span>
+      <div class="title-mark-row">
+        {{ partial "rc-logo.html" 26 }}
+        <span class="title-mark-word">relcon.ai</span>
       </div>
-      <div class="title-panel">
-        <div class="title-dots"></div>
-        <div class="title-content">
-          <h1 class="title-heading">{{ .Title }}</h1>
-          {{ with .Description }}<p class="title-subtitle">{{ . }}</p>{{ end }}
-          <p class="title-meta">
-            {{- .Date.Format "January 2, 2006" -}}
-            {{- with .Params.author }} · {{ . }}{{ end -}}
-            {{- with .Params.event }} · {{ . }}{{ end -}}
-          </p>
-        </div>
+
+      <h1 class="title-heading">{{ .Title }}</h1>
+
+      <div class="title-eyebrow-row">
+        <div class="title-eyebrow">{{ with .Params.event }}{{ . }}{{ else }}Research dispatch{{ end }}</div>
+        <div class="title-accent-rule"></div>
       </div>
+
+      <div class="title-meta">
+        {{ with .Params.author }}<div class="title-author">{{ . }}</div>{{ end }}
+        {{ with .Params.affiliation }}<div class="title-affiliation">{{ . }}</div>{{ end }}
+        <div class="title-date">{{ .Date.Format "2 January 2006" }}</div>
+      </div>
+
+      {{ with .Description }}
+      <p class="title-subtitle">{{ . }}</p>
+      {{ end }}
     </section>
 
     {{/* Content slides — from markdown */}}
@@ -38,10 +43,8 @@
 {{/* Footer bar — hidden on title slide */}}
 <div class="slide-footer hidden" id="slide-footer">
   <div class="slide-footer-left">
-    <a href="/slides/" style="pointer-events: all; line-height: 0;">
-      <img src="/images/relcon-logo-color.svg" alt="Back to slides" class="slide-footer-logo">
-    </a>
-    <span class="slide-footer-event">{{ .Title }}{{ with .Params.event }} · {{ . }}{{ end }}</span>
+    <a href="/slides/" aria-label="Back to slides">{{ partial "rc-logo.html" 22 }}</a>
+    <span class="slide-footer-event">{{ .Title }}{{ with .Params.event }} &middot; {{ . }}{{ end }}</span>
   </div>
   <span class="slide-footer-number" id="slide-footer-number"></span>
 </div>
