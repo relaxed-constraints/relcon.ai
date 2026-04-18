@@ -59,7 +59,7 @@ repos:
 
 changelog:
   - { date: "Apr 9, 2026",  text: "Preprint v2 — stronger baselines on nested benchmarks" }
-  - { date: "Mar 30, 2026", text: "Residual post: \"Breaking through tabular constraints\"" }
+  - { date: "Mar 30, 2026", text: "Blog post: \"Breaking through tabular constraints\"" }
   - { date: "Dec 12, 2025", text: "NeurIPS 2025 talk — Vancouver" }
   - { date: "Sep 2, 2025",  text: "Paper accepted at NeurIPS 2025" }
 

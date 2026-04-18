@@ -8,7 +8,7 @@
   (dict "id" "results"       "label" "key results"   "partial" "research/block-results.html"       "show" (gt (len (default slice $p.results)) 0))
   (dict "id" "collaborators" "label" "collaborators" "partial" "research/block-collaborators.html" "show" (gt (len (default slice $p.collaborators)) 0))
   (dict "id" "papers"        "label" "papers"        "partial" "research/block-papers.html"        "show" (gt (len (default slice $p.papers)) 0))
-  (dict "id" "posts"         "label" "residual"      "partial" "research/block-posts.html"         "show" (gt (len (default slice $p.post_slugs)) 0))
+  (dict "id" "posts"         "label" "blog"          "partial" "research/block-posts.html"         "show" (gt (len (default slice $p.post_slugs)) 0))
   (dict "id" "slides"        "label" "slides"        "partial" "research/block-slides.html"        "show" (gt (len (default slice $p.deck_slugs)) 0))
   (dict "id" "code"          "label" "code"          "partial" "research/block-repos.html"         "show" (gt (len (default slice $p.repos)) 0))
   (dict "id" "changelog"     "label" "changelog"     "partial" "research/block-changelog.html"     "show" (gt (len (default slice $p.changelog)) 0))

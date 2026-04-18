@@ -31,7 +31,7 @@ theme = "relcon-theme"
     url = "/research/"
     weight = 1
   [[menu.main]]
-    name = "Residual"
+    name = "Blog"
     url = "/blog/"
     weight = 2
   [[menu.main]]
