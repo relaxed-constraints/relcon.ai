@@ -41,6 +41,11 @@
     {{ end }}
   </header>
 
+  {{/* Summary — lead paragraph, sits full-width between the header and TOC grid */}}
+  {{ with $p.summary }}
+  <p class="font-display mt-8 text-balance" style="font-size: 1.35rem; font-weight: 400; line-height: 1.4; letter-spacing: -0.005em; color: var(--c-gray-300); max-width: 62ch;">{{ . }}</p>
+  {{ end }}
+
   {{/* TOC + body — 220px sticky sidebar */}}
   <div class="grid gap-10 lg:gap-14 mt-6" style="grid-template-columns: 1fr;">
     <div class="grid gap-10 lg:gap-14" style="grid-template-columns: 220px minmax(0, 1fr); align-items: start;">
