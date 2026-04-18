@@ -65,7 +65,7 @@ def hello(name):
 
 ---
 
-## Columns (three)
+# Columns (three)
 
 <!-- columns: 3 -->
 
