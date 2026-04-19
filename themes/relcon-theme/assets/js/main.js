@@ -7,7 +7,6 @@ function startHeroWalkers() {
   var GRID = 48;
   var w = 0, h = 0, cols = 0, rows = 0, raf;
   var walkers = [];
-  var offX = 0, offY = 0; // align walker coords to the page's fixed CSS grid
   var dpr = Math.min(window.devicePixelRatio || 1, 2);
   var DIRS = [[1,0],[0,1],[-1,0],[0,-1]];
 
@@ -38,10 +37,6 @@ function startHeroWalkers() {
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     cols = Math.ceil(w / GRID) + 2;
     rows = Math.ceil(h / GRID) + 2;
-    // The CSS grid is position:fixed (viewport-anchored). Translate walker
-    // coordinates so their intersections land on the same grid lines.
-    offX = ((GRID - (Math.round(r.left) % GRID)) % GRID);
-    offY = ((GRID - (Math.round(r.top)  % GRID)) % GRID);
   }
 
   function spawnWalker() {
@@ -83,8 +78,8 @@ function startHeroWalkers() {
         }
         if (offscreen(wk)) Object.assign(wk, spawnWalker());
       }
-      var cx = (wk.gx + wk.dx * wk.t) * GRID + offX;
-      var cy = (wk.gy + wk.dy * wk.t) * GRID + offY;
+      var cx = (wk.gx + wk.dx * wk.t) * GRID;
+      var cy = (wk.gy + wk.dy * wk.t) * GRID;
       // Soft glow
       var g = ctx.createRadialGradient(cx, cy, 0, cx, cy, 18);
       g.addColorStop(0, accentRgba(glowStrength));

@@ -47,44 +47,32 @@
     })();
   </script>
 
-  {{/* ===== Relcon Notebook slide theme ===== */}}
+  {{/* Shared site palette — defines --c-* on :root and .dark */}}
+  {{ partial "theme-tokens.html" . }}
+
+  {{/* ===== Relcon slide theme ===== */}}
   <style>
-    /* ── Color tokens ────────────────────────────────────────────── */
+    /* ── Slide-scoped aliases ──────────────────────────────────────
+       The slide theme referenced `--r-*` names historically; rather than
+       rewrite every rule, we alias them to the shared --c-* tokens so the
+       palette stays in a single place (_partials/theme-tokens.html). */
     :root {
-      --r-bg: #fbf8f0;
-      --r-surface: #ffffff;
-      --r-code-bg: #f0ebdc;
-      --r-border: #e1d9bf;
-      --r-text: #1a1810;
-      --r-text-muted: #5c5847;
-      --r-text-faint: #8a8672;
-      --r-heading: #1a1810;
-      --r-accent: #b8421e;
-      --r-accent-light: #d6552d;
-      --r-accent-soft: rgba(184, 66, 30, 0.32);
-      --r-code-text: #1a1810;
-      --r-link: #b8421e;
-      --r-link-hover: #94321a;
-      --r-selection-bg: rgba(184, 66, 30, 0.32);
-      --r-selection-color: #fbf8f0;
-    }
-    html.dark {
-      --r-bg: #12110c;
-      --r-surface: #1a1812;
-      --r-code-bg: #0c0b07;
-      --r-border: #2a2620;
-      --r-text: #ece7d6;
-      --r-text-muted: #968f76;
-      --r-text-faint: #5a5443;
-      --r-heading: #ece7d6;
-      --r-accent: #ff8c5a;
-      --r-accent-light: #ff9f73;
-      --r-accent-soft: rgba(255, 140, 90, 0.38);
-      --r-code-text: #d5cfba;
-      --r-link: #ff8c5a;
-      --r-link-hover: #ff9f73;
-      --r-selection-bg: rgba(255, 140, 90, 0.38);
-      --r-selection-color: #12110c;
+      --r-bg: var(--c-bg);
+      --r-surface: var(--c-surface);
+      --r-code-bg: var(--c-code-bg);
+      --r-border: var(--c-border);
+      --r-text: var(--c-text);
+      --r-text-muted: var(--c-gray-300);
+      --r-text-faint: var(--c-gray-500);
+      --r-heading: var(--c-text);
+      --r-accent: var(--c-accent);
+      --r-accent-light: var(--c-accent-light);
+      --r-accent-soft: var(--c-accent-soft);
+      --r-code-text: var(--c-code-text);
+      --r-link: var(--c-accent);
+      --r-link-hover: var(--c-accent-dark);
+      --r-selection-bg: var(--c-accent-soft);
+      --r-selection-color: var(--c-bg);
     }
 
     /* ── Base ─────────────────────────────────────────────────────── */
@@ -259,24 +247,6 @@
       box-sizing: border-box;
       position: relative;
     }
-    /* Grid-paper background — title slide only.
-       Drawn on the slide-background backdrop so it fills the full viewport
-       (sections have a 4% margin from Reveal). The backdrop is only visible
-       when the title slide is the active slide, so no other slides see the
-       grid. Using `::before` rather than a plain background keeps the
-       slide-background's own solid fill intact. */
-    .reveal .backgrounds .slide-background.title-slide::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background-image:
-        linear-gradient(to right, var(--r-border) 1px, transparent 1px),
-        linear-gradient(to bottom, var(--r-border) 1px, transparent 1px);
-      background-size: 96px 96px;
-      opacity: 0.55;
-    }
-
     /* Top mark row */
     .title-mark-row {
       display: flex;
@@ -487,7 +457,7 @@
       color: var(--r-bg);
     }
     .reveal .colloquium-box--muted {
-      background: var(--r-code-bg);
+      background: var(--c-muted);
       color: var(--r-text);
       border: 1px solid var(--r-border);
     }

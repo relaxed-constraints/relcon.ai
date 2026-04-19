@@ -23,11 +23,11 @@
     <h1 class="font-display font-semibold m-0 text-balance"
       style="font-size: clamp(36px, 4.5vw, 54px); letter-spacing: -0.02em; line-height: 1.1;">{{ .Title }}</h1>
     {{ with .Params.description }}
-    <p class="mt-5 font-display font-medium leading-[1.4]" style="font-size: 1.32rem; color: var(--c-accent);">&mdash; {{ . }}</p>
+    <p class="mt-5 font-display font-light leading-[1.4]" style="font-size: 1.22rem; color: var(--c-accent);">&mdash; {{ . }}</p>
     {{ end }}
     {{ with .Params.author }}
     <div class="mt-4 text-[0.86rem]" style="color: var(--c-gray-300);">
-      {{ . }}{{ with $.Params.tags }} &middot; <span class="font-mono text-[0.76rem]">{{ range $j, $t := . }}{{ if $j }} {{ end }}#{{ $t }}{{ end }}</span>{{ end }}
+      {{ . }}{{ with $.Params.tags }}&nbsp;&nbsp;&middot;&nbsp;&nbsp;<span class="font-mono text-[0.76rem]">{{ range $j, $t := . }}{{ if $j }} {{ end }}#{{ $t }}{{ end }}</span>{{ end }}
     </div>
     {{ end }}
   </header>

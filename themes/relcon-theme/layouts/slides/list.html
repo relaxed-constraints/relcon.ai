@@ -15,29 +15,32 @@
   <main class="flex-grow">
     <div class="max-w-5xl mx-auto px-6 lg:px-10 pt-12 pb-16">
       <header class="mb-12">
+        <div class="mono-eyebrow mb-3.5 flex items-center gap-2.5">
+          <span style="color: var(--c-accent);">&#x25E2;</span>slides &middot; index
+        </div>
         <h1 class="font-display font-semibold m-0" style="font-size: clamp(44px, 5.5vw, 72px); letter-spacing: -0.025em;">Slides</h1>
         <p class="mt-4 max-w-[560px] text-[1.04rem] leading-[1.55]" style="color: var(--c-gray-300);">
           Decks from talks, workshops, and internal all-hands. No polish &mdash; just the slides we actually used.
         </p>
       </header>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {{ range .Pages.ByDate.Reverse }}
         <a href="{{ .RelPermalink }}" data-date="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}"
-          class="block p-6 card-surface group hover:-translate-y-0.5 transition-transform">
-          <div class="aspect-video mb-4 grid place-items-center relative overflow-hidden font-display italic text-center px-4"
-            style="background: linear-gradient(135deg, var(--c-accent), var(--c-gray-500)); color: var(--c-bg); font-size: 1.2rem;">
+          class="block p-4 card-surface group hover:-translate-y-0.5 transition-transform">
+          <div class="aspect-video mb-3 grid place-items-center relative overflow-hidden font-display italic text-center px-3"
+            style="background: linear-gradient(135deg, var(--c-accent), var(--c-gray-500)); color: var(--c-bg); font-size: 0.95rem;">
             <div class="absolute inset-0 opacity-[0.15]"
               style="background-image: repeating-linear-gradient(135deg, rgba(255,255,255,0.4) 0 1px, transparent 1px 8px);"></div>
             <span class="relative z-10">{{ .Title }}</span>
           </div>
-          <h2 class="font-display font-semibold m-0 mb-1.5 group-hover:text-[var(--c-accent)]"
-            style="font-size: 1.2rem; letter-spacing: -0.01em; line-height: 1.2;">{{ .Title }}</h2>
-          <div class="text-[0.84rem]" style="color: var(--c-gray-300);">
+          <h2 class="font-display font-semibold m-0 mb-1 group-hover:text-[var(--c-accent)]"
+            style="font-size: 1rem; letter-spacing: -0.01em; line-height: 1.2;">{{ .Title }}</h2>
+          <div class="text-[0.76rem]" style="color: var(--c-gray-300);">
             {{ with .Params.event }}{{ . }} &middot; {{ end }}{{ .Date.Format "Jan 2006" }}
           </div>
           {{ with .Params.description }}
-          <p class="mt-2 m-0 text-[0.88rem] leading-[1.5]" style="color: var(--c-gray-300);">{{ . }}</p>
+          <p class="mt-1.5 m-0 text-[0.78rem] leading-[1.45]" style="color: var(--c-gray-300);">{{ . }}</p>
           {{ end }}
         </a>
         {{ end }}

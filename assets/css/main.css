@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
 @import "tailwindcss";
 @source "hugo_stats.json";
 @config "./tailwind.config.js";
@@ -6,48 +6,9 @@
 /* Use class-based dark mode (not media query) */
 @variant dark (&:where(.dark, .dark *));
 
-/* ===== Theme custom properties — Notebook palette ===== */
-:root {
-  --c-bg: #fbf8f0;
-  --c-surface: #ffffff;
-  --c-code-bg: #f0ebdc;
-  --c-border: #e1d9bf;
-  --c-text: #1a1810;
-  --c-gray-200: #2a2618;
-  --c-gray-300: #5c5847;
-  --c-gray-400: #7a7662;
-  --c-gray-500: #8a8672;
-  --c-gray-600: #b2ac94;
-  --c-accent: #b8421e;
-  --c-accent-light: #d6552d;
-  --c-accent-dark: #94321a;
-  --c-accent-soft: rgba(184, 66, 30, 0.32);
-  --c-code-border: #e1d9bf;
-  --c-code-text: #1a1810;
-  --c-code-line-nr: #8a8672;
-  --c-code-hl: #ebe3c6;
-}
-
-.dark {
-  --c-bg: #12110c;
-  --c-surface: #1a1812;
-  --c-code-bg: #0c0b07;
-  --c-border: #2a2620;
-  --c-text: #ece7d6;
-  --c-gray-200: #dcd7c6;
-  --c-gray-300: #968f76;
-  --c-gray-400: #7d7662;
-  --c-gray-500: #5a5443;
-  --c-gray-600: #3e3a2f;
-  --c-accent: #ff8c5a;
-  --c-accent-light: #ff9f73;
-  --c-accent-dark: #e67545;
-  --c-accent-soft: rgba(255, 140, 90, 0.38);
-  --c-code-border: #2a2620;
-  --c-code-text: #d5cfba;
-  --c-code-line-nr: #5a5443;
-  --c-code-hl: #1d1b13;
-}
+/* ===== Theme custom properties ===== */
+/* Defined by the _partials/theme-tokens.html partial (shared with the slide
+   theme so both stay in sync). Main.css below consumes them via var(--c-*). */
 
 /* Theme transition for smooth switching */
 body, body * {
@@ -64,21 +25,6 @@ canvas, .chroma, .chroma *, .prose pre, .prose pre * {
 }
 
 a { transition: color 0.2s ease-in-out; }
-
-/* ===== Grid-paper background (global, behind everything) ===== */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  background-image:
-    linear-gradient(to right, var(--c-border) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--c-border) 1px, transparent 1px);
-  background-size: 48px 48px;
-  opacity: 0.18;
-}
-body > * { position: relative; z-index: 1; }
 
 @layer base {
   body {
@@ -234,9 +180,9 @@ input:focus, textarea:focus {
 
 } /* end @layer components */
 
-/* ===== Syntax highlighting — Chroma, neutral on Notebook paper ===== */
+/* ===== Syntax highlighting — Chroma, cool palette + coral accent ===== */
 .chroma { color: var(--c-code-text); background-color: var(--c-code-bg); }
-.chroma .err { color: #b8421e; }
+.chroma .err { color: #d73a49; }
 .chroma .lnlinks { outline: none; text-decoration: none; color: inherit; }
 .chroma .lntd { vertical-align: top; padding: 0; margin: 0; border: 0; }
 .chroma .lntable { border-spacing: 0; padding: 0; margin: 0; border: 0; }
@@ -247,37 +193,37 @@ input:focus, textarea:focus {
 }
 .chroma .line { display: flex; }
 
-/* --- Light theme syntax (warm paper) --- */
-.chroma .k, .chroma .kd, .chroma .kn, .chroma .kp, .chroma .kr, .chroma .kt { color: #9e2a1f; }
-.chroma .kc { color: #7a4b1f; }
-.chroma .nc { color: #1f5a8e; }
-.chroma .nb { color: #6b3d8c; }
-.chroma .bp { color: #7a4a94; }
-.chroma .nv, .chroma .vc, .chroma .vg, .chroma .vi, .chroma .vm { color: #2f6b4a; }
-.chroma .nf, .chroma .fm { color: #2f6b4a; }
+/* --- Light theme syntax (cool grey bg) --- */
+.chroma .k, .chroma .kd, .chroma .kn, .chroma .kp, .chroma .kr, .chroma .kt { color: #a32fbb; }  /* keywords — magenta */
+.chroma .kc { color: #d73a49; }                                                                   /* constants — coral red */
+.chroma .nc { color: #1e6bb8; }                                                                   /* class names — blue */
+.chroma .nb { color: #6f42c1; }                                                                   /* builtins — violet */
+.chroma .bp { color: #7a4db8; }                                                                   /* builtin pseudo — lavender */
+.chroma .nv, .chroma .vc, .chroma .vg, .chroma .vi, .chroma .vm { color: #2a7a7e; }               /* variables — teal */
+.chroma .nf, .chroma .fm { color: #1e6bb8; }                                                      /* functions — blue */
 .chroma .s, .chroma .sa, .chroma .sb, .chroma .sc, .chroma .dl, .chroma .sd,
-.chroma .s2, .chroma .se, .chroma .sh, .chroma .sx, .chroma .sr, .chroma .s1, .chroma .ss { color: #826a1c; }
-.chroma .m, .chroma .mb, .chroma .mf, .chroma .mh, .chroma .mi, .chroma .il, .chroma .mo { color: #8a4a1f; }
-.chroma .c, .chroma .ch, .chroma .cm, .chroma .c1 { color: #8a8672; }
-.chroma .cs { color: #8a8672; font-style: italic; }
-.chroma .cp, .chroma .cpf { color: #b8421e; }
+.chroma .s2, .chroma .se, .chroma .sh, .chroma .sx, .chroma .sr, .chroma .s1, .chroma .ss { color: #2f7e4a; } /* strings — green */
+.chroma .m, .chroma .mb, .chroma .mf, .chroma .mh, .chroma .mi, .chroma .il, .chroma .mo { color: #c25c3a; }  /* numbers — dark coral */
+.chroma .c, .chroma .ch, .chroma .cm, .chroma .c1 { color: #74747c; }                             /* comments — neutral cool grey */
+.chroma .cs { color: #74747c; font-style: italic; }
+.chroma .cp, .chroma .cpf { color: #FF634A; }                                                     /* preprocessor — accent */
 
-/* --- Dark theme syntax --- */
+/* --- Dark theme syntax (cool dark bg) --- */
 .dark .chroma .k, .dark .chroma .kd, .dark .chroma .kn,
-.dark .chroma .kp, .dark .chroma .kr, .dark .chroma .kt { color: #ff8c5a; }
-.dark .chroma .kc { color: #d9b37e; }
-.dark .chroma .nc { color: #7fb0e0; }
-.dark .chroma .nb { color: #c9a8f0; }
-.dark .chroma .bp { color: #b095e0; }
+.dark .chroma .kp, .dark .chroma .kr, .dark .chroma .kt { color: #d58de8; }                       /* keywords — light magenta */
+.dark .chroma .kc { color: #ff9775; }                                                             /* constants — peach */
+.dark .chroma .nc { color: #7fb0e0; }                                                             /* class names — light blue */
+.dark .chroma .nb { color: #c9a8f0; }                                                             /* builtins — light violet */
+.dark .chroma .bp { color: #b095e0; }                                                             /* builtin pseudo — soft lavender */
 .dark .chroma .nv, .dark .chroma .vc, .dark .chroma .vg,
-.dark .chroma .vi, .dark .chroma .vm { color: #7fd4a9; }
-.dark .chroma .nf, .dark .chroma .fm { color: #7fd4a9; }
+.dark .chroma .vi, .dark .chroma .vm { color: #7fd4c0; }                                          /* variables — light teal */
+.dark .chroma .nf, .dark .chroma .fm { color: #7fb0e0; }                                          /* functions — light blue */
 .dark .chroma .s, .dark .chroma .sa, .dark .chroma .sb, .dark .chroma .sc,
 .dark .chroma .dl, .dark .chroma .sd, .dark .chroma .s2, .dark .chroma .se,
 .dark .chroma .sh, .dark .chroma .sx, .dark .chroma .sr, .dark .chroma .s1,
-.dark .chroma .ss { color: #e3c470; }
+.dark .chroma .ss { color: #9ad088; }                                                             /* strings — light green */
 .dark .chroma .m, .dark .chroma .mb, .dark .chroma .mf, .dark .chroma .mh,
-.dark .chroma .mi, .dark .chroma .il, .dark .chroma .mo { color: #d9b37e; }
-.dark .chroma .c, .dark .chroma .ch, .dark .chroma .cm, .dark .chroma .c1 { color: #5a5443; }
-.dark .chroma .cs { color: #5a5443; font-style: italic; }
-.dark .chroma .cp, .dark .chroma .cpf { color: #ff8c5a; }
+.dark .chroma .mi, .dark .chroma .il, .dark .chroma .mo { color: #ffa888; }                       /* numbers — soft peach */
+.dark .chroma .c, .dark .chroma .ch, .dark .chroma .cm, .dark .chroma .c1 { color: #6a6a72; }     /* comments — dim cool grey */
+.dark .chroma .cs { color: #6a6a72; font-style: italic; }
+.dark .chroma .cp, .dark .chroma .cpf { color: #FF7A65; }                                         /* preprocessor — accent */

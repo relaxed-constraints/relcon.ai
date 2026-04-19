@@ -1,22 +1,25 @@
 {{ define "main" }}
 
-{{/* Hero — grid walkers live inside the 640px wrapper, faded at the bottom */}}
+{{/* Hero — the walker canvas fills the section, ending at the separator below */}}
 <div class="relative">
-  <div class="absolute left-0 right-0 top-0 pointer-events-none" style="height: 640px; z-index: 0;
-    mask-image: linear-gradient(to bottom, black 0%, black 55%, transparent 100%);
-    -webkit-mask-image: linear-gradient(to bottom, black 0%, black 55%, transparent 100%);">
+  {{/* Hero backdrop: walker canvas, faded to transparent at top and bottom.
+       Walkers traverse the 48px grid on invisible lines. Canvas inset:0
+       sizes it to the hero section, so walkers stop exactly at the border
+       that separates the hero from Three threads. */}}
+  <div class="absolute inset-0 pointer-events-none" style="z-index: 0;
+    mask-image: linear-gradient(to bottom, transparent 0%, black 18%, black 62%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 18%, black 62%, transparent 100%);">
     <canvas id="hero-walkers" class="w-full h-full block"></canvas>
   </div>
 
-  <section class="relative max-w-6xl mx-auto px-6 lg:px-10 pt-12 pb-16" style="z-index: 1;">
+  <section class="relative max-w-6xl mx-auto px-6 lg:px-10 pt-12 pb-28" style="z-index: 1;">
     <div class="mono-eyebrow-accent mb-5 flex items-center gap-2.5">
       <span aria-hidden>&#x25E2;</span>
       <span>Entry 001 &mdash; The lab is the experiment</span>
     </div>
     <h1 class="font-display font-bold text-balance"
       style="font-size: clamp(44px, 6.2vw, 84px); line-height: 0.98; letter-spacing: -0.04em; margin: 0;">
-      Relaxed
-      <span style="background: linear-gradient(transparent 62%, var(--c-accent-soft) 62%);">Constraints</span>.
+      <span style="background: linear-gradient(transparent 62%, var(--c-accent-soft) 62%);">Relaxed Constraints</span>.
     </h1>
     <p class="mt-7 max-w-[680px] text-[1.06rem] leading-[1.55]" style="color: var(--c-gray-300);">
       We don't retrofit automation onto human processes. We design the processes for agents and keep humans where
@@ -30,9 +33,9 @@
 </div>
 
 {{/* Pillars */}}
-<section class="max-w-6xl mx-auto px-6 lg:px-10 mt-12 pt-14 border-t" style="border-color: var(--c-border);">
+<section class="max-w-6xl mx-auto px-6 lg:px-10 pt-14 border-t" style="border-color: var(--c-border);">
   <div class="flex items-baseline justify-between mb-12">
-    <h2 class="font-display font-semibold text-[2rem] m-0" style="letter-spacing: -0.02em;">Three threads</h2>
+    <h2 class="font-display font-semibold text-[2rem] m-0" style="letter-spacing: -0.02em;">Current Focus</h2>
     <span class="mono-eyebrow">// pillars.md</span>
   </div>
   <div class="grid grid-cols-1 md:grid-cols-3">
@@ -59,7 +62,7 @@
 {{ if gt (len $blogPages) 0 }}
 <section class="max-w-6xl mx-auto px-6 lg:px-10 mt-24 pt-14 border-t" style="border-color: var(--c-border);">
   <div class="flex items-baseline justify-between mb-10">
-    <h2 class="font-display font-semibold text-[2rem] m-0" style="letter-spacing: -0.02em;">Blog</h2>
+    <h2 class="font-display font-semibold text-[2rem] m-0" style="letter-spacing: -0.02em;">Research Blog</h2>
     <a href="/blog/" class="mono-eyebrow hover:text-[var(--c-text)]" style="color: var(--c-gray-300);">&gt; all</a>
   </div>
   <div>
