@@ -14,13 +14,15 @@
   {{ if $projects }}
   <div class="grid gap-5" style="grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));">
     {{ range $projects }}
-    {{ $accent := .Params.accent | default "#b8421e" }}
+    {{ $projStyle := "border-radius: 2px;" }}
+    {{ with .Params.accent }}{{ $projStyle = printf "%s --proj-accent-light: %s;" $projStyle . }}{{ end }}
+    {{ with .Params.accent_dark }}{{ $projStyle = printf "%s --proj-accent-dark: %s;" $projStyle . }}{{ end }}
     <a href="{{ .RelPermalink }}"
-      class="block relative px-6 pt-5 pb-6 card-surface transition-transform hover:-translate-y-0.5"
-      style="border-radius: 2px;">
-      <div class="absolute left-0 right-0 top-0 h-[3px]" style="background: {{ $accent }};"></div>
+      class="project-themed block relative px-6 pt-5 pb-6 card-surface transition-transform hover:-translate-y-0.5"
+      style="{{ $projStyle | safeCSS }}">
+      <div class="absolute left-0 right-0 top-0 h-[3px]" style="background: var(--proj-accent);"></div>
       <div class="flex justify-between items-center mb-4 mt-1">
-        <span class="font-mono text-[0.72rem] tracking-[0.18em] font-medium" style="color: {{ $accent }};">{{ .Params.code }}</span>
+        <span class="font-mono text-[0.72rem] tracking-[0.18em] font-medium" style="color: var(--proj-accent);">{{ .Params.code }}</span>
         {{ partial "research/status-pill.html" (.Params.status | default "active") }}
       </div>
       <div class="mb-3">

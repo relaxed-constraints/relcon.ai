@@ -94,6 +94,13 @@ a { transition: color 0.2s ease-in-out; }
   display: inline-block;
 }
 
+/* Per-project accent. Elements with .project-themed and inline
+   --proj-accent-light / --proj-accent-dark custom properties expose a
+   single --proj-accent that auto-flips with the theme. Templates fall
+   back to the site accent when the project frontmatter omits a value. */
+.project-themed { --proj-accent: var(--proj-accent-light, var(--c-accent)); }
+.dark .project-themed { --proj-accent: var(--proj-accent-dark, var(--c-accent)); }
+
 /* Card surface */
 .card-surface {
   background: var(--c-surface);
