@@ -6,7 +6,7 @@ date: 2024-09-01
 
 # Project chrome
 code: "ORiG-01"
-accent: "cyan"
+# accent: "cyan"
 status: "active"             # active | exploratory | shipped | paused
 association: "mongodb"       # mongodb | sydney | solo
 started: "2024-09"

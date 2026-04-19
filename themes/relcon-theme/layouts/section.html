@@ -1,16 +1,30 @@
 {{ define "main" }}
-<div class="max-w-3xl mx-auto px-6 pt-28 pb-16">
-  <h1 class="text-4xl md:text-5xl font-display font-bold mb-8">{{ .Title }}</h1>
+<div class="max-w-5xl mx-auto px-6 lg:px-10 pt-12 pb-16">
+  <header class="mb-12">
+    <div class="mono-eyebrow mb-3.5 flex items-center gap-2.5">
+      <span style="color: var(--c-accent);">&#x25E2;</span>{{ lower .Title }} &middot; index
+    </div>
+    <h1 class="font-display font-semibold m-0" style="font-size: clamp(44px, 5.5vw, 72px); letter-spacing: -0.025em;">{{ .Title }}</h1>
+    {{ with .Params.description }}
+    <p class="mt-4 max-w-[560px] text-[1.04rem] leading-[1.55]" style="color: var(--c-gray-300);">{{ . }}</p>
+    {{ end }}
+  </header>
+
   <div class="prose max-w-none">
     {{ .Content }}
   </div>
-  {{ range .Pages }}
-  <div class="py-4 border-b border-dark-border">
-    <h2 class="text-lg font-display font-semibold mt-0 mb-1">
-      <a href="{{ .RelPermalink }}" class="hover:text-accent transition-colors">{{ .Title }}</a>
-    </h2>
-    {{ with .Params.description }}
-    <p class="text-gray-400 text-sm mb-0">{{ . }}</p>
+
+  {{ with .Pages }}
+  <div class="mt-10">
+    {{ range . }}
+    <div class="py-4 border-b" style="border-color: var(--c-border);">
+      <h2 class="text-lg font-display font-semibold mt-0 mb-1">
+        <a href="{{ .RelPermalink }}" class="hover:text-[var(--c-accent)] transition-colors">{{ .Title }}</a>
+      </h2>
+      {{ with .Params.description }}
+      <p class="text-sm mb-0" style="color: var(--c-gray-300);">{{ . }}</p>
+      {{ end }}
+    </div>
     {{ end }}
   </div>
   {{ end }}
