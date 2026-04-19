@@ -94,12 +94,12 @@ a { transition: color 0.2s ease-in-out; }
   display: inline-block;
 }
 
-/* Per-project accent. Elements with .project-themed and inline
-   --proj-accent-light / --proj-accent-dark custom properties expose a
-   single --proj-accent that auto-flips with the theme. Templates fall
-   back to the site accent when the project frontmatter omits a value. */
-.project-themed { --proj-accent: var(--proj-accent-light, var(--c-accent)); }
-.dark .project-themed { --proj-accent: var(--proj-accent-dark, var(--c-accent)); }
+/* Per-project accent. Templates set --proj-accent-color inline on the
+   .project-themed element (to a named token like `var(--c-cyan)` or to
+   a raw hex). That token itself flips with the theme, so no separate
+   light/dark override is needed here. Falls back to the site accent
+   when the project doesn't specify one. */
+.project-themed { --proj-accent: var(--proj-accent-color, var(--c-accent)); }
 
 /* Card surface */
 .card-surface {

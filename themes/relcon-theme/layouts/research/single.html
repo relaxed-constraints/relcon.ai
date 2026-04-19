@@ -1,10 +1,12 @@
 {{ define "main" }}
 {{- $p := .Params -}}
-{{- /* Per-project accent — inline custom properties let the CSS rule in
-     main.css resolve --proj-accent to the right variant per theme. */ -}}
+{{- /* Per-project accent: frontmatter takes a named color token (e.g.
+     `accent: cyan` → var(--c-cyan)) or a hex string. */ -}}
 {{- $projStyle := "" -}}
-{{- with $p.accent }}{{ $projStyle = printf "%s --proj-accent-light: %s;" $projStyle . }}{{ end -}}
-{{- with $p.accent_dark }}{{ $projStyle = printf "%s --proj-accent-dark: %s;" $projStyle . }}{{ end -}}
+{{- with $p.accent -}}
+  {{- $color := cond (hasPrefix . "#") . (printf "var(--c-%s)" .) -}}
+  {{- $projStyle = printf "--proj-accent-color: %s;" $color -}}
+{{- end -}}
 
 {{/* Build section list: id, label, partial, show? */}}
 {{- $sections := slice

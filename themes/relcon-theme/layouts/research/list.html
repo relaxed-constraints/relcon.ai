@@ -15,8 +15,10 @@
   <div class="grid gap-5" style="grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));">
     {{ range $projects }}
     {{ $projStyle := "border-radius: 2px;" }}
-    {{ with .Params.accent }}{{ $projStyle = printf "%s --proj-accent-light: %s;" $projStyle . }}{{ end }}
-    {{ with .Params.accent_dark }}{{ $projStyle = printf "%s --proj-accent-dark: %s;" $projStyle . }}{{ end }}
+    {{ with .Params.accent }}
+      {{ $color := cond (hasPrefix . "#") . (printf "var(--c-%s)" .) }}
+      {{ $projStyle = printf "%s --proj-accent-color: %s;" $projStyle $color }}
+    {{ end }}
     <a href="{{ .RelPermalink }}"
       class="project-themed block relative px-6 pt-5 pb-6 card-surface transition-transform hover:-translate-y-0.5"
       style="{{ $projStyle | safeCSS }}">
