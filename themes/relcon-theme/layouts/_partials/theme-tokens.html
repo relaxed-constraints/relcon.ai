@@ -1,0 +1,69 @@
+{{/* Shared color tokens — single source of truth for light/dark palette.
+     Included in the main site head and in slides/baseof.html so the site
+     prose, the reveal.js slide theme, and any future surface all stay in
+     lock-step when the palette changes. */}}
+<style>
+:root {
+  --c-bg: #F4F4F6;
+  --c-surface: #FFFFFF;
+  --c-muted: #E7E7E7;
+  --c-code-bg: #FFFFFF;
+  --c-border: #D2D2D4;
+  --c-text: #111114;
+  --c-gray-200: #222228;
+  --c-gray-300: #5a5a62;
+  --c-gray-400: #72727a;
+  --c-gray-500: #8e8e97;
+  --c-gray-600: #b0b0b8;
+  --c-accent: #FF634A;
+  --c-accent-light: #FF7864;
+  --c-accent-dark: #E5503A;
+  --c-accent-soft: rgba(255, 99, 74, 0.28);
+  --c-code-border: #D2D2D4;
+  --c-code-text: #111114;
+  --c-code-line-nr: #8e8e97;
+  --c-code-hl: #dddde0;
+
+  /* Named color tokens (flexoki-ish) — for per-project accents, highlights
+     in diagrams / charts, etc. Flip to dark variants in `.dark` below. */
+  --c-red:     #AF3029;
+  --c-orange:  #BC5215;
+  --c-yellow:  #AD8301;
+  --c-green:   #66800B;
+  --c-cyan:    #24837B;
+  --c-blue:    #205EA6;
+  --c-purple:  #5E409D;
+  --c-magenta: #A02F6F;
+}
+.dark {
+  --c-bg: #111115;
+  --c-surface: #1a1a20;
+  --c-muted: #0e0e12;
+  --c-code-bg: #0b0b10;
+  --c-border: #2a2a32;
+  --c-text: #ebebf0;
+  --c-gray-200: #d4d4dc;
+  --c-gray-300: #98989f;
+  --c-gray-400: #75757d;
+  --c-gray-500: #55555d;
+  --c-gray-600: #3a3a40;
+  --c-accent: #FF7A65;
+  --c-accent-light: #FF8E7C;
+  --c-accent-dark: #E5634E;
+  --c-accent-soft: rgba(255, 122, 101, 0.38);
+  --c-code-border: #2a2a32;
+  --c-code-text: #d4d4dc;
+  --c-code-line-nr: #55555d;
+  --c-code-hl: #1e1e24;
+
+  /* Named color tokens — dark variants */
+  --c-red:     #D14D41;
+  --c-orange:  #DA702C;
+  --c-yellow:  #D0A215;
+  --c-green:   #879A39;
+  --c-cyan:    #3AA99F;
+  --c-blue:    #4385BE;
+  --c-purple:  #8B7EC8;
+  --c-magenta: #CE5D97;
+}
+</style>

@@ -1,0 +1,12 @@
+{{- /* Overview block: hypothesis callout + markdown body. Arg: Page */ -}}
+<div class="text-[1.04rem] leading-[1.7]" style="color: var(--c-text);">
+  {{ with .Params.hypothesis }}
+  <div class="mb-6" style="border-left: 3px solid var(--c-accent); padding: 0.2em 0 0.2em 1.25rem;">
+    <div class="font-mono text-[0.66rem] tracking-[0.18em] uppercase mb-2" style="color: var(--c-accent);">Hypothesis</div>
+    <p class="font-display font-medium m-0 text-balance" style="font-size: 1.15rem; line-height: 1.35; letter-spacing: -0.01em;">{{ . }}</p>
+  </div>
+  {{ end }}
+  <div class="prose max-w-none">
+    {{ .Content }}
+  </div>
+</div>

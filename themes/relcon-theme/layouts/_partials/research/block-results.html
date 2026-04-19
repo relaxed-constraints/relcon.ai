@@ -1,0 +1,13 @@
+{{- /* Key results ribbon. Arg: Page */ -}}
+{{- $items := default slice .Params.results -}}
+{{- if $items }}
+{{- $n := len $items -}}
+<div class="grid card-surface" style="grid-template-columns: repeat({{ cond (gt $n 3) 3 $n }}, 1fr);">
+  {{ range $i, $r := $items }}
+  <div class="py-5 px-5" style="{{ if lt $i (sub $n 1) }}border-right: 1px solid var(--c-border);{{ end }}">
+    <div class="font-display font-bold" style="font-size: 1.8rem; letter-spacing: -0.02em; color: var(--proj-accent);">{{ $r.value }}</div>
+    <div class="font-mono text-[0.72rem] tracking-[0.08em] mt-1" style="color: var(--c-gray-300);">{{ $r.caption }}</div>
+  </div>
+  {{ end }}
+</div>
+{{ end }}

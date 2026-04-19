@@ -13,29 +13,43 @@
 <body class="min-h-screen flex flex-col bg-dark text-off-white font-body">
   {{ partial "header.html" . }}
   <main class="flex-grow">
-    <div class="max-w-4xl mx-auto px-6 pt-28 pb-16">
-      <h1 class="text-4xl md:text-5xl font-display font-bold mb-4">Slides</h1>
-      <p class="text-gray-400 mb-12">Presentations, research talks, and pitches.</p>
-
-      {{ range .Pages.ByDate.Reverse }}
-      <a href="{{ .RelPermalink }}" data-date="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}" class="block py-6 border-b border-dark-border group">
-        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1 mb-2">
-          <h2 class="text-lg font-display font-semibold group-hover:text-accent transition-colors mt-0 mb-0">{{ .Title }}</h2>
-          <time class="text-sm text-gray-500 shrink-0">{{ .Date.Format "Jan 2, 2006" }}</time>
+    <div class="max-w-5xl mx-auto px-6 lg:px-10 pt-12 pb-16">
+      <header class="mb-12">
+        <div class="mono-eyebrow mb-3.5 flex items-center gap-2.5">
+          <span style="color: var(--c-accent);">&#x25E2;</span>slides &middot; index
         </div>
-        {{ with .Params.description }}
-        <p class="text-gray-400 text-sm mb-0">{{ . }}</p>
+        <h1 class="font-display font-semibold m-0" style="font-size: clamp(44px, 5.5vw, 72px); letter-spacing: -0.025em;">Slides</h1>
+        <p class="mt-4 max-w-[560px] text-[1.04rem] leading-[1.55]" style="color: var(--c-gray-300);">
+          Presentation decks from talks, workshops, and conferences.
+        </p>
+      </header>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        {{ range .Pages.ByDate.Reverse }}
+        <a href="{{ .RelPermalink }}" data-date="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}"
+          class="block p-4 card-surface group hover:-translate-y-0.5 transition-transform">
+          <div class="aspect-video mb-3 grid place-items-center relative overflow-hidden font-display italic text-center px-3"
+            style="background: linear-gradient(135deg, var(--c-accent), var(--c-gray-500)); color: var(--c-bg); font-size: 0.95rem;">
+            <div class="absolute inset-0 opacity-[0.15]"
+              style="background-image: repeating-linear-gradient(135deg, rgba(255,255,255,0.4) 0 1px, transparent 1px 8px);"></div>
+            <span class="relative z-10">{{ .Title }}</span>
+          </div>
+          <h2 class="font-display font-semibold m-0 mb-1 group-hover:text-[var(--c-accent)]"
+            style="font-size: 1rem; letter-spacing: -0.01em; line-height: 1.2;">{{ .Title }}</h2>
+          <div class="text-[0.76rem]" style="color: var(--c-gray-300);">
+            {{ with .Params.event }}{{ . }} &middot; {{ end }}{{ .Date.Format "Jan 2006" }}
+          </div>
+          {{ with .Params.description }}
+          <p class="mt-1.5 m-0 text-[0.78rem] leading-[1.45]" style="color: var(--c-gray-300);">{{ . }}</p>
+          {{ end }}
+        </a>
         {{ end }}
-        {{ with .Params.event }}
-        <p class="text-gray-500 text-xs mt-1">{{ . }}</p>
-        {{ end }}
-      </a>
-      {{ end }}
+      </div>
 
       {{ if not .Pages }}
-      <p class="text-gray-500 italic">No presentations yet.</p>
+      <p class="italic mt-4" style="color: var(--c-gray-500);">No presentations yet.</p>
       {{ end }}
-      <p class="text-gray-500 italic" id="no-slides-js" style="display:none">No presentations yet.</p>
+      <p class="italic mt-4" style="color: var(--c-gray-500); display:none" id="no-slides-js">No presentations yet.</p>
 
       <script>
       (function() {
@@ -43,15 +57,10 @@
         var items = document.querySelectorAll('a[data-date]');
         var visible = 0;
         items.forEach(function(el) {
-          if (new Date(el.dataset.date).getTime() > now) {
-            el.style.display = 'none';
-          } else {
-            visible++;
-          }
+          if (new Date(el.dataset.date).getTime() > now) el.style.display = 'none';
+          else visible++;
         });
-        if (items.length > 0 && visible === 0) {
-          document.getElementById('no-slides-js').style.display = '';
-        }
+        if (items.length > 0 && visible === 0) document.getElementById('no-slides-js').style.display = '';
       })();
       </script>
     </div>

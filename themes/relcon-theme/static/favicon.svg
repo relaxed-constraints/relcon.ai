@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 401">
+  <style>
+    .ink { fill: #111114; }
+    .accent { fill: #FF634A; }
+    @media (prefers-color-scheme: dark) {
+      .ink { fill: #ebebf0; }
+      .accent { fill: #FF7A65; }
+    }
+  </style>
+  <g class="ink">
+    <path d="M177.178 80H0V0H241.178L177.178 80Z"/>
+    <path d="M91.5781 187H0V107H155.578L91.5781 187Z"/>
+    <path d="M156.022 294H0V214H92.0218L156.022 294Z"/>
+    <path d="M241.621 401H0V321H177.622L241.621 401Z"/>
+  </g>
+  <g class="accent">
+    <path d="M279.628 80L343.628 0H400V80H279.628Z"/>
+    <path d="M194.027 187L258.027 107H400V187H194.027Z"/>
+    <path d="M258.471 294L194.471 214H400V294H258.471Z"/>
+    <path d="M344.071 401L280.071 321H400V401H344.071Z"/>
+  </g>
+</svg>

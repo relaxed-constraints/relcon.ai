@@ -1,497 +1,97 @@
 {{ define "main" }}
 
-{{/* Hero Section */}}
-<section class="hero-gradient flex items-center justify-center relative overflow-hidden -mt-[68px] pt-[200px] pb-12">
-  <canvas id="dot-grid" class="absolute inset-0 w-full h-full pointer-events-none" style="z-index:0"></canvas>
-
-  <div class="w-full relative z-10">
-    <div class="max-w-6xl mx-auto px-6 flex flex-col items-center">
-      <div class="relative mb-6 pl-8" id="hero-typer">
-        {{/* Line 1: Rel... */}}
-        <div class="text-[clamp(3rem,10vw,8rem)] leading-none font-hero font-bold tracking-tight whitespace-nowrap">
-          <span class="text-[#F2A74B]">Rel</span><span class="hero-suffix-rel" id="rel-suffix"></span><span class="typing-cursor" id="rel-cursor">|</span>
-        </div>
-        {{/* Line 2: Con... */}}
-        <div class="text-[clamp(3rem,10vw,8rem)] leading-none font-hero font-bold tracking-tight whitespace-nowrap mt-1">
-          <span class="text-[#0d9488]">Con</span><span class="hero-suffix-con" id="con-suffix"></span><span class="typing-cursor" id="con-cursor">|</span>
-        </div>
-      </div>
-      <p class="text-lg md:text-xl text-gray-200 mb-16 font-body font-light leading-relaxed text-center">
-        {{ .Params.hero_subtitle | default "Building the next generation of intelligent systems." }}
-      </p>
-    </div>
-    <div class="flex flex-row gap-4 justify-center px-6 mt-2 mb-6">
-      {{ if gt (len (where site.RegularPages "Type" "blog")) 0 }}
-      <a href="/blog/"
-        class="px-8 py-3 bg-accent hover:bg-accent-dark text-white font-medium rounded-lg transition-colors text-sm">
-        Read our Blog
-      </a>
-      {{ end }}
-      <a href="/about/"
-        class="px-8 py-3 border border-gray-600 hover:border-accent text-off-white rounded-lg transition-colors text-sm">
-        Learn More
-      </a>
-    </div>
+{{/* Hero — the walker canvas fills the section, ending at the separator below */}}
+<div class="relative">
+  {{/* Hero backdrop: walker canvas, faded to transparent at top and bottom.
+       Walkers traverse the 48px grid on invisible lines. Canvas inset:0
+       sizes it to the hero section, so walkers stop exactly at the border
+       that separates the hero from Three threads. */}}
+  <div class="absolute inset-0 pointer-events-none" style="z-index: 0;
+    mask-image: linear-gradient(to bottom, transparent 0%, black 18%, black 62%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 18%, black 62%, transparent 100%);">
+    <canvas id="hero-walkers" class="w-full h-full block"></canvas>
   </div>
-</section>
 
-<script>
-(function() {
-  // Rel + adjective/modifier suffixes (positive words only)
-  const relWords = [
-    'axed',         // Relaxed
-    'evant',        // Relevant
-    'iable',        // Reliable
-    'iant',         // Reliant
-    'entless',      // Relentless
-    'atable',       // Relatable
-    'ished',        // Relished
-    'ucent',        // Relucent
-    'ative',        // Relative
-    'ayed',         // Relayed
-    'eased',        // Released
-    'ished',        // Relished
-  ];
-  // Con + noun suffixes (positive words only)
-  const conWords = [
-    'straints',     // Constraints
-    'nection',      // Connection
-    'vergence',     // Convergence
-    'fidence',      // Confidence
-    'sciousness',   // Consciousness
-    'stellation',   // Constellation
-    'tinuity',      // Continuity
-    'sensus',       // Consensus
-    'text',         // Context
-    'cept',         // Concept
-    'tribution',    // Contribution
-    'viction',      // Conviction
-    'cord',         // Concord
-    'fluence',      // Confluence
-    'gruence',      // Congruence
-    'stancy',       // Constancy
-    'sonance',      // Consonance
-    'tent',         // Content
-    'sideration',   // Consideration
-    'centration',   // Concentration
-    'versation',    // Conversation
-    'duction',      // Conduction
-    'naissance',    // Connaissance
-  ];
-
-  // Index of the "home" words (Relaxed / Constraints)
-  var HOME_REL = 0;  // 'axed'
-  var HOME_CON = 0;  // 'straints'
-
-  var container = document.getElementById('hero-typer');
-  var relSuffix = document.getElementById('rel-suffix');
-  var conSuffix = document.getElementById('con-suffix');
-  var relCursor = document.getElementById('rel-cursor');
-  var conCursor = document.getElementById('con-cursor');
-
-  // Pre-measure the widest word in each row to lock the container width
-  function lockWidth() {
-    var maxW = container.offsetWidth;
-    relWords.forEach(function(w) {
-      relSuffix.textContent = w;
-      if (container.offsetWidth > maxW) maxW = container.offsetWidth;
-    });
-    relSuffix.textContent = '';
-    conWords.forEach(function(w) {
-      conSuffix.textContent = w;
-      if (container.offsetWidth > maxW) maxW = container.offsetWidth;
-    });
-    conSuffix.textContent = '';
-    container.style.minWidth = maxW + 'px';
-  }
-  lockWidth();
-  window.addEventListener('resize', function() {
-    container.style.minWidth = '';
-    lockWidth();
-  });
-
-  var TYPE_SPEED = 100;
-  var FADE_DURATION = 1200;
-  var PAUSE_AFTER_TYPE = 2000;
-  var PAUSE_BETWEEN_LINES = 600;
-  var INITIAL_HOLD = 5000;
-  var FADE_STAGGER = 600;
-
-  var lastRel = -1, lastCon = -1;
-  function pick(arr, last) {
-    var i;
-    do { i = Math.floor(Math.random() * arr.length); } while (i === last && arr.length > 1);
-    return i;
-  }
-
-  function typeText(el, text, cursor, cb) {
-    var i = 0;
-    cursor.style.opacity = '1';
-    cursor.classList.add('blinking');
-    el.style.opacity = '1';
-    var iv = setInterval(function() {
-      i++;
-      el.textContent = text.slice(0, i);
-      if (i >= text.length) {
-        clearInterval(iv);
-        cursor.classList.remove('blinking');
-        cursor.style.opacity = '0';
-        cb();
-      }
-    }, TYPE_SPEED);
-  }
-
-  function fadeOut(el, cb) {
-    el.style.transition = 'opacity ' + FADE_DURATION + 'ms ease';
-    el.style.opacity = '0';
-    setTimeout(function() {
-      el.textContent = '';
-      el.style.transition = '';
-      cb();
-    }, FADE_DURATION);
-  }
-
-  // Initial: show "Relaxed" + "Constraints" immediately, then hold for 5 seconds
-  function start() {
-    lastRel = HOME_REL;
-    lastCon = HOME_CON;
-
-    relSuffix.textContent = relWords[HOME_REL];
-    relSuffix.style.opacity = '1';
-    relCursor.style.opacity = '0';
-    conSuffix.textContent = conWords[HOME_CON];
-    conSuffix.style.opacity = '1';
-    conCursor.style.opacity = '0';
-
-    setTimeout(loop, INITIAL_HOLD);
-  }
-
-  // Continuous loop: fade out and type in with overlap
-  function loop() {
-    var nextRel = pick(relWords, lastRel);
-    var nextCon = pick(conWords, lastCon);
-    lastRel = nextRel;
-    lastCon = nextCon;
-
-    fadeOut(relSuffix, function() {
-      typeText(relSuffix, relWords[nextRel], relCursor, function() {});
-    });
-
-    setTimeout(function() {
-      fadeOut(conSuffix, function() {
-        typeText(conSuffix, conWords[nextCon], conCursor, function() {
-          setTimeout(loop, PAUSE_AFTER_TYPE);
-        });
-      });
-    }, FADE_STAGGER);
-  }
-
-  setTimeout(start, 600);
-})();
-
-// Animated dot grid — the Hero of all Heroes
-(function() {
-  var canvas = document.getElementById('dot-grid');
-  if (!canvas) return;
-  var ctx = canvas.getContext('2d');
-  var dpr = window.devicePixelRatio || 1;
-  var spacing = 20;
-  var w, h, cols, rows;
-  var mouseX = -9999, mouseY = -9999;
-  var mouseRadius = 150;       // influence radius
-  var mouseForce = 12;         // how far dots push away
-  var canvasRect;
-  var FRICTION = 0.06;         // how fast dots catch up (0=frozen, 1=instant)
-  var RETURN_FRICTION = 0.03;  // slower return when mouse leaves
-
-  // Per-dot displacement state for friction/inertia
-  var dispX, dispY;
-
-  // Trail of recent mouse positions for a comet-tail effect
-  var trail = [];
-  var TRAIL_LEN = 12;
-
-  function isDark() {
-    return document.documentElement.classList.contains('dark');
-  }
-
-  function resize() {
-    canvasRect = canvas.parentElement.getBoundingClientRect();
-    w = canvasRect.width;
-    h = canvasRect.height;
-    canvas.width = w * dpr;
-    canvas.height = h * dpr;
-    canvas.style.width = w + 'px';
-    canvas.style.height = h + 'px';
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    var oldCols = cols, oldRows = rows;
-    cols = Math.ceil(w / spacing) + 2;
-    rows = Math.ceil(h / spacing) + 2;
-    var total = cols * rows;
-    // Preserve existing displacement on resize, or init to zero
-    var newDX = new Float32Array(total);
-    var newDY = new Float32Array(total);
-    if (dispX && oldCols) {
-      for (var r = 0; r < Math.min(rows, oldRows); r++) {
-        for (var c = 0; c < Math.min(cols, oldCols); c++) {
-          newDX[r * cols + c] = dispX[r * oldCols + c];
-          newDY[r * cols + c] = dispY[r * oldCols + c];
-        }
-      }
-    }
-    dispX = newDX;
-    dispY = newDY;
-  }
-  resize();
-  window.addEventListener('resize', resize);
-
-  // Track mouse with smooth trailing
-  canvas.parentElement.addEventListener('mousemove', function(e) {
-    mouseX = e.clientX - canvasRect.left;
-    mouseY = e.clientY - canvasRect.top;
-    trail.unshift({ x: mouseX, y: mouseY });
-    if (trail.length > TRAIL_LEN) trail.length = TRAIL_LEN;
-  });
-  canvas.parentElement.addEventListener('mouseleave', function() {
-    mouseX = -9999;
-    mouseY = -9999;
-    trail = [];
-  });
-
-  function draw(t) {
-    ctx.clearRect(0, 0, w, h);
-    var s = t * 0.0003;
-    var dark = isDark();
-    // In light mode, dots are slightly more opaque to stay visible
-    var alphaBase = dark ? 0.10 : 0.18;
-    var alphaWave = dark ? 0.12 : 0.14;
-    var alphaMax = dark ? 0.55 : 0.45;
-
-    for (var row = 0; row < rows; row++) {
-      for (var col = 0; col < cols; col++) {
-        var idx = row * cols + col;
-        var baseX = col * spacing;
-        var baseY = row * spacing;
-
-        // Distance from visual center (for radial effects)
-        var cdx = (baseX - w * 0.4) / w;
-        var cdy = (baseY - h * 0.5) / h;
-        var dist = Math.sqrt(cdx * cdx + cdy * cdy);
-        var angle = Math.atan2(cdy, cdx);
-
-        // === WAVE FIELD ===
-        var w1 = Math.sin(dist * 25 - t * 0.002);
-        var w2 = Math.sin(baseX * 0.015 + baseY * 0.01 + s * 3);
-        var w3 = Math.sin(baseY * 0.02 - baseX * 0.005 + s * 2) * 0.6;
-        var w4 = Math.cos(dist * 15 + t * 0.001 + angle * 3) * 0.4;
-        var w5 = Math.sin(baseX * 0.008 + t * 0.0008) * Math.cos(baseY * 0.006 + t * 0.0006) * 0.5;
-        var wave = (w1 + w2 + w3 + w4 + w5) / 3.5;
-
-        // === MOUSE REPULSION (target force) ===
-        var targetPX = 0, targetPY = 0;
-        var mouseGlow = 0;
-        var mouseHeat = 0;
-
-        // React to current mouse and trail (creates wake effect)
-        for (var ti = 0; ti < trail.length; ti++) {
-          var tp = trail[ti];
-          var tmx = baseX - tp.x;
-          var tmy = baseY - tp.y;
-          var tmd = Math.sqrt(tmx * tmx + tmy * tmy);
-          var falloff = 1 - (ti / TRAIL_LEN);  // trail fades
-          var trailRadius = mouseRadius * (1 - ti * 0.04);
-
-          if (tmd < trailRadius && tmd > 0) {
-            var strength = (1 - tmd / trailRadius);
-            strength = strength * strength * falloff;  // quadratic falloff
-            targetPX += (tmx / tmd) * mouseForce * strength;
-            targetPY += (tmy / tmd) * mouseForce * strength;
-            mouseGlow = Math.max(mouseGlow, strength * falloff);
-            mouseHeat += strength * falloff * 0.3;
-          }
-        }
-
-        // Also react to current position even without trail
-        var mx = baseX - mouseX;
-        var my = baseY - mouseY;
-        var md = Math.sqrt(mx * mx + my * my);
-        if (md < mouseRadius && md > 0) {
-          var ms = (1 - md / mouseRadius);
-          ms = ms * ms;
-          targetPX += (mx / md) * mouseForce * ms * 1.5;
-          targetPY += (my / md) * mouseForce * ms * 1.5;
-          mouseGlow = Math.max(mouseGlow, ms);
-          mouseHeat = Math.max(mouseHeat, ms);
-        }
-
-        // === FRICTION: lerp current displacement toward target ===
-        var fric = (targetPX === 0 && targetPY === 0) ? RETURN_FRICTION : FRICTION;
-        dispX[idx] += (targetPX - dispX[idx]) * fric;
-        dispY[idx] += (targetPY - dispY[idx]) * fric;
-
-        var drawX = baseX + dispX[idx];
-        var drawY = baseY + dispY[idx];
-
-        // === SIZE & OPACITY ===
-        var r = 1.5 + 2.0 * wave;
-        // Mouse proximity makes dots swell and brighten
-        r += mouseGlow * 3.0;
-        if (r < 0.15) r = 0.15;
-        if (r > 6.0) r = 6.0;
-
-        var alpha = alphaBase + alphaWave * wave;
-        alpha += mouseGlow * 0.35;
-        if (alpha < 0.02) alpha = 0.02;
-        if (alpha > alphaMax) alpha = alphaMax;
-
-        // === COLOR ===
-        // Monochrome teal — slightly lighter at edges
-        var tealAmt = 1 - Math.min(dist * 1.5, 1);
-        var cr = 20 + 25 * (1 - tealAmt);
-        var cg = 184 + 28 * (1 - tealAmt);
-        var cb = 166 + 46 * (1 - tealAmt);
-
-        // Mouse heat shifts toward bright teal/white
-        if (mouseHeat > 0) {
-          cr = cr + (220 - cr) * mouseHeat * 0.6;
-          cg = cg + (255 - cg) * mouseHeat * 0.5;
-          cb = cb + (255 - cb) * mouseHeat * 0.7;
-        }
-
-        // Draw the dot
-        ctx.beginPath();
-        ctx.arc(drawX, drawY, r, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(' + Math.round(cr) + ',' + Math.round(cg) + ',' + Math.round(cb) + ',' + alpha + ')';
-        ctx.fill();
-
-        // Extra glow ring for dots near mouse
-        if (mouseGlow > 0.3) {
-          ctx.beginPath();
-          ctx.arc(drawX, drawY, r * 2.5, 0, Math.PI * 2);
-          ctx.fillStyle = 'rgba(' + Math.round(cr) + ',' + Math.round(cg) + ',' + Math.round(cb) + ',' + (mouseGlow * 0.06) + ')';
-          ctx.fill();
-        }
-      }
-    }
-
-    // Slowly fade trail when mouse stops
-    if (trail.length > 0 && mouseX === -9999) {
-      trail.pop();
-    }
-
-    requestAnimationFrame(draw);
-  }
-  requestAnimationFrame(draw);
-})();
-</script>
-
-{{/* Focus Areas */}}
-<section class="pt-8 pb-12 border-t border-dark-border">
-  <div class="max-w-6xl mx-auto px-6">
-    <h2 class="text-3xl md:text-4xl font-display font-bold text-center mb-16">What We Do</h2>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-
-      <div class="p-6 rounded-xl border border-dark-border card-surface glow-hover">
-        <div class="flex items-center gap-3 mb-3">
-          <div class="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center shrink-0">
-            <svg class="w-5 h-5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z" />
-            </svg>
-          </div>
-          <h3 class="text-lg font-display font-semibold text-off-white leading-none !m-0">Autonomous Agents</h3>
-        </div>
-        <p class="text-gray-400 text-sm leading-relaxed">AI agents that plan multi-step workflows, evaluate their own outputs, and improve over time. We design processes around agent capabilities and build systems where the entire organisation can be steered by autonomous agents with human oversight.</p>
-      </div>
-
-      <div class="p-6 rounded-xl border border-dark-border card-surface glow-hover">
-        <div class="flex items-center gap-3 mb-3">
-          <div class="w-10 h-10 rounded-lg bg-[#F2A74B]/10 flex items-center justify-center shrink-0">
-            <svg class="w-5 h-5 text-[#F2A74B]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z" />
-            </svg>
-          </div>
-          <h3 class="text-lg font-display font-semibold text-off-white leading-none !m-0">Self-Improving Systems</h3>
-        </div>
-        <p class="text-gray-400 text-sm leading-relaxed">Closed-loop systems where agents execute tasks, evaluate outcomes, and feed successful patterns back into the process. Every agent action produces a trace that other agents can learn from — the lab improves itself as it runs.</p>
-      </div>
-
-      <div class="p-6 rounded-xl border border-dark-border card-surface glow-hover">
-        <div class="flex items-center gap-3 mb-3">
-          <div class="w-10 h-10 rounded-lg bg-[#06b6d4]/10 flex items-center justify-center shrink-0">
-            <svg class="w-5 h-5 text-[#06b6d4]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125v-3.75m16.5 3.75v3.75c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125v-3.75" />
-            </svg>
-          </div>
-          <h3 class="text-lg font-display font-semibold text-off-white leading-none !m-0">ML & Data Systems</h3>
-        </div>
-        <p class="text-gray-400 text-sm leading-relaxed">Neural architectures for semi-structured data, learned components for document databases, and generative models that work natively with hierarchical data — the research substrate that underpins our agent systems.</p>
-      </div>
-
+  <section class="relative max-w-6xl mx-auto px-6 lg:px-10 pt-12 pb-28" style="z-index: 1;">
+    <div class="mono-eyebrow-accent mb-5 flex items-center gap-2.5">
+      <span aria-hidden>&#x25E2;</span>
+      <span>Entry 001 &mdash; The lab is the experiment</span>
     </div>
-  </div>
-</section>
-
-{{/* How We Work */}}
-<section class="py-8">
-  <div class="max-w-3xl mx-auto px-6">
-    <h2 class="text-3xl md:text-4xl font-display font-bold text-center mb-12">How We Work</h2>
-    <p class="text-gray-400 leading-relaxed mb-6">
-      We practice what we research. Our lab runs on automated pipelines that triage issues, route tasks to AI agents, and track experiments with minimal human intervention. The same infrastructure we build as research tools powers the lab itself.
+    <h1 class="font-display font-bold text-balance"
+      style="font-size: clamp(44px, 6.2vw, 84px); line-height: 0.98; letter-spacing: -0.04em; margin: 0;">
+      <span style="background: linear-gradient(transparent 62%, var(--c-accent-soft) 62%);">Relaxed Constraints</span>.
+    </h1>
+    <p class="mt-7 max-w-[680px] text-[1.06rem] leading-[1.55]" style="color: var(--c-gray-300);">
+      A lab wired to improve itself: AI runs as much of the research loop as possible, and every trace feeds the next iteration.
     </p>
-    <p class="text-gray-400 leading-relaxed">
-      Every process that can be delegated to an agent is. Humans drive prioritization, design decisions, and interpretation — the mechanical work of running experiments, reviewing code, and managing workflows is handled by the systems we build. This isn't a future aspiration; it's how we operate today.
-    </p>
+    <div class="mt-9 flex flex-wrap gap-3">
+      <a href="/research/" class="btn-primary">&rarr; research</a>
+      <a href="/blog/" class="btn-ghost">&darr; blog</a>
+    </div>
+  </section>
+</div>
+
+{{/* Pillars */}}
+<section class="max-w-6xl mx-auto px-6 lg:px-10 pt-14 border-t" style="border-color: var(--c-border);">
+  <div class="flex items-baseline justify-between mb-12">
+    <h2 class="font-display font-semibold text-[2rem] m-0" style="letter-spacing: -0.02em;">Current Focus</h2>
+    <span class="mono-eyebrow">// pillars.md</span>
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-3">
+    {{ $pillars := slice
+      (dict "num" "01" "meta" "ops"      "title" "Autonomous agents"
+            "body" "Agent systems that plan multi-step workflows, evaluate their own outputs, and operate under human oversight. Humans drive prioritisation and interpretation. Mechanical work is delegated.")
+      (dict "num" "02" "meta" "loop"     "title" "Self-improving systems"
+            "body" "Every agent action and routing decision produces a trace. Those traces are data: analysed by other agents, fed back into process. The lab learns from its own behaviour.")
+      (dict "num" "03" "meta" "ML" "title" "ML & data systems"
+            "body" "Neural architectures for semi-structured data &mdash; density estimation, representation learning, and generative models that work natively with nested JSON. Applied to cardinality estimation, query optimisation, and learned indexes.")
+    }}
+    {{ range $i, $p := $pillars }}
+    <article class="p-7 border-l md:border-r-0 {{ if eq $i 2 }}md:border-r{{ end }}" style="border-color: var(--c-border);">
+      <div class="mono-eyebrow-accent mb-3.5">[{{ .num }}] {{ .meta }}</div>
+      <h3 class="font-display font-semibold m-0 mb-3" style="font-size: 1.35rem; letter-spacing: -0.015em; line-height: 1.2;">{{ .title }}</h3>
+      <p class="m-0 text-[0.95rem] leading-[1.62]" style="color: var(--c-gray-300);">{{ .body | safeHTML }}</p>
+    </article>
+    {{ end }}
   </div>
 </section>
 
-{{/* Latest Research Posts — only shown when non-draft blog posts exist */}}
+{{/* Latest posts */}}
 {{ $blogPages := where site.RegularPages "Type" "blog" }}
 {{ if gt (len $blogPages) 0 }}
-<section class="py-8">
-  <div class="max-w-6xl mx-auto px-6">
-    <h2 class="text-3xl md:text-4xl font-display font-bold text-center mb-12">Latest Posts</h2>
-    <div class="max-w-3xl mx-auto">
-      {{ range first 3 $blogPages }}
-      <a href="{{ .RelPermalink }}" data-date="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}" class="block py-6 border-b border-dark-border group">
-        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1 mb-2">
-          <h3 class="text-lg font-display font-semibold group-hover:text-accent transition-colors">{{ .Title }}</h3>
-          <time class="text-sm text-gray-500 shrink-0">{{ .Date.Format "Jan 2, 2006" }}</time>
-        </div>
+<section class="max-w-6xl mx-auto px-6 lg:px-10 mt-24 pt-14 border-t" style="border-color: var(--c-border);">
+  <div class="flex items-baseline justify-between mb-10">
+    <h2 class="font-display font-semibold text-[2rem] m-0" style="letter-spacing: -0.02em;">Research Blog</h2>
+    <a href="/blog/" class="mono-eyebrow hover:text-[var(--c-text)]" style="color: var(--c-gray-300);">&gt; all</a>
+  </div>
+  <div>
+    {{ range $i, $post := first 3 $blogPages }}
+    <a href="{{ .RelPermalink }}" data-date="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}"
+      class="grid grid-cols-1 md:grid-cols-[120px_1fr_70px] gap-4 md:gap-6 py-7 border-t items-baseline group"
+      style="border-color: var(--c-border); {{ if eq (add $i 1) (len (first 3 $blogPages)) }}border-bottom: 1px solid var(--c-border);{{ end }}">
+      <div class="mono-eyebrow">{{ .Date.Format "Jan 2, 2006" }}</div>
+      <div>
+        <h3 class="font-display font-semibold m-0 mb-2 group-hover:text-[var(--c-accent)]"
+          style="font-size: 1.45rem; letter-spacing: -0.015em; line-height: 1.2;">{{ .Title }}</h3>
         {{ with .Params.description }}
-        <p class="text-gray-400 text-sm">{{ . }}</p>
+        <p class="m-0 text-[0.94rem] leading-[1.6]" style="color: var(--c-gray-300);">{{ . }}</p>
         {{ end }}
-      </a>
-      {{ end }}
-    </div>
-    <div class="text-center mt-12">
-      <a href="/blog/" class="text-accent hover:text-accent-light transition-colors text-sm">View all posts &rarr;</a>
-    </div>
+      </div>
+      <div class="font-mono text-[0.72rem] md:text-right" style="color: var(--c-gray-300);">
+        {{ with .Params.read }}{{ . }}{{ else }}&nbsp;{{ end }}
+      </div>
+    </a>
+    {{ end }}
   </div>
 </section>
 <script>
 (function() {
   var now = Date.now();
   document.querySelectorAll('a[data-date]').forEach(function(el) {
-    if (new Date(el.dataset.date).getTime() > now) {
-      el.style.display = 'none';
-    }
+    if (new Date(el.dataset.date).getTime() > now) el.style.display = 'none';
   });
 })();
 </script>
 {{ end }}
-
-{{/* Contact CTA */}}
-<section class="py-12">
-  <div class="max-w-6xl mx-auto px-6 text-center">
-    <h2 class="text-3xl md:text-4xl font-display font-bold mb-4">Get in Touch</h2>
-    <p class="text-gray-400 max-w-xl mx-auto mb-8">
-      Interested in collaborating or learning more about our work?
-    </p>
-    <a href="/contact/"
-      class="px-8 py-3 bg-accent hover:bg-accent-dark text-white font-medium rounded-lg transition-colors inline-block text-sm">
-      Contact Us
-    </a>
-  </div>
-</section>
 
 {{ end }}

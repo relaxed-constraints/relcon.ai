@@ -19,26 +19,45 @@
   {{ $description := or .Description site.Params.description }}
   <meta name="description" content="{{ $description }}">
 
+  {{/* OG image: per-page frontmatter override, else generated card, else site default */}}
+  {{ $ogImage := "" }}
+  {{ with .Params.image }}
+    {{ $ogImage = . | absURL }}
+  {{ else }}
+    {{ $ogImage = partial "og-image.html" . | absURL }}
+  {{ end }}
+
   {{/* Open Graph */}}
   <meta property="og:title" content="{{ .Title }}">
   <meta property="og:description" content="{{ $description }}">
   <meta property="og:type" content="article">
   <meta property="og:url" content="{{ .Permalink }}">
   <meta property="og:site_name" content="{{ site.Title }}">
+  {{ with $ogImage }}
+  <meta property="og:image" content="{{ . }}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  {{ end }}
 
-  <link rel="icon" type="image/svg+xml" href="/images/relcon-logo-color.svg">
+  {{/* Twitter/X card */}}
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ .Title }}">
+  <meta name="twitter:description" content="{{ $description }}">
+  {{ with $ogImage }}<meta name="twitter:image" content="{{ . }}">{{ end }}
 
-  {{/* Fonts — same as site */}}
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+  {{/* Fonts — Inter Tight for display/body, IBM Plex Mono for labels/code */}}
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 
   {{/* reveal.js core CSS */}}
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.min.css">
 
-  {{/* Code syntax highlighting — light/dark variants */}}
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11/styles/vs.min.css" id="hl-light" media="all">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11/styles/vs2015.min.css" id="hl-dark" media="not all">
+  {{/* Code syntax highlighting — github / github-dark */}}
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11/styles/github.min.css" id="hl-light" media="all">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11/styles/github-dark.min.css" id="hl-dark" media="not all">
   <script>
     (function() {
       var isDark = window._slidesDark;
@@ -47,393 +66,293 @@
     })();
   </script>
 
-  {{/* Custom relcon theme — replaces reveal.js built-in themes */}}
+  {{/* Shared site palette — defines --c-* on :root and .dark */}}
+  {{ partial "theme-tokens.html" . }}
+
+  {{/* ===== Relcon slide theme ===== */}}
   <style>
-    /* ===== Relcon reveal.js theme ===== */
-
-/* --- Color tokens (light default, dark override) --- */
+    /* ── Slide-scoped aliases ──────────────────────────────────────
+       The slide theme referenced `--r-*` names historically; rather than
+       rewrite every rule, we alias them to the shared --c-* tokens so the
+       palette stays in a single place (_partials/theme-tokens.html). */
     :root {
-      --r-bg: #f0f4f3;
-      --r-surface: #ffffff;
-      --r-text: #1a1a2e;
-      --r-text-muted: #555568;
-      --r-text-faint: #9898a8;
-      --r-heading: #1a1a2e;
-      --r-accent: #0d9488;
-      --r-accent-light: #14b8a6;
-      --r-border: #c8d4d2;
-      --r-code-bg: #e8efed;
-      --r-code-border: #c8d4d2;
-      --r-code-text: #0A2326;
-      --r-link: #0d9488;
-      --r-link-hover: #0a7a70;
-      --r-selection-bg: rgba(13, 148, 136, 0.2);
-      --r-selection-color: #1a1a2e;
-      --r-logo: url('/images/relcon-logo-black.svg');
-      --r-dots-opacity: 1;
-    }
-    html.dark {
-      --r-bg: #080c14;
-      --r-surface: #12181e;
-      --r-text: #d0d0dc;
-      --r-text-muted: #b0b0be;
-      --r-text-faint: #606078;
-      --r-heading: #e8e8f0;
-      --r-accent: #14b8a6;
-      --r-accent-light: #2dd4bf;
-      --r-border: #275959;
-      --r-code-bg: #060a12;
-      --r-code-border: #275959;
-      --r-code-text: #D2D9D8;
-      --r-link: #14b8a6;
-      --r-link-hover: #2dd4bf;
-      --r-selection-bg: rgba(20, 184, 166, 0.3);
-      --r-selection-color: #e8e8f0;
-      --r-logo: url('/images/relcon-logo-white.svg');
-      --r-dots-opacity: 0.7;
+      --r-bg: var(--c-bg);
+      --r-surface: var(--c-surface);
+      --r-code-bg: var(--c-code-bg);
+      --r-border: var(--c-border);
+      --r-text: var(--c-text);
+      --r-text-muted: var(--c-gray-300);
+      --r-text-faint: var(--c-gray-500);
+      --r-heading: var(--c-text);
+      --r-accent: var(--c-accent);
+      --r-accent-light: var(--c-accent-light);
+      --r-accent-soft: var(--c-accent-soft);
+      --r-code-text: var(--c-code-text);
+      --r-link: var(--c-accent);
+      --r-link-hover: var(--c-accent-dark);
+      --r-selection-bg: var(--c-accent-soft);
+      --r-selection-color: var(--c-bg);
     }
 
-    /* --- Base --- */
-    html, body {
-      margin: 0; padding: 0; height: 100%; overflow: hidden;
-    }
-    .reveal-viewport {
-      background: var(--r-bg);
-      color: var(--r-text);
-    }
+    /* ── Base ─────────────────────────────────────────────────────── */
+    html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; }
+    .reveal-viewport { background: var(--r-bg); color: var(--r-text); }
     .reveal {
-      font-family: 'Inter', sans-serif;
+      font-family: 'Inter Tight', system-ui, sans-serif;
       font-size: 42px;
       font-weight: 400;
       color: var(--r-text);
     }
-    .reveal ::selection {
-      background: var(--r-selection-bg);
-      color: var(--r-selection-color);
-    }
+    .reveal ::selection { background: var(--r-selection-bg); color: var(--r-selection-color); }
 
-    /* --- Headings --- */
+    /* Logo coloring hook (partial emits paths with these classes) */
+    .rc-logo-ink { fill: currentColor; }
+    .rc-logo-accent { fill: var(--r-accent); }
+
+    /* ── Headings ─────────────────────────────────────────────────── */
     .reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
-      margin: 0 0 0.9em 0;
-      font-family: 'Geist', sans-serif;
+      margin: 0 0 1em 0;
+      font-family: 'Inter Tight', sans-serif;
       font-weight: 600;
-      line-height: 1.15;
+      line-height: 1.12;
       letter-spacing: -0.02em;
       color: var(--r-heading);
       text-transform: none;
       text-shadow: none;
       word-wrap: break-word;
     }
-    .reveal h1 { font-size: 1.8em; }
-    .reveal h2 { font-size: 1.35em; }
-    .reveal h3 { font-size: 1.1em; }
-    .reveal h4 { font-size: 0.95em; color: var(--r-text-muted); }
+    .reveal h1 { font-size: 2.1em;  font-weight: 700; letter-spacing: -0.03em; margin-bottom: 1.1em; }
+    .reveal h2 { font-size: 1.6em;  font-weight: 700; letter-spacing: -0.025em; margin-bottom: 1em; }
+    .reveal h3 { font-size: 1.2em;  font-weight: 600; margin-bottom: 0.7em; }
+    .reveal h4 { font-size: 1em;    font-weight: 500; color: var(--r-text-muted); margin-bottom: 0.6em; }
 
-    /* --- Slide content alignment (non-title slides) --- */
+    /* Content slides: left-aligned, top-anchored, bottom padding clears the
+       76px fixed footer regardless of slide scale. */
     .reveal .slides section:not(.title-slide) {
       text-align: left;
       top: 0 !important;
-      padding: 1em 0em 0em 0em !important;
+      padding: 0.8em 0 2.4em 0 !important;
     }
 
-    /* --- Paragraphs & body --- */
-    .reveal p {
-      margin: 0 0 0.6em 0;
-      line-height: 1.55;
-    }
+    /* ── Body elements ────────────────────────────────────────────── */
+    .reveal p { margin: 0 0 0.55em 0; line-height: 1.4; }
+    .reveal a { color: var(--r-link); text-decoration: none; transition: color 0.2s ease; }
+    .reveal a:hover { color: var(--r-link-hover); text-shadow: none; }
 
-    /* --- Links --- */
-    .reveal a {
-      color: var(--r-link);
-      text-decoration: none;
-      transition: color 0.2s ease;
-    }
-    .reveal a:hover {
-      color: var(--r-link-hover);
-      text-shadow: none;
-    }
-
-    /* --- Lists --- */
     .reveal ul, .reveal ol {
       display: block;
       text-align: left;
-      margin: 0 0 0.6em 1em;
+      margin: 0 0 0.55em 0;
+      padding-left: 1.1em;
     }
-    .reveal li {
-      margin-bottom: 0.35em;
-      line-height: 1.5;
-    }
-    .reveal ul ul, .reveal ol ol {
-      margin-top: 0.2em;
-    }
+    .reveal ul > li::marker { color: var(--r-accent); }
+    .reveal ol > li::marker { color: var(--r-accent); font-weight: 500; }
+    .reveal li { margin-bottom: 0.3em; line-height: 1.4; }
+    .reveal ul ul, .reveal ol ol, .reveal ul ol, .reveal ol ul { margin-top: 0.2em; }
 
-    /* --- Images --- */
-    .reveal img, .reveal video, .reveal iframe {
-      max-width: 90%;
-      max-height: 70vh;
-    }
-    .reveal section img {
-      border: none;
-      box-shadow: none;
-      background: none;
-    }
-    html.dark .reveal section img.img-invert {
-      filter: invert(1) hue-rotate(180deg);
-    }
+    .reveal img, .reveal video, .reveal iframe { max-width: 90%; max-height: 70vh; }
+    .reveal section img { border: none; box-shadow: none; background: none; }
+    html.dark .reveal section img.img-invert { filter: invert(1) hue-rotate(180deg); }
 
-    /* --- Code --- */
+    .reveal strong { color: var(--r-heading); font-weight: 600; }
+    .reveal em { color: var(--r-text-muted); }
+
+    .reveal hr { border: none; border-top: 1px solid var(--r-border); margin: 1em 0; }
+
+    /* ── Code ─────────────────────────────────────────────────────── */
     .reveal pre {
       width: 100%;
       margin: 0.8em auto;
       font-size: 0.55em;
       line-height: 1.5;
       box-shadow: none;
+      font-family: 'IBM Plex Mono', ui-monospace, monospace;
     }
     .reveal pre code {
       display: block;
-      padding: 0.8em 1em;
+      padding: 0.9em 1.1em;
       max-height: 800px;
       overflow: auto;
       background: var(--r-code-bg);
-      border: 1px solid var(--r-code-border);
+      border: 1px solid var(--r-border);
       border-radius: 6px;
       color: var(--r-code-text);
     }
     .reveal code:not(pre code) {
-      font-size: 0.85em;
-      padding: 0.15em 0.4em;
+      font-family: 'IBM Plex Mono', ui-monospace, monospace;
+      font-size: 0.88em;
+      padding: 0.08em 0.38em;
       background: var(--r-code-bg);
-      border: 1px solid var(--r-code-border);
+      border: 1px solid var(--r-border);
       border-radius: 4px;
       color: var(--r-accent);
     }
 
-    /* --- Tables --- */
-    .reveal table {
-      margin: auto;
-      border-collapse: collapse;
-      font-size: 0.85em;
-    }
+    /* ── Tables ───────────────────────────────────────────────────── */
+    .reveal table { margin: auto; border-collapse: collapse; font-size: 0.85em; }
     .reveal table th {
-      font-family: 'Geist', sans-serif;
+      font-family: 'Inter Tight', sans-serif;
       font-weight: 600;
       color: var(--r-heading);
       border-bottom: 2px solid var(--r-border);
-      padding: 0.4em 0.8em;
+      padding: 0.5em 0.9em;
       text-align: left;
     }
     .reveal table td {
       border-bottom: 1px solid var(--r-border);
-      padding: 0.35em 0.8em;
+      padding: 0.4em 0.9em;
     }
 
-    /* --- Blockquotes --- */
+    /* ── Blockquote ───────────────────────────────────────────────── */
     .reveal blockquote {
       width: 90%;
       margin: 0.8em auto;
-      padding: 0.4em 0 0.4em 1em;
-      font-style: italic;
+      padding: 0.3em 0 0.3em 1em;
       color: var(--r-text-muted);
       border-left: 3px solid var(--r-accent);
       background: transparent;
       box-shadow: none;
+      font-style: normal;
     }
 
-    /* --- Horizontal rule (in case it appears inside a slide) --- */
-    .reveal hr {
-      border: none;
-      border-top: 1px solid var(--r-border);
-      margin: 1em 0;
-    }
+    /* ── reveal.js chrome ─────────────────────────────────────────── */
+    .reveal .slide-number { display: none; }
+    .reveal .progress { height: 3px; color: var(--r-accent); }
+    .reveal .controls { color: var(--r-text-faint); bottom: 80px; right: 40px; }
+    .reveal .controls button:hover { color: var(--r-accent); }
 
-    /* --- Strong / emphasis --- */
-    .reveal strong { color: var(--r-heading); }
-    .reveal em { color: var(--r-text-muted); }
-
-    /* --- Slide numbers --- */
-    .reveal .slide-number {
-      font-family: 'Inter', sans-serif;
-      font-size: 12px;
-      color: var(--r-text-faint);
-      background: transparent;
-      right: 16px;
-      bottom: 16px;
-    }
-
-    /* --- Progress bar --- */
-    .reveal .progress {
-      height: 5px;
-      color: var(--r-accent);
-    }
-
-    /* --- Controls --- */
-    .reveal .controls {
-      color: var(--r-accent);
-      bottom: 100px;
-      right: 40px;
-    }
-
-    /* --- Slide footer bar --- */
+    /* ── Slide footer bar ─────────────────────────────────────────── */
     .slide-footer {
       position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
+      bottom: 0; left: 0; right: 0;
       z-index: 50;
       pointer-events: none;
-      border-top: 2px solid var(--r-accent);
+      border-top: 1px solid var(--r-border);
       background: var(--r-bg);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 52px;
-      height: 60px;
+      padding: 0 56px;
+      height: 76px;
       box-sizing: border-box;
       transition: opacity 0.2s ease;
     }
-    .slide-footer.hidden {
-      opacity: 0;
-    }
-    .slide-footer-left {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-    }
-    .slide-footer-logo {
-      width: 24px;
-      height: 24px;
-      object-fit: contain;
-      display: block;
-    }
+    .slide-footer.hidden { opacity: 0; }
+    .slide-footer-left  { display: flex; align-items: center; gap: 16px; pointer-events: auto; color: var(--r-heading); }
+    .slide-footer-left a { display: inline-flex; align-items: center; line-height: 0; color: inherit; }
     .slide-footer-event {
-      font-family: 'Inter', sans-serif;
+      font-family: 'IBM Plex Mono', ui-monospace, monospace;
       font-size: 20px;
-      font-weight: 400;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
       color: var(--r-text-muted);
     }
     .slide-footer-number {
-      font-family: 'Inter', sans-serif;
+      font-family: 'IBM Plex Mono', ui-monospace, monospace;
       font-size: 20px;
-      font-weight: 400;
+      letter-spacing: 0.12em;
       color: var(--r-text-muted);
     }
 
-    /* Hide reveal.js built-in slide number — we render our own in the footer */
-    .reveal .slide-number { display: none; }
-
-    /* ===== Title slide ===== */
+    /* ── Title slide ──────────────────────────────────────────────── */
     .reveal .title-slide {
       display: flex !important;
       flex-direction: column;
       align-items: stretch;
       justify-content: flex-start;
-      padding: 2em 3em 1em !important;
-      text-align: center;
+      padding: 2em 2.8em 2em 2.8em !important;
+      text-align: left !important;
       height: 100% !important;
       box-sizing: border-box;
+      position: relative;
     }
-
-    /* Header row: logo + wordmark, left-aligned */
-    .title-header {
+    /* Top mark row */
+    .title-mark-row {
       display: flex;
       align-items: center;
-      gap: 0.5em;
-      margin-bottom: 0.8em;
-      padding-left: 0.5em;
-    }
-    .title-logo {
-      width: 30px !important;
-      height: 30px !important;
-      max-width: 30px !important;
-      max-height: 30px !important;
-      margin: 0 !important;
-    }
-    .title-wordmark {
-      font-family: 'Geist', sans-serif;
-      font-size: 28px;
-      font-weight: 400;
-      letter-spacing: 0.02em;
-      color: var(--r-text);
-    }
-
-    /* Main panel: thin teal borders + dots background */
-    .title-panel {
-      position: relative;
-      width: 100%;
-      flex: 0 0 80%;
-      border-top: 2px solid var(--r-accent);
-      border-bottom: 2px solid var(--r-accent);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
-
-    /* Dots-wave tiled background */
-    .title-dots {
-      position: absolute;
-      inset: 0;
-      background-image: url('/images/dots-wave.svg');
-      background-size: 560px 560px;
-      background-repeat: repeat;
-      opacity: var(--r-dots-opacity);
-      pointer-events: none;
-    }
-
-    /* Content inside the panel */
-    .title-content {
-      position: relative;
-      z-index: 1;
-      padding: 2em 3em;
-    }
-    .reveal .title-heading {
-      font-family: 'Geist', sans-serif;
-      font-size: 2.2em !important;
-      font-weight: 700;
-      color: var(--r-accent) !important;
-      margin: 0 0 0.6em 0 !important;
-      line-height: 1.1;
-      letter-spacing: -0.03em;
-    }
-    .reveal .title-subtitle {
-      font-family: 'Inter', sans-serif;
-      font-size: 1.1em;
+      gap: 10px;
       color: var(--r-heading);
-      margin: 0 0 2.5em 0;
-      line-height: 1.4;
-      font-weight: 400;
     }
-    .reveal .title-meta {
-      font-family: 'Inter', sans-serif;
+    .title-mark-word {
+      font-family: 'Inter Tight', sans-serif;
       font-size: 0.75em;
+      font-weight: 600;
+      letter-spacing: -0.01em;
       color: var(--r-heading);
-      font-weight: 300;
-      margin: 0;
-      letter-spacing: 0.02em;
     }
 
-    /* --- Manual size classes (apply via <!-- .slide: class="small" --> in markdown) --- */
-    .reveal .slides section.small { font-size: 0.90em; }
-    .reveal .slides section.smaller { font-size: 0.80em; }
-
-    /* --- Fragments --- */
-    .reveal .fragment {
-      transition: all 0.3s ease;
+    /* Big heading */
+    .reveal .title-heading {
+      font-family: 'Inter Tight', sans-serif !important;
+      font-size: 2.6em !important;
+      font-weight: 700 !important;
+      line-height: 1 !important;
+      letter-spacing: -0.035em !important;
+      color: var(--r-heading) !important;
+      margin: 1.1em 0 0 0 !important;
+      max-width: 30ch;
+      text-wrap: balance;
     }
 
-    /* ===== Colloquium-compatible syntax primitives =====
-       Rows (===), columns (|||), inline footnotes (^[..]), align/size helpers.
-       Written to match colloquium's class names so the same markdown renders
-       consistently under either renderer. */
+    /* Eyebrow + accent rule */
+    .title-eyebrow-row {
+      margin-top: 1.6em;
+    }
+    .title-eyebrow {
+      font-family: 'IBM Plex Mono', ui-monospace, monospace;
+      font-size: 0.44em;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--r-accent);
+    }
+    .title-accent-rule {
+      width: 2.6em;
+      height: 3px;
+      background: var(--r-accent);
+      margin-top: 0.55em;
+    }
 
-    /* Slides that use rows, columns, inline footnotes, or a valign
-       directive become a fixed-height flex column. Flex is the prerequisite
-       for justify-content to do anything — without it, <!-- valign: center -->
-       is a no-op. The deck ships 1728x1117 via Reveal initialize(); sections
-       stretch to that box. box-sizing: border-box keeps total section height
-       at 1117px even after we add padding-bottom to clear the 60px fixed
-       footer bar — otherwise valign: bottom / rows / footnotes land behind
-       the footer. */
+    /* Meta stack */
+    .title-meta {
+      margin-top: 1.4em;
+      font-family: 'Inter Tight', sans-serif;
+      line-height: 1.4;
+    }
+    .title-author {
+      font-size: 0.95em;
+      color: var(--r-heading);
+      font-weight: 500;
+      margin-bottom: 0.3em;
+    }
+    .title-affiliation,
+    .title-date {
+      font-size: 0.7em;
+      color: var(--r-text-muted);
+      margin-bottom: 0.15em;
+    }
+
+    /* Subtitle (description) — sits right under the heading */
+    .reveal .title-subtitle {
+      font-family: 'Inter Tight', sans-serif !important;
+      font-size: 0.95em !important;
+      color: var(--r-text-muted) !important;
+      font-weight: 400 !important;
+      line-height: 1.4 !important;
+      margin: 1em 0 0 0 !important;
+      max-width: 60ch;
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       Colloquium primitives
+       ══════════════════════════════════════════════════════════════ */
+
+    /* Slide becomes a fixed-height flex column when it uses rows,
+       columns, footnotes, or a valign directive. Flex is the prerequisite
+       for justify-content to do anything. The deck ships 1728x1117 via
+       Reveal initialize(); sections stretch to that box. The padding-bottom
+       clears the 54px fixed footer bar so valign: bottom / rows / footnotes
+       land above it. */
     .reveal .slides section.has-rows,
     .reveal .slides section.has-columns,
     .reveal .slides section.has-footnote,
@@ -445,21 +364,12 @@
       justify-content: flex-start;
       height: 100% !important;
       box-sizing: border-box;
-      padding-bottom: 2em !important;
+      padding-bottom: 2.4em !important;
     }
 
-    .reveal .colloquium-grid {
-      display: grid;
-      gap: 1.5em;
-      width: 100%;
-    }
-    .reveal .colloquium-grid > .col {
-      min-width: 0;
-    }
+    .reveal .colloquium-grid { display: grid; gap: 1.5em; width: 100%; }
+    .reveal .colloquium-grid > .col { min-width: 0; }
 
-    /* Rows fill the remaining vertical space under the slide title. Default
-       grid align-items is "stretch", which gives each row the full height
-       of its fr-weighted track. */
     .reveal .colloquium-rows {
       display: grid;
       gap: 1em;
@@ -467,20 +377,11 @@
       flex: 1 1 auto;
       min-height: 0;
     }
-    .reveal .colloquium-row {
-      min-height: 0;
-      overflow: hidden;
-    }
-    .reveal .colloquium-row.colloquium-grid {
-      display: grid;
-    }
+    .reveal .colloquium-row { min-height: 0; overflow: hidden; }
+    .reveal .colloquium-row.colloquium-grid { display: grid; }
 
-    /* Images in rows: constrain to the row's allotted track height.
-       `max-height: 100%` on <img> only resolves if the containing block has
-       a definite height. marked.js wraps standalone images in <p>, whose
-       height is content-sized — circular. Setting `display: contents` on
-       the wrapping paragraph removes it from layout, so the image becomes
-       a direct child of the row cell and sizes against the grid track. */
+    /* Images-only paragraphs in rows use `display:contents` so the image
+       sizes against the grid track. */
     .reveal .colloquium-row > p:has(> img:only-child),
     .reveal .colloquium-row > figure:has(> img:only-child),
     .reveal .colloquium-row > .col > p:has(> img:only-child),
@@ -495,9 +396,9 @@
       margin: 0 auto;
     }
 
-    /* Inline footnote marker. */
+    /* Inline footnote marker */
     .reveal .colloquium-footnote-ref {
-      font-size: 0.6em;
+      font-size: 0.55em;
       vertical-align: super;
       line-height: 0;
       margin-left: 0.1em;
@@ -506,15 +407,14 @@
       color: var(--r-accent);
       text-decoration: none;
       font-weight: 600;
+      font-family: 'IBM Plex Mono', ui-monospace, monospace;
     }
 
-    /* Footnote stack at the bottom of the slide. A flex row holds both
-       side-stacks so they share the bottom line even when both are
-       present. Section-level padding-bottom (above) clears the 60px fixed
-       footer bar. */
+    /* Footnote stack — pinned to bottom of the slide */
     .reveal .colloquium-slide-footnotes-row {
       margin-top: auto;
-      padding-top: 1em;
+      padding-top: 0.9em;
+      border-top: 1px solid var(--r-border);
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
@@ -522,11 +422,12 @@
       width: 100%;
     }
     .reveal .colloquium-slide-footnote {
-      font-size: 0.55em;
+      font-size: 0.5em;
       line-height: 1.4;
       color: var(--r-text-muted);
       flex: 1 1 0;
       min-width: 0;
+      font-family: 'Inter Tight', sans-serif;
     }
     .reveal .colloquium-slide-footnote--right { text-align: right; }
     .reveal .colloquium-slide-footnote--left  { text-align: left; }
@@ -534,15 +435,16 @@
       margin-top: 0.3em;
     }
     .reveal .colloquium-slide-footnote-label {
-      font-weight: 600;
+      font-family: 'IBM Plex Mono', ui-monospace, monospace;
+      font-weight: 500;
       color: var(--r-accent);
-      margin-right: 0.2em;
+      margin-right: 0.3em;
     }
     .reveal .colloquium-slide-footnote-prose {
       font-style: italic;
     }
 
-    /* Directive-driven helpers. */
+    /* Directive helpers */
     .reveal .slides section.align-left   { text-align: left; }
     .reveal .slides section.align-center { text-align: center; }
     .reveal .slides section.align-right  { text-align: right; }
@@ -561,22 +463,22 @@
     .reveal .slides section.title-hidden h1,
     .reveal .slides section.title-hidden h2 { display: none; }
 
-    /* ===== Boxes / callouts ===== */
+    /* ── Boxes / callouts ────────────────────────────────────────── */
     .reveal .colloquium-box {
-      border-radius: 16px;
-      padding: 0.75em 1em;
+      border-radius: 14px;
+      padding: 0.9em 1.15em;
       width: 100%;
       box-sizing: border-box;
       margin: 0.5em 0;
     }
     .reveal .colloquium-box--accent {
       background: var(--r-accent);
-      color: #ffffff;
+      color: var(--r-bg);
     }
     .reveal .colloquium-box--muted {
-      background: var(--r-code-bg);
+      background: var(--c-muted);
       color: var(--r-text);
-      border: 1px solid var(--r-code-border);
+      border: 1px solid var(--r-border);
     }
     .reveal .colloquium-box--surface {
       background: var(--r-surface);
@@ -587,13 +489,12 @@
     .reveal .colloquium-box--align-right  { text-align: right; }
 
     .reveal .colloquium-box-title {
-      font-family: 'Geist', sans-serif;
+      font-family: 'Inter Tight', sans-serif;
       font-weight: 600;
+      letter-spacing: -0.01em;
       margin-bottom: 0.3em;
       line-height: 1.25;
     }
-    /* Title-only box: drop the trailing title margin so the single line is
-       visually centered between the box's top/bottom padding. */
     .reveal .colloquium-box-title:last-child { margin-bottom: 0; }
     .reveal .colloquium-box-content > :first-child { margin-top: 0; }
     .reveal .colloquium-box-content > :last-child  { margin-bottom: 0; }
@@ -606,7 +507,6 @@
     .reveal .colloquium-box li { margin-bottom: 0.2em; }
     .reveal .colloquium-box li::marker { color: currentColor; opacity: 0.75; }
 
-    /* Accent box: keep inline markup readable on the teal background. */
     .reveal .colloquium-box--accent a,
     .reveal .colloquium-box--accent strong,
     .reveal .colloquium-box--accent em {
@@ -618,8 +518,7 @@
       color: inherit;
     }
 
-    /* Compact variant — tighter spacing for dense bullet lists. */
-    .reveal .colloquium-box--compact { padding: 0.55em 0.9em; }
+    .reveal .colloquium-box--compact { padding: 0.6em 1em; border-radius: 10px; }
     .reveal .colloquium-box--compact .colloquium-box-title { margin-bottom: 0.2em; }
     .reveal .colloquium-box--compact .colloquium-box-content p { margin: 0.2em 0; }
     .reveal .colloquium-box--compact ul,
@@ -629,7 +528,7 @@
     }
     .reveal .colloquium-box--compact li { margin-bottom: 0.05em; line-height: 1.2; }
 
-    /* ===== Text size utilities ===== */
+    /* ── Text size utilities ─────────────────────────────────────── */
     .reveal .text-xs   { font-size: 0.65em; }
     .reveal .text-sm   { font-size: 0.80em; }
     .reveal .text-base { font-size: 1.00em; }
@@ -639,12 +538,12 @@
     .reveal .text-3xl  { font-size: 2.20em; }
     .reveal .text-4xl  { font-size: 2.80em; }
 
-    /* ===== Spacer helpers ===== */
+    /* ── Spacers ─────────────────────────────────────────────────── */
     .reveal .colloquium-spacer-sm { height: 0.5em; }
     .reveal .colloquium-spacer-md { height: 1em; }
     .reveal .colloquium-spacer-lg { height: 2em; }
 
-    /* ===== Inline secondary-text block (for caveats inside slide body) ===== */
+    /* ── Inline caveat text ──────────────────────────────────────── */
     .reveal .colloquium-footnote {
       font-size: 0.75em;
       color: var(--r-text-muted);
@@ -652,7 +551,7 @@
       margin-top: 0.6em;
     }
 
-    /* ===== Figure + caption (unnumbered; alt text → caption) ===== */
+    /* ── Figure + caption ────────────────────────────────────────── */
     .reveal .colloquium-figure {
       margin: 0.5em auto;
       max-width: 100%;
@@ -664,17 +563,19 @@
       margin: 0 auto;
     }
     .reveal .colloquium-figure > .colloquium-figure-caption {
-      margin-top: 0.4em;
-      font-size: 0.55em;
+      margin-top: 0.55em;
+      font-family: 'IBM Plex Mono', ui-monospace, monospace;
+      font-size: 0.5em;
       line-height: 1.35;
       color: var(--r-text-muted);
       text-align: center;
+      letter-spacing: 0.04em;
     }
 
-    /* ===== Image alignment directives (slide-level) ===== */
-    .reveal .slides section.img-align-left   img { display: block; margin-left: 0;     margin-right: auto; }
-    .reveal .slides section.img-align-center img { display: block; margin-left: auto;  margin-right: auto; }
-    .reveal .slides section.img-align-right  img { display: block; margin-left: auto;  margin-right: 0; }
+    /* ── Image alignment directives ──────────────────────────────── */
+    .reveal .slides section.img-align-left   img { display: block; margin-left: 0;    margin-right: auto; }
+    .reveal .slides section.img-align-center img { display: block; margin-left: auto; margin-right: auto; }
+    .reveal .slides section.img-align-right  img { display: block; margin-left: auto; margin-right: 0; }
 
     .reveal .slides section.img-valign-top    .col > p:has(> img:only-child),
     .reveal .slides section.img-valign-top    .colloquium-row > p:has(> img:only-child) { align-self: start; }
@@ -683,21 +584,20 @@
     .reveal .slides section.img-valign-bottom .col > p:has(> img:only-child),
     .reveal .slides section.img-valign-bottom .colloquium-row > p:has(> img:only-child) { align-self: end; }
 
-    /* img-fill: image fills the grid cell (crops as needed) */
     .reveal .slides section.img-fill .col img,
     .reveal .slides section.img-fill .colloquium-row img {
       width: 100%;
       height: 100%;
       object-fit: cover;
     }
-    /* img-overflow: let images bleed outside their cell boundary */
     .reveal .slides section.img-overflow .col,
     .reveal .slides section.img-overflow .colloquium-row { overflow: visible !important; }
 
-    /* --- Print / PDF export --- */
-    @media print {
-      .reveal::after { display: none; }
-    }
+    /* Fragments transition */
+    .reveal .fragment { transition: all 0.3s ease; }
+
+    /* Print / PDF */
+    @media print { .reveal::after { display: none; } }
   </style>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>

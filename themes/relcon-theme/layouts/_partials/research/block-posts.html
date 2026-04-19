@@ -1,0 +1,26 @@
+{{- /* Blog posts linked to a project. Arg: Page */ -}}
+{{- $slugs := default slice .Params.post_slugs -}}
+{{- $posts := slice -}}
+{{- range $slugs -}}
+  {{- with site.GetPage (printf "/blog/%s" .) -}}
+    {{- $posts = $posts | append . -}}
+  {{- end -}}
+{{- end -}}
+{{- if $posts }}
+<div class="grid gap-3.5">
+  {{ range $i, $po := $posts }}
+  <a href="{{ $po.RelPermalink }}"
+    class="grid grid-cols-[110px_1fr] gap-5 pb-3.5 items-baseline group"
+    style="{{ if lt $i (sub (len $posts) 1) }}border-bottom: 1px dashed var(--c-border);{{ end }}">
+    <div class="font-mono text-[0.7rem] tracking-[0.1em]" style="color: var(--c-gray-300);">{{ $po.Date.Format "Jan 2, 2006" }}</div>
+    <div>
+      <div class="font-display font-semibold leading-[1.3] group-hover:text-[var(--c-accent)]"
+        style="font-size: 1.02rem; letter-spacing: -0.01em;">{{ $po.Title }}</div>
+      {{ with $po.Params.description }}
+      <div class="text-[0.84rem] mt-1 leading-[1.5]" style="color: var(--c-gray-300);">{{ . }}</div>
+      {{ end }}
+    </div>
+  </a>
+  {{ end }}
+</div>
+{{ end }}

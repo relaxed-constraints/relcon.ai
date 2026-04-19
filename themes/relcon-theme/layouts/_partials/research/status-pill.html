@@ -1,0 +1,12 @@
+{{- /* Status pill. Arg: status string */ -}}
+{{- $s := . -}}
+{{- $map := dict
+  "active"      (dict "label" "active"      "dot" "&#9679;" "c" "var(--c-accent)")
+  "exploratory" (dict "label" "exploratory" "dot" "&#9680;" "c" "var(--c-gray-300)")
+  "shipped"     (dict "label" "shipped"     "dot" "&#9675;" "c" "var(--c-gray-300)")
+  "paused"      (dict "label" "paused"      "dot" "&#9643;" "c" "var(--c-gray-300)")
+-}}
+{{- $st := index $map $s | default (index $map "active") -}}
+<span class="font-mono text-[0.66rem] tracking-[0.16em] uppercase inline-flex items-center gap-1.5" style="color: {{ $st.c }};">
+  <span>{{ $st.dot | safeHTML }}</span>{{ $st.label }}
+</span>

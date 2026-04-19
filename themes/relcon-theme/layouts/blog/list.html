@@ -1,37 +1,52 @@
 {{ define "main" }}
-<div class="max-w-4xl mx-auto px-6 pt-28 pb-16">
-  <h1 class="text-4xl md:text-5xl font-display font-bold mb-4">The Residual</h1>
-  <p class="text-gray-400 mb-12">Exploring what the models leave unexplained. Our take on ML research, building with AI, and what comes next.</p>
+<div class="max-w-5xl mx-auto px-6 lg:px-10 pt-12 pb-16">
+  <header class="mb-12">
+    <div class="mono-eyebrow mb-3.5 flex items-center gap-2.5">
+      <span style="color: var(--c-accent);">&#x25E2;</span>blog &middot; index
+    </div>
+    <h1 class="font-display font-semibold m-0" style="font-size: clamp(44px, 5.5vw, 72px); letter-spacing: -0.025em;">Blog</h1>
+    <p class="mt-4 max-w-[560px] text-[1.04rem] leading-[1.55]" style="color: var(--c-gray-300);">
+      Exploring what the models leave unexplained. Notes, reports and commentary on ML research, building with AI, and what comes next.
+    </p>
+  </header>
 
   {{ $paginator := .Paginate .Pages 10 }}
-  {{ range $paginator.Pages }}
-  <a href="{{ .RelPermalink }}" data-date="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}" class="block py-6 border-b border-dark-border group">
-    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1 mb-2">
-      <h2 class="text-lg font-display font-semibold group-hover:text-accent transition-colors mt-0 mb-0">{{ .Title }}</h2>
-      <time class="text-sm text-gray-500 shrink-0">{{ .Date.Format "Jan 2, 2006" }}</time>
-    </div>
-    {{ with .Params.description }}
-    <p class="text-gray-400 text-sm mb-0">{{ . }}</p>
+  <div>
+    {{ range $i, $p := $paginator.Pages }}
+    <a href="{{ .RelPermalink }}" data-date="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}"
+      class="grid grid-cols-1 md:grid-cols-[110px_1fr_96px] gap-4 md:gap-7 py-7 border-t items-baseline group"
+      style="border-color: var(--c-border); {{ if eq (add $i 1) (len $paginator.Pages) }}border-bottom: 1px solid var(--c-border);{{ end }}">
+      <div class="font-mono text-[0.7rem] uppercase tracking-[0.12em]" style="color: var(--c-gray-300);">
+        &#8470;&nbsp;{{ printf "%02d" (add $i 1) }}
+      </div>
+      <div>
+        <h2 class="font-display font-semibold m-0 mb-2 group-hover:text-[var(--c-accent)]"
+          style="font-size: 1.6rem; letter-spacing: -0.015em; line-height: 1.2;">{{ .Title }}</h2>
+        {{ with .Params.description }}
+        <p class="m-0 text-[0.96rem] leading-[1.55]" style="color: var(--c-gray-300);">{{ . }}</p>
+        {{ end }}
+        {{ with .Params.tags }}
+        <div class="flex flex-wrap gap-1.5 mt-3">
+          {{ range . }}<span class="chip">{{ . }}</span>{{ end }}
+        </div>
+        {{ end }}
+      </div>
+      <div class="font-mono text-[0.72rem] md:text-right leading-[1.5]" style="color: var(--c-gray-300);">
+        {{ .Date.Format "Jan 2, 2006" }}{{ with .Params.read }}<br>{{ . }}{{ end }}
+      </div>
+    </a>
     {{ end }}
-    {{ with .Params.tags }}
-    <div class="flex flex-wrap gap-2 mt-2">
-      {{ range . }}
-      <span class="text-xs text-gray-500 border border-dark-border rounded px-2 py-0.5">{{ . }}</span>
-      {{ end }}
-    </div>
-    {{ end }}
-  </a>
-  {{ end }}
+  </div>
 
   {{/* Pagination */}}
   {{ if gt $paginator.TotalPages 1 }}
-  <div class="flex justify-center gap-4 mt-12 text-sm">
+  <div class="flex justify-center gap-6 mt-12 font-mono text-[0.78rem] uppercase tracking-[0.1em]">
     {{ if $paginator.HasPrev }}
-    <a href="{{ $paginator.Prev.URL }}" class="text-accent hover:text-accent-light transition-colors">&larr; Newer</a>
+    <a href="{{ $paginator.Prev.URL }}" class="hover:text-[var(--c-text)]" style="color: var(--c-accent);">&larr; Newer</a>
     {{ end }}
-    <span class="text-gray-500">Page {{ $paginator.PageNumber }} of {{ $paginator.TotalPages }}</span>
+    <span style="color: var(--c-gray-300);">Page {{ $paginator.PageNumber }} of {{ $paginator.TotalPages }}</span>
     {{ if $paginator.HasNext }}
-    <a href="{{ $paginator.Next.URL }}" class="text-accent hover:text-accent-light transition-colors">Older &rarr;</a>
+    <a href="{{ $paginator.Next.URL }}" class="hover:text-[var(--c-text)]" style="color: var(--c-accent);">Older &rarr;</a>
     {{ end }}
   </div>
   {{ end }}
@@ -41,9 +56,7 @@
 (function() {
   var now = Date.now();
   document.querySelectorAll('a[data-date]').forEach(function(el) {
-    if (new Date(el.dataset.date).getTime() > now) {
-      el.style.display = 'none';
-    }
+    if (new Date(el.dataset.date).getTime() > now) el.style.display = 'none';
   });
 })();
 </script>

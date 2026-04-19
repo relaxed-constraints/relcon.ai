@@ -1,0 +1,159 @@
+{{ define "main" }}
+{{- $p := .Params -}}
+{{- /* Per-project accent: frontmatter takes a named color token (e.g.
+     `accent: cyan` → var(--c-cyan)) or a hex string. */ -}}
+{{- $projStyle := "" -}}
+{{- with $p.accent -}}
+  {{- $color := cond (hasPrefix . "#") . (printf "var(--c-%s)" .) -}}
+  {{- $projStyle = printf "--proj-accent-color: %s;" $color -}}
+{{- end -}}
+
+{{/* Build section list: id, label, partial, show? */}}
+{{- $sections := slice
+  (dict "id" "overview"      "label" "overview"      "partial" "research/block-overview.html"      "show" true)
+  (dict "id" "results"       "label" "key results"   "partial" "research/block-results.html"       "show" (gt (len (default slice $p.results)) 0))
+  (dict "id" "collaborators" "label" "collaborators" "partial" "research/block-collaborators.html" "show" (gt (len (default slice $p.collaborators)) 0))
+  (dict "id" "papers"        "label" "papers"        "partial" "research/block-papers.html"        "show" (gt (len (default slice $p.papers)) 0))
+  (dict "id" "posts"         "label" "blog"          "partial" "research/block-posts.html"         "show" (gt (len (default slice $p.post_slugs)) 0))
+  (dict "id" "slides"        "label" "slides"        "partial" "research/block-slides.html"        "show" (gt (len (default slice $p.deck_slugs)) 0))
+  (dict "id" "code"          "label" "code"          "partial" "research/block-repos.html"         "show" (gt (len (default slice $p.repos)) 0))
+  (dict "id" "changelog"     "label" "changelog"     "partial" "research/block-changelog.html"     "show" (gt (len (default slice $p.changelog)) 0))
+  (dict "id" "related"       "label" "related"       "partial" "research/block-related.html"       "show" (gt (len (default slice $p.related)) 0))
+-}}
+
+<article class="project-themed max-w-6xl mx-auto px-6 lg:px-10 pt-12 pb-16" style="{{ $projStyle | safeCSS }}">
+
+  {{/* Back link */}}
+  <a href="/research/" class="inline-block font-mono text-[0.72rem] tracking-[0.14em] uppercase mb-5 hover:text-[var(--c-text)]" style="color: var(--c-gray-300);">&larr; all projects</a>
+
+  {{/* Header */}}
+  <header class="pb-6" style="border-bottom: 1px solid var(--c-border);">
+    <div class="flex items-baseline justify-between gap-5 mb-4 flex-wrap">
+      <div>
+        <div class="font-mono text-[0.74rem] tracking-[0.2em] font-medium mb-1" style="color: var(--proj-accent);">{{ $p.code }}</div>
+        <h1 class="font-display font-semibold m-0" style="font-size: clamp(36px, 4.4vw, 56px); letter-spacing: -0.025em; line-height: 1;">{{ .Title }}</h1>
+      </div>
+      <div class="flex gap-5 items-baseline">
+        {{ partial "research/status-pill.html" ($p.status | default "active") }}
+        {{ with $p.started }}
+        <span class="font-mono text-[0.7rem] tracking-[0.08em]" style="color: var(--c-gray-500);">{{ . }} &rarr; present</span>
+        {{ end }}
+      </div>
+    </div>
+    {{ with $p.summary }}
+    <p class="font-display mt-5 text-balance" style="font-size: 1.35rem; font-weight: 400; line-height: 1.4; letter-spacing: -0.005em; color: var(--c-gray-300); max-width: 62ch;">{{ . }}</p>
+    {{ end }}
+    {{ with $p.tags }}
+    <div class="flex flex-wrap gap-1.5 mt-5">
+      {{ range . }}<span class="chip-lg">{{ . }}</span>{{ end }}
+    </div>
+    {{ end }}
+  </header>
+
+  {{/* TOC + body — 220px sticky sidebar */}}
+  <div class="grid gap-10 lg:gap-14 mt-6" style="grid-template-columns: 1fr;">
+    <div class="grid gap-10 lg:gap-14" style="grid-template-columns: 220px minmax(0, 1fr); align-items: start;">
+
+      {{/* Sticky TOC sidebar */}}
+      <aside class="sticky top-6 hidden lg:block">
+        <div class="mono-eyebrow mb-3">contents</div>
+        <nav id="research-toc" class="grid gap-px" style="border-top: 1px solid var(--c-border);">
+          {{ range $sections }}{{ if .show }}
+          <a href="#sec-{{ .id }}" data-sec="{{ .id }}"
+            class="toc-item flex justify-between items-baseline py-2.5 font-body text-[0.92rem] hover:text-[var(--c-accent)]"
+            style="border-bottom: 1px solid var(--c-border); color: var(--c-text); padding-left: 0;">
+            <span>{{ .label }}</span>
+          </a>
+          {{ end }}{{ end }}
+        </nav>
+        {{ with $p.last_touched }}
+        <div class="mt-6 font-mono text-[0.68rem] tracking-[0.08em] leading-[1.6]" style="color: var(--c-gray-500);">
+          last touched<br><span style="color: var(--c-gray-300);">{{ . }}</span>
+        </div>
+        {{ end }}
+      </aside>
+
+      {{/* Body sections — first section has no top rule/margin so its label
+           aligns with the sidebar "contents" eyebrow. */}}
+      <div>
+        {{ range $i, $s := $sections }}{{ if $s.show }}
+        <section id="sec-{{ $s.id }}"
+          class="{{ if ne $i 0 }}pt-6 mt-11{{ end }}"
+          style="{{ if ne $i 0 }}border-top: 1px solid var(--c-border);{{ end }} scroll-margin-top: 120px;"
+          data-toc-section="{{ $s.id }}">
+          <div class="mono-eyebrow mb-4 flex items-center gap-2.5">
+            <span style="color: var(--c-accent);">&#x25E2;</span>{{ $s.label }}
+          </div>
+          {{ partial $s.partial $ }}
+        </section>
+        {{ end }}{{ end }}
+      </div>
+
+    </div>
+  </div>
+</article>
+
+<script>
+(function() {
+  // Scroll-spy: highlight active TOC item based on which section is most in view.
+  var items = document.querySelectorAll('#research-toc .toc-item');
+  var sections = document.querySelectorAll('[data-toc-section]');
+  if (!items.length || !sections.length) return;
+
+  function setActive(id) {
+    items.forEach(function(a) {
+      if (a.dataset.sec === id) {
+        a.style.color = 'var(--c-accent)';
+        a.style.background = 'var(--c-code-bg)';
+        a.style.paddingLeft = '10px';
+      } else {
+        a.style.color = 'var(--c-text)';
+        a.style.background = 'transparent';
+        a.style.paddingLeft = '0';
+      }
+    });
+  }
+
+  // Pick the section whose top has most recently crossed above a threshold
+  // near the top of the viewport. Deterministic regardless of section height.
+  var THRESHOLD = 120;
+  var ticking = false;
+  // A click locks the active state to the clicked section. The lock only
+  // releases when the user initiates a scroll themselves (wheel / touch /
+  // nav keys) — NOT when the click's smooth-scroll fires scroll events.
+  // Handles pages where the last section can't scroll to the threshold.
+  var lockedId = null;
+  function updateActive() {
+    ticking = false;
+    if (lockedId) { setActive(lockedId); return; }
+    var current = sections[0];
+    for (var i = 0; i < sections.length; i++) {
+      if (sections[i].getBoundingClientRect().top - THRESHOLD <= 0) {
+        current = sections[i];
+      } else {
+        break;
+      }
+    }
+    setActive(current.dataset.tocSection);
+  }
+  function onScroll() {
+    if (!ticking) { ticking = true; requestAnimationFrame(updateActive); }
+  }
+  function unlock() { lockedId = null; updateActive(); }
+  items.forEach(function(a) {
+    a.addEventListener('click', function() {
+      lockedId = this.dataset.sec;
+      setActive(lockedId);
+    });
+  });
+  window.addEventListener('wheel',     unlock, { passive: true });
+  window.addEventListener('touchmove', unlock, { passive: true });
+  window.addEventListener('keydown', function(e) {
+    // Space, PageUp, PageDown, End, Home, ArrowUp, ArrowDown
+    if ([32, 33, 34, 35, 36, 38, 40].indexOf(e.keyCode) !== -1) unlock();
+  });
+  window.addEventListener('scroll', onScroll, { passive: true });
+  updateActive();
+})();
+</script>
+{{ end }}

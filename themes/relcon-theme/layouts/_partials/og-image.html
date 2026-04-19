@@ -1,0 +1,77 @@
+{{- /*
+  Generates a per-page OG card by overlaying the page title on the shared
+  og-base.png. Word-wraps the title to ~28 chars per line (max 3 lines) and
+  uses Hugo's native `images.Text` filter so there's no runtime dependency.
+
+  Output: the processed image's RelPermalink (a single absolute-path string).
+  Caller must use `absURL` or `absLangURL` if they need a full URL.
+*/ -}}
+{{- $base := resources.Get "images/og-base.png" -}}
+{{- $fontBold  := resources.Get "fonts/InterTight-Bold.ttf" -}}
+{{- $fontLight := resources.Get "fonts/InterTight-Light.ttf" -}}
+
+{{- /* Homepage: use the dedicated "big wordmark" hero card from static/. */ -}}
+{{- if .IsHome -}}
+  {{- "/images/og-home.png" | relURL -}}
+{{- else -}}
+
+  {{- /* Word-wrap the title greedily, target 28 chars per line, cap at 3 lines */ -}}
+  {{- $maxChars := 28 -}}
+  {{- $lines := slice -}}
+  {{- $current := "" -}}
+  {{- range split .Title " " -}}
+    {{- $candidate := printf "%s %s" $current . | strings.TrimSpace -}}
+    {{- if and (gt (len $current) 0) (gt (len $candidate) $maxChars) -}}
+      {{- $lines = $lines | append $current -}}
+      {{- $current = . -}}
+    {{- else -}}
+      {{- $current = $candidate -}}
+    {{- end -}}
+  {{- end -}}
+  {{- if $current -}}{{- $lines = $lines | append $current -}}{{- end -}}
+  {{- $wrapped := delimit (first 3 $lines) "\n" -}}
+
+  {{- /* Byline only on typed single pages. Other pages (About, Contact,
+         section indexes, taxonomies) render the title on its own. */ -}}
+  {{- $byline := "" -}}
+  {{- if .IsPage -}}
+    {{- if eq .Type "blog" -}}
+      {{- $byline = "— Blog post" -}}
+      {{- with .Params.author -}}{{- $byline = printf "— Blog post by %s" . -}}{{- end -}}
+    {{- else if eq .Type "slides" -}}
+      {{- $dateStr := .Date.Format "2 January 2006" -}}
+      {{- with .Params.event -}}
+        {{- $byline = printf "— Slide Deck for %s, %s" (. | strings.TrimSpace) $dateStr -}}
+      {{- else -}}
+        {{- $byline = printf "— Slide Deck, %s" $dateStr -}}
+      {{- end -}}
+    {{- else if eq .Type "research" -}}
+      {{- $byline = "— Research Project" -}}
+      {{- with .Params.code -}}{{- $byline = printf "— Research Project · %s" . -}}{{- end -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- $titleFilter := images.Text $wrapped (dict
+      "x"           80
+      "y"           240
+      "size"        64
+      "color"       "#111114"
+      "font"        $fontBold
+      "linespacing" 14
+  ) -}}
+
+  {{- $ogImage := $base | images.Filter $titleFilter -}}
+
+  {{- if $byline -}}
+    {{- $bylineFilter := images.Text $byline (dict
+        "x"     80
+        "y"     540
+        "size"  28
+        "color" "#5a5a62"
+        "font"  $fontLight
+    ) -}}
+    {{- $ogImage = $ogImage | images.Filter $bylineFilter -}}
+  {{- end -}}
+
+  {{- $ogImage.RelPermalink -}}
+{{- end -}}

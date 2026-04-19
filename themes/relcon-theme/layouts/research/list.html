@@ -1,0 +1,52 @@
+{{ define "main" }}
+<div class="max-w-6xl mx-auto px-6 lg:px-10 pt-12 pb-16">
+  <header class="mb-10">
+    <div class="mono-eyebrow mb-3.5 flex items-center gap-2.5">
+      <span style="color: var(--c-accent);">&#x25E2;</span>research &middot; projects &middot; index
+    </div>
+    <h1 class="font-display font-semibold m-0" style="font-size: clamp(44px, 5.5vw, 72px); letter-spacing: -0.025em;">Research Projects</h1>
+    <p class="mt-4 max-w-[620px] text-[1.04rem] leading-[1.55]" style="color: var(--c-gray-300);">
+      Open threads of work. Each one is a hypothesis the lab is testing &mdash; across papers, posts, slides, and working code.
+    </p>
+  </header>
+
+  {{ $projects := where .Pages "Section" "research" }}
+  {{ if $projects }}
+  <div class="grid gap-5" style="grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));">
+    {{ range $projects }}
+    {{ $projStyle := "border-radius: 2px;" }}
+    {{ with .Params.accent }}
+      {{ $color := cond (hasPrefix . "#") . (printf "var(--c-%s)" .) }}
+      {{ $projStyle = printf "%s --proj-accent-color: %s;" $projStyle $color }}
+    {{ end }}
+    <a href="{{ .RelPermalink }}"
+      class="project-themed block relative px-6 pt-5 pb-6 card-surface transition-transform hover:-translate-y-0.5"
+      style="{{ $projStyle | safeCSS }}">
+      <div class="absolute left-0 right-0 top-0 h-[3px]" style="background: var(--proj-accent);"></div>
+      <div class="flex justify-between items-center mb-4 mt-1">
+        <span class="font-mono text-[0.72rem] tracking-[0.18em] font-medium" style="color: var(--proj-accent);">{{ .Params.code }}</span>
+        {{ partial "research/status-pill.html" (.Params.status | default "active") }}
+      </div>
+      <div class="mb-3">
+        <h3 class="font-display font-semibold m-0" style="font-size: 1.3rem; letter-spacing: -0.015em; line-height: 1.15;">{{ .Title }}</h3>
+        {{ with .Params.association }}
+        <div class="text-[0.78rem] mt-1 font-mono tracking-[0.04em]" style="color: var(--c-gray-300);">
+          {{ delimit . " &middot; " | safeHTML }}
+        </div>
+        {{ end }}
+      </div>
+      {{ with .Params.summary }}
+      <p class="text-[0.92rem] leading-[1.55] m-0 mb-4" style="color: var(--c-gray-300);">{{ . }}</p>
+      {{ end }}
+      {{ partial "research/count-chips.html" . }}
+      {{ with .Params.last_touched }}
+      <div class="mt-3 font-mono text-[0.68rem] tracking-[0.08em]" style="color: var(--c-gray-500);">upd. {{ . }}</div>
+      {{ end }}
+    </a>
+    {{ end }}
+  </div>
+  {{ else }}
+  <p class="italic" style="color: var(--c-gray-500);">No projects published yet.</p>
+  {{ end }}
+</div>
+{{ end }}

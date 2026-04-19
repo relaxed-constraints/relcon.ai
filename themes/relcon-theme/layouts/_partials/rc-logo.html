@@ -1,0 +1,20 @@
+{{- /* Relcon L07 mark — inline SVG, theme-aware via currentColor + CSS vars.
+     Argument: size in pixels (integer). Default 20.
+     The ink half uses `currentColor` — set `color` on the parent to control it.
+     The accent half falls through --c-accent → --r-accent → #b8421e so the same
+     partial works on the website and inside reveal.js slides. */ -}}
+{{- $size := . | default 20 -}}
+<svg width="{{ $size }}" height="{{ $size }}" viewBox="0 0 400 401" xmlns="http://www.w3.org/2000/svg" aria-label="Relaxed Constraints">
+  <g class="rc-logo-ink" fill="currentColor">
+    <path d="M177.178 80H0V0H241.178L177.178 80Z"/>
+    <path d="M91.5781 187H0V107H155.578L91.5781 187Z"/>
+    <path d="M156.022 294H0V214H92.0218L156.022 294Z"/>
+    <path d="M241.621 401H0V321H177.622L241.621 401Z"/>
+  </g>
+  <g class="rc-logo-accent" fill="var(--c-accent, var(--r-accent, #b8421e))">
+    <path d="M279.628 80L343.628 0H400V80H279.628Z"/>
+    <path d="M194.027 187L258.027 107H400V187H194.027Z"/>
+    <path d="M258.471 294L194.471 214H400V294H258.471Z"/>
+    <path d="M344.071 401L280.071 321H400V401H344.071Z"/>
+  </g>
+</svg>
