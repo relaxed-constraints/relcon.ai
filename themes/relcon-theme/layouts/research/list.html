@@ -29,23 +29,19 @@
       </div>
       <div class="mb-3">
         <h3 class="font-display font-semibold m-0" style="font-size: 1.3rem; letter-spacing: -0.015em; line-height: 1.15;">{{ .Title }}</h3>
-        {{ with .Params.collaborators }}
-        {{ $affs := slice }}
-        {{ range . }}{{ if ne .role "lab" }}{{ $affs = $affs | append .affiliation }}{{ end }}{{ end }}
+        {{ with .Params.association }}
         <div class="text-[0.78rem] mt-1 font-mono tracking-[0.04em]" style="color: var(--c-gray-300);">
-          {{ if $affs }}{{ delimit ($affs | uniq) " &middot; " | safeHTML }}{{ else }}Solo{{ end }}
+          {{ delimit . " &middot; " | safeHTML }}
         </div>
         {{ end }}
       </div>
       {{ with .Params.summary }}
       <p class="text-[0.92rem] leading-[1.55] m-0 mb-4" style="color: var(--c-gray-300);">{{ . }}</p>
       {{ end }}
-      <div class="flex justify-between items-end gap-2.5 flex-wrap">
-        {{ partial "research/count-chips.html" . }}
-        {{ with .Params.last_touched }}
-        <span class="font-mono text-[0.68rem] tracking-[0.08em]" style="color: var(--c-gray-500);">upd. {{ . }}</span>
-        {{ end }}
-      </div>
+      {{ partial "research/count-chips.html" . }}
+      {{ with .Params.last_touched }}
+      <div class="mt-3 font-mono text-[0.68rem] tracking-[0.08em]" style="color: var(--c-gray-500);">upd. {{ . }}</div>
+      {{ end }}
     </a>
     {{ end }}
   </div>

@@ -8,7 +8,7 @@ date: {{ .Date }}
 code: "XX-00"                # e.g. ORG-01, AB-02
 accent: "cyan"               # named color (red/orange/yellow/green/cyan/blue/purple/magenta) or a hex string — auto-flips with theme when named
 status: "active"             # active | exploratory | shipped | paused
-association: "solo"          # mongodb | sydney | solo (free-form ok)
+association: ["RelCon"]      # free-text array rendered on the index card, e.g. ["USYD", "RelCon"]
 started: "YYYY-MM"
 last_touched: "Mon D, YYYY"
 tags: []

@@ -5,10 +5,10 @@ draft: false
 date: 2024-09-01
 
 # Project chrome
-code: "ORiG-01"
-# accent: "cyan"
+code: "ORG-01"
+accent: "green"
 status: "active"             # active | exploratory | shipped | paused
-association: "mongodb"       # mongodb | sydney | solo
+association: ["MongoDB", "RelCon"]
 started: "2024-09"
 last_touched: "2026-04-09"
 tags: [ML, semi-structured, density-estimation]
