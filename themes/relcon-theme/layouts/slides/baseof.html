@@ -128,7 +128,7 @@
 
     /* Content slides: left-aligned, top-anchored, bottom padding clears the
        76px fixed footer regardless of slide scale. */
-    .reveal .slides section:not(.title-slide) {
+    .reveal:not(.overview) .slides section:not(.title-slide):not(.stack) {
       text-align: left;
       top: 0 !important;
       padding: 0.8em 0 2.4em 0 !important;
@@ -220,6 +220,24 @@
     .reveal .progress { height: 3px; color: var(--r-accent); }
     .reveal .controls { color: var(--r-text-faint); bottom: 80px; right: 40px; }
     .reveal .controls button:hover { color: var(--r-accent); }
+
+    /* ESC overview: keep the preview border attached to the actual slide
+       section instead of reveal's separate background layer, which can drift
+       when our slide theme adds custom layout rules. */
+    .reveal.overview .backgrounds .slide-background {
+      outline: none !important;
+    }
+    .reveal.overview .slides > section:not(.stack),
+    .reveal.overview .slides > section > section {
+      outline: 10px solid rgba(150, 150, 150, 0.1);
+      outline-offset: 10px;
+    }
+    .reveal.overview .slides > section.present,
+    .reveal.overview .slides > section > section.present,
+    .reveal.overview .slides > section:not(.stack):hover,
+    .reveal.overview .slides > section > section:hover {
+      outline: 10px solid rgba(150, 150, 150, 0.4);
+    }
 
     /* ── Slide footer bar ─────────────────────────────────────────── */
     .slide-footer {
@@ -353,12 +371,12 @@
        Reveal initialize(); sections stretch to that box. The padding-bottom
        clears the 54px fixed footer bar so valign: bottom / rows / footnotes
        land above it. */
-    .reveal .slides section.has-rows,
-    .reveal .slides section.has-columns,
-    .reveal .slides section.has-footnote,
-    .reveal .slides section.valign-top,
-    .reveal .slides section.valign-center,
-    .reveal .slides section.valign-bottom {
+    .reveal:not(.overview) .slides section.has-rows,
+    .reveal:not(.overview) .slides section.has-columns,
+    .reveal:not(.overview) .slides section.has-footnote,
+    .reveal:not(.overview) .slides section.valign-top,
+    .reveal:not(.overview) .slides section.valign-center,
+    .reveal:not(.overview) .slides section.valign-bottom {
       display: flex !important;
       flex-direction: column;
       justify-content: flex-start;

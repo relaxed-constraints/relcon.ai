@@ -326,7 +326,7 @@ content: |
 
 # Tokenisation
 
-<!-- size: small -->
+<!-- size: normal -->
 <!-- padding: compact -->
 
 ```json
@@ -353,14 +353,14 @@ ORiGAMi tokenisation:
 
 # Grammar & schema constraints
 
-<!-- columns: 1/1 -->
+<!-- rows: 1/1 -->
 <!-- size: small -->
 <!-- padding: compact -->
 
 ```box
 title: Grammar constraints
 tone: surface
-compact: true
+compact: false
 content: |
   Enforce **correct syntax**.
 
@@ -369,12 +369,14 @@ content: |
   - Implemented as a pushdown automaton tracking context and nesting level
 ```
 
-|||
+===
+
+<!-- step -->
 
 ```box
 title: Schema constraints
 tone: surface
-compact: true
+compact: false
 content: |
   Enforce **semantic validity**.
 

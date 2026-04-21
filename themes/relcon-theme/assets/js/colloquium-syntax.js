@@ -37,6 +37,7 @@
   'use strict';
 
   var SLIDE_SEP = /\n---\s*\n/;
+  var VERTICAL_SLIDE_SEP = /\n----\s*\n/;
 
   // Slide-level directives. `row-columns` is intentionally excluded — it's a
   // row-local directive, handled inside wrapRow(). Longer alternatives list
@@ -399,17 +400,23 @@
    *      so subsequent regexes (directive extraction, ^[..] footnotes,
    *      <!-- step --> splitting, slide ^---$ splitting, |||/=== cell
    *      splitting) can't reach inside authored code examples.
-   *   3. Split into per-slide chunks on ^---$ and transform each slide
-   *      (directives, columns/rows, footnotes, steps).
+   *   3. Split into per-slide chunks on ^---$ and per-subslide chunks on
+   *      ^----$ so colloquium directives stay local even inside reveal
+   *      vertical stacks, then transform each chunk (directives,
+   *      columns/rows, footnotes, steps).
    *   4. Restore code placeholders before handing back to Reveal.
    */
   window.preprocessColloquiumSyntax = function (markdown) {
     markdown = processFencedElements(markdown);
     var codeStore = [];
     markdown = protectCode(markdown, codeStore);
+    var slideIdx = 0;
     var parts = markdown.split(SLIDE_SEP);
-    var out = parts.map(function (slide, i) {
-      return processSlide(slide, i);
+    var out = parts.map(function (slideGroup) {
+      var verticalParts = slideGroup.split(VERTICAL_SLIDE_SEP);
+      return verticalParts.map(function (slide) {
+        return processSlide(slide, slideIdx++);
+      }).join('\n\n----\n\n');
     }).join('\n\n---\n\n');
     return restoreCode(out, codeStore);
   };
