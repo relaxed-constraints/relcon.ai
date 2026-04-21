@@ -51,8 +51,8 @@
   </header>
 
   {{/* TOC + body — 220px sticky sidebar */}}
-  <div class="grid gap-10 lg:gap-14 mt-6" style="grid-template-columns: 1fr;">
-    <div class="grid gap-10 lg:gap-14" style="grid-template-columns: 220px minmax(0, 1fr); align-items: start;">
+  <div class="grid gap-10 lg:gap-14 mt-6">
+    <div class="grid grid-cols-1 gap-10 lg:gap-14 lg:[grid-template-columns:220px_minmax(0,1fr)] items-start">
 
       {{/* Sticky TOC sidebar */}}
       <aside class="sticky top-6 hidden lg:block">
@@ -75,7 +75,7 @@
 
       {{/* Body sections — first section has no top rule/margin so its label
            aligns with the sidebar "contents" eyebrow. */}}
-      <div>
+      <div class="min-w-0">
         {{ range $i, $s := $sections }}{{ if $s.show }}
         <section id="sec-{{ $s.id }}"
           class="{{ if ne $i 0 }}pt-6 mt-11{{ end }}"
