@@ -58,8 +58,9 @@ repos:
   - { label: "rueckstiess/origami-jsynth", url: "https://github.com/rueckstiess/origami-jsynth" }
 
 changelog:
+  - { date: "Apr 30, 2026", text: "Submitted synthesis paper to VLDB" }
+  - { date: "Apr 28, 2026", text: "Blog post: \"Breaking through tabular constraints\"" }
   - { date: "Apr 1, 2026", text: "Presentation at USYD - Database Reading Group" }
-  - { date: "Mar 30, 2026", text: "Blog post: \"Breaking through tabular constraints\"" }
   - { date: "Mar 2, 2026",  text: "Preprint Autoregressive Synthesis of Sparse and Semi-Structured Mixed-Type Data on arXiv" }
   - { date: "Dec 12, 2024", text: "Preprint ORiGAMi: Object representation via generative autoregressive modelling on arXiv" }
 

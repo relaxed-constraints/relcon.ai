@@ -1,6 +1,6 @@
 ---
 title: "Breaking Through Tabular Constraints for Synthetic Data Generation"
-date: 2026-04-30
+date: 2026-04-28
 draft: false
 type: "blog"
 description: "Most synthetic data generation tools assume flat tables. Real-world application data is often nested JSON with optional fields and variable-length arrays. The ORiGAMi architecture handles semi-structured data directly."
