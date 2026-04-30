@@ -3,9 +3,9 @@ title: "Autoregressive Synthesis of Sparse and Semi-Structured Mixed-Type Data"
 date: 2026-04-01T00:00:00+11:00
 draft: false
 type: "slides"
-description: "To be submitted to VLDB 2027, joint work with Robin Vujanic (MongoDB)"
+description: "Submitted to VLDB 2027, joint work with Robin Vujanic (MongoDB)"
 transition: "none"
-event: "DBRG Seminar "
+event: "DBRG Seminar"
 author: "Thomas Rückstieß"
 ---
 
@@ -402,13 +402,10 @@ data distribution instead.
 
 ![Standard Transformer](transformer.png)
 
-## Standard Transformer
-
 |||
 
 ![ORiGAMi Architecture](architecture.png)
 
-## ORiGAMi Architecture
 
 ---
 
@@ -463,65 +460,61 @@ data distribution instead.
 
 # Results — Fidelity
 
-<!-- size: small -->
 <!-- padding: compact -->
 
-| Dataset | TVAE | CTGAN | REaLTabF. | Tab.ARGN | TabDiff | ORiGAMi |
-| --- | --- | --- | --- | --- | --- | --- |
-| Adult | 0.895 | 0.885 | 0.964 | 0.983 | 0.989 | **0.993** |
-| Diabetes | 0.859 | 0.952 | 0.963 | 0.982 | 0.983 | **0.992** |
-| Elec. Vehicles | ❌ | ❌ | 0.864 | 0.972 | 0.976 | **0.987** |
-| DDXPlus | ❌ | ❌ | ❌ | 0.790 | 0.827 | **0.918** |
-| Yelp | ❌ | ❌ | 0.911 | 0.884 | 0.837 | **0.950** |
-| GitHub Issues | ❌ | ❌ | ❌ | 0.909 | 0.738 | **0.919** |
+| Dataset | Tabby | TVAE | CTGAN | REaLTabF. | Tab.ARGN | TabDiff | ORiGAMi |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Adult | 0.938 | 0.893 | 0.876 | 0.960 | 0.979 | 0.990 | **0.992** |
+| Diabetes | ❌ | 0.860 | 0.927 | 0.965 | 0.982 | 0.982 | **0.992** |
+| Elec. Vehicles | ❌ | ❌ | ❌ | 0.866 | 0.968 | 0.976 | **0.987** |
+| Yelp | ❌ | ❌ | ❌ | 0.895 | 0.883 | 0.914 | **0.960** |
+| DDXPlus | ❌ | ❌ | ❌ | ❌ | 0.797 | 0.857 | **0.917** |
+| GitHub Issues | ❌ | ❌ | ❌ | ❌ | 0.910 | 0.904 | **0.930** |
 
 ---
 
 # Results — Detection
 
-<!-- size: small -->
 <!-- padding: compact -->
 
-| Dataset | TVAE | CTGAN | REaLTabF. | Tab.ARGN | TabDiff | ORiGAMi |
-| --- | --- | --- | --- | --- | --- | --- |
-| Adult | 0.255 | 0.220 | 0.825 | 0.882 | 0.957 | **0.972** |
-| Diabetes | 0.002 | 0.564 | 0.692 | 0.904 | 0.880 | **1.000** |
-| Elec. Vehicles | ❌ | ❌ | 0.394 | 0.783 | 0.940 | **1.000** |
-| DDXPlus | ❌ | ❌ | ❌ | 0.411 | 0.082 | **0.587** |
-| Yelp | ❌ | ❌ | 0.353 | 0.326 | 0.228 | **0.766** |
-| GitHub Issues | ❌ | ❌ | ❌ | 0.630 | 0.265 | **0.665** |
+| Dataset | Tabby | TVAE | CTGAN | REaLTabF. | Tab.ARGN | TabDiff | ORiGAMi |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Adult | 0.587 | 0.218 | 0.112 | 0.807 | 0.866 | 0.967 | **0.979** |
+| Diabetes | ❌ | 0.045 | 0.411 | 0.696 | 0.896 | 0.885 | **1.000** |
+| Elec. Vehicles | ❌ | ❌ | ❌ | 0.417 | 0.640 | 0.937 | **1.000** |
+| Yelp | ❌ | ❌ | ❌ | 0.327 | 0.341 | 0.427 | **0.772** |
+| DDXPlus | ❌ | ❌ | ❌ | ❌ | 0.400 | 0.133 | **0.558** |
+| GitHub Issues | ❌ | ❌ | ❌ | ❌ | 0.676 | 0.449 | **0.687** |
 
 ---
 
 # Results — ML Utility
 
-<!-- size: small -->
 <!-- padding: compact -->
 
-| Dataset | TVAE | CTGAN | REaLTabF. | Tab.ARGN | TabDiff | ORiGAMi |
-| --- | --- | --- | --- | --- | --- | --- |
-| Adult | 0.961 | 0.952 | 0.991 | 0.981 | 0.982 | **0.997** |
-| Diabetes | 0.957 | 0.921 | 0.971 | 0.977 | 0.967 | **0.980** |
-| Elec. Vehicles | ❌ | ❌ | 0.866 | 0.981 | 0.987 | **0.996** |
-| DDXPlus | ❌ | ❌ | ❌ | **1.000** | **1.000** | **1.000** |
-| Yelp | ❌ | ❌ | **0.987** | 0.974 | 0.950 | 0.971 |
-| GitHub Issues | ❌ | ❌ | ❌ | 0.957 | 0.952 | **0.979** |
+| Dataset | Tabby | TVAE | CTGAN | REaLTabF. | Tab.ARGN | TabDiff | ORiGAMi |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Adult | 0.948 | 0.950 | 0.893 | **0.994** | 0.983 | 0.982 | **0.994** |
+| Diabetes | ❌ | 0.954 | 0.926 | 0.973 | 0.973 | 0.976 | **0.988** |
+| Elec. Vehicles | ❌ | ❌ | ❌ | 0.955 | 0.983 | 0.978 | **0.999** |
+| Yelp | ❌ | ❌ | ❌ | **0.981** | 0.971 | 0.947 | 0.978 |
+| DDXPlus | ❌ | ❌ | ❌ | ❌ | 0.998 | **1.000** | **1.000** |
+| GitHub Issues | ❌ | ❌ | ❌ | ❌ | 0.961 | 0.949 | **0.979** |
 
 ---
 
 # Results — Privacy
 
-<!-- size: small -->
 <!-- padding: compact -->
 
-| Dataset | TVAE | CTGAN | REaLTabF. | Tab.ARGN | TabDiff | ORiGAMi |
-| --- | --- | --- | --- | --- | --- | --- |
-| Adult | 0.987 | **0.995** | 0.915 | 0.985 | 0.914 | 0.992 |
-| Diabetes | 0.978 | **0.991** | 0.870 | 0.973 | 0.966 | 0.975 |
-| Elec. Vehicles | ❌ | ❌ | 0.417 | 0.996 | 0.949 | **1.000** |
-| DDXPlus | ❌ | ❌ | ❌ | **1.000** | 0.984 | **1.000** |
-| Yelp | ❌ | ❌ | 0.909 | 0.959 | 0.994 | **0.970** |
-| GitHub Issues | ❌ | ❌ | ❌ | **1.000** | **1.000** | **1.000** |
+| Dataset | Tabby | TVAE | CTGAN | REaLTabF. | Tab.ARGN | TabDiff | ORiGAMi |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Adult | **1.000** | 0.967 | **1.000** | 0.915 | 0.981 | 0.831 | 0.984 |
+| Diabetes | ❌ | 0.967 | **1.000** | 0.874 | 0.963 | 0.941 | 0.976 |
+| Elec. Vehicles | ❌ | ❌ | ❌ | 0.161 | 0.958 | 0.938 | **0.965** |
+| Yelp | ❌ | ❌ | ❌ | 0.939 | 0.955 | 0.971 | **0.974** |
+| DDXPlus | ❌ | ❌ | ❌ | ❌ | 0.978 | 0.977 | 0.995 |
+| GitHub Issues | ❌ | ❌ | ❌ | ❌ | **0.999** | **0.999** | 0.994 |
 
 ---
 
@@ -536,12 +529,13 @@ data distribution instead.
   "data": {
     "labels": ["Adult (0%)", "Diabetes (0%)", "Electric (11%)", "DDXPlus (67%)", "Yelp (78%)", "GitHub (93%)"],
     "datasets": [
-      { "label": "TVAE",          "data": [0.255, 0.002, null, null, null, null], "backgroundColor": "rgba(148,103,189,0.75)" },
-      { "label": "CTGAN",         "data": [0.220, 0.564, null, null, null, null], "backgroundColor": "rgba(140,86,75,0.75)"   },
-      { "label": "REaLTabFormer", "data": [0.825, 0.692, 0.394, null, 0.353, null], "backgroundColor": "rgba(214,39,40,0.75)" },
-      { "label": "TabularARGN",   "data": [0.882, 0.904, 0.783, 0.411, 0.326, 0.630], "backgroundColor": "rgba(44,160,44,0.75)" },
-      { "label": "TabDiff",       "data": [0.957, 0.880, 0.940, 0.082, 0.228, 0.265], "backgroundColor": "rgba(255,127,14,0.75)" },
-      { "label": "ORiGAMi",       "data": [0.972, 1.000, 1.000, 0.587, 0.766, 0.665], "backgroundColor": "rgba(31,119,180,0.85)" }
+      { "label": "Tabby",         "data": [0.587, null, null, null, null, null], "backgroundColor": "rgba(127,127,127,0.75)" },
+      { "label": "TVAE",          "data": [0.218, 0.045, null, null, null, null], "backgroundColor": "rgba(148,103,189,0.75)" },
+      { "label": "CTGAN",         "data": [0.112, 0.411, null, null, null, null], "backgroundColor": "rgba(140,86,75,0.75)"   },
+      { "label": "REaLTabFormer", "data": [0.807, 0.696, 0.417, null, 0.327, null], "backgroundColor": "rgba(214,39,40,0.75)" },
+      { "label": "TabularARGN",   "data": [0.866, 0.896, 0.640, 0.400, 0.341, 0.676], "backgroundColor": "rgba(44,160,44,0.75)" },
+      { "label": "TabDiff",       "data": [0.967, 0.885, 0.937, 0.133, 0.427, 0.449], "backgroundColor": "rgba(255,127,14,0.75)" },
+      { "label": "ORiGAMi",       "data": [0.979, 1.000, 1.000, 0.558, 0.772, 0.687], "backgroundColor": "rgba(31,119,180,0.85)" }
     ]
   },
   "options": {
@@ -558,11 +552,11 @@ data distribution instead.
 
 ---
 
-# Numerical columns on _Electric Vehicles_
+# Numerical Artifacts
 
 <!-- align: center -->
 
-![](kde_electric_vehicles.png)
+![KDE Plots of Numerical Columns on Electric Vehicles](kde_electric_vehicles.png)
 
 ---
 
@@ -578,25 +572,25 @@ data distribution instead.
 
 ---
 
-# Array lengths on _Yelp_ `categories`
+# Array length Artifacts
 
-<!-- rows: 3/2 -->
-<!-- size: small -->
 <!-- padding: compact -->
 <!-- align: center -->
 
-![](yelp_array_length_pmf.png)
-
-===
+<!-- rows: 1/1 -->
 
 <!-- row-columns: 3/2 -->
-
-- Wasserstein distance between real and synthetic distributions of array lengths
 - Due to flattening, baselines have no way to model array length directly
+- Wasserstein distance between real and synthetic distributions of array lengths
 
 |||
 
-![](yelp_array_length.png)
+
+![](array_length_ablation.png)
+===
+
+![KDE plots of Yelp `categories` array lengths](./yelp_array_length_dist.png)
+
 
 ---
 

@@ -10,7 +10,7 @@ accent: "green"
 status: "active"             # active | exploratory | shipped | paused
 association: ["MongoDB", "RelCon"]
 started: "2024-09"
-last_touched: "2026-04-09"
+last_touched: "2026-04-30"
 tags: [ML, semi-structured, density-estimation]
 
 hypothesis: >
@@ -22,8 +22,9 @@ summary: "Object Representation via Generative Autoregressive Modelling"
 
 collaborators:
   - { who: "Thomas Rückstieß",   affiliation: "Relaxed Constraints",  role: "Lead" }
-  - { who: "Alana Huang",        affiliation: "MongoDB",  role: "Contributor" }
   - { who: "Robin Vujanic",      affiliation: "MongoDB",  role: "Contributor" }
+  - { who: "Alana Huang",        affiliation: "MongoDB",  role: "Contributor" }
+  - { who: "William Hadden",     affiliation: "MongoDB",  role: "Intern" }
 
 papers:
   - title: "ORiGAMi: Object representation via generative autoregressive modelling"

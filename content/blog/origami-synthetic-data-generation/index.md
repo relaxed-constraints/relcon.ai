@@ -83,7 +83,7 @@ never sees the same record twice, and it learns to generalize the structure and 
 
 ## Results
 
-We evaluated on six datasets with increasing complexity: Adult and Diabetes (standard dense benchmarks, 49K and 81K records respectively), Electric Vehicles (210K records, 11% sparsity), Yelp (150K records, 78% sparsity), DDXPlus (1.16M records, 67% sparsity), and GitHub Issues (642K records, 93% sparsity).
+We evaluated on six datasets with increasing complexity: Adult and Diabetes (standard dense benchmarks, 49K and 81K records respectively), Electric Vehicles (210K records, 11% sparsity), Yelp (150K records, 78% sparsity), GitHub Issues (642K records, 93% sparsity) and DDXPlus (1.16M records, 67% sparsity).
 
 The first thing to look at is which methods could run at all:
 
@@ -93,8 +93,8 @@ The first thing to look at is which methods could run at all:
 | Diabetes | OOM | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | Electric | OOM | OOM | OOM | ✓ | ✓ | ✓ | ✓ |
 | Yelp | OOM | OOM | OOM | ✓ | ✓ | ✓ | ✓ |
-| DDXPlus | OOM | OOM | OOM | OOM | ✓ | ✓ | ✓ |
 | GitHub Issues | OOM | OOM | OOM | OOM | ✓ | ✓ | ✓ |
+| DDXPlus | OOM | OOM | OOM | OOM | ✓ | ✓ | ✓ |
 
 By the third dataset, half the baselines are out of memory (OOM).
 
@@ -104,7 +104,7 @@ For the methods that did run, we measured how hard it is for an XGBoost classifi
 {
   type: 'bar',
   data: {
-    labels: ['Adult (0%)', 'Diabetes (0%)', 'Electric (11%)', 'Yelp (78%)', 'DDXPlus (67%)', 'GitHub Issues (93%)'],
+    labels: ['Adult (0%)', 'Diabetes (0%)', 'Electric (11%)', 'Yelp (78%)', 'GitHub Issues (93%)', 'DDXPlus (67%)'],
     datasets: [
       {
         label: 'Tabby',
@@ -128,17 +128,17 @@ For the methods that did run, we measured how hard it is for an XGBoost classifi
       },
       {
         label: 'TabularARGN',
-        data: [0.866, 0.896, 0.640, 0.341, 0.400, 0.676],
+        data: [0.866, 0.896, 0.640, 0.341, 0.676, 0.400],
         backgroundColor: 'rgba(44, 160, 44, 0.75)'
       },
       {
         label: 'TabDiff',
-        data: [0.967, 0.885, 0.937, 0.427, 0.133, 0.449],
+        data: [0.967, 0.885, 0.937, 0.427, 0.449, 0.133],
         backgroundColor: 'rgba(255, 127, 14, 0.75)'
       },
       {
         label: 'ORiGAMi',
-        data: [0.979, 1.000, 1.000, 0.772, 0.558, 0.687],
+        data: [0.979, 1.000, 1.000, 0.772, 0.687, 0.558],
         backgroundColor: 'rgba(31, 119, 180, 0.85)'
       }
     ]
