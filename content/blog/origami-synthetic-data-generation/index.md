@@ -1,17 +1,17 @@
 ---
 title: "Breaking Through Tabular Constraints for Synthetic Data Generation"
-date: 2026-03-30
+date: 2026-04-30
 draft: false
 type: "blog"
-description: "Most synthetic data generation tools assume flat tables. Real-world application data is often nested JSON with optional fields and variable-length arrays. The ORiGAMi architecture is the first to handle semi-structured data natively."
+description: "Most synthetic data generation tools assume flat tables. Real-world application data is often nested JSON with optional fields and variable-length arrays. The ORiGAMi architecture handles semi-structured data directly."
 tags: ["research", "synthetic-data", "origami"]
 categories: ["Research", "Synthetic Data", "JSON"]
 author: "Thomas Rückstieß"
 ---
 
-Teams need realistic data for testing, development environments, database optimization and ML training, but without exposing actual user records. For simple tabular data, there are decent tools and algorithms to generate synthetic records, spanning various architecture families: [GANs and VAEs](https://arxiv.org/abs/1907.00503), [diffusion models](https://arxiv.org/abs/2410.20626), and more recently [LLMs](https://arxiv.org/abs/2210.06280). But if your data has nested objects, optional fields, or variable-length arrays (typical application layer data and API payloads), the only recourse is to flatten everything into tables during preprocessing. This flattening process is lossy, creates extremely wide sparse tables, and leads to poor quality synthetic data.
+Teams need realistic data for testing, development environments, database optimization and ML training, but without exposing actual user records. For simple tabular data, there are decent tools and algorithms to generate synthetic records, spanning various architecture families: [GANs and VAEs](https://arxiv.org/abs/1907.00503), [diffusion models](https://arxiv.org/abs/2410.20626), and more recently [LLMs](https://arxiv.org/abs/2210.06280). But if your data has nested objects, optional fields, or variable-length arrays (typical application layer data and API payloads), the usual workaround is to flatten everything into tables during preprocessing. This creates wide sparse tables and turns nested structure and array lengths into column-layout artifacts.
 
-In our recent [paper](https://arxiv.org/abs/2603.01444), we study how existing synthesizers hold up when applied to flattened semi-structured data, and introduce a new model architecture that sidesteps the problem entirely. ORiGAMi (**O**bject **R**epresentat**i**on via **G**enerative **A**utoregressive **M**odell**i**ng) is a modified transformer that operates on JSON directly — no flattening required. It’s the first synthesizer, to our knowledge, designed to handle semi-structured data end-to-end: learning the structure, the sparsity patterns, and the statistical relationships directly from the raw JSON records.
+In our recent [paper](https://arxiv.org/abs/2603.01444), we study how existing synthesizers hold up when applied to flattened semi-structured data, and introduce a new model architecture that sidesteps the problem entirely. ORiGAMi (**O**bject **R**epresentat**i**on via **G**enerative **A**utoregressive **M**odell**i**ng) is a modified transformer that operates on JSON directly — no flattening required. It learns structure, sparsity patterns, and statistical relationships directly from the raw JSON records.
 
 
 ## Application data looks different
@@ -41,7 +41,7 @@ Here's a simplified business listing from Yelp:
 
 Nested objects, variable-length arrays, keys that show up in some records but not others. If you've worked with document databases, REST APIs, or event streams, this is familiar. It's how most application-layer data is shaped.
 
-To use any existing synthesizer on data like this, you first have to flatten it into a table. `categories` becomes `categories.0`, `categories.1`, `categories.2`, one column per array slot. `hours.Monday` and `attributes.WiFi` become top-level columns. Records missing a key get a blank cell. This process is lossy (you lose the hierarchical structure) and creates wide sparse tables, which many ML algorithms struggle with.
+To use a tabular synthesizer on data like this, you first have to flatten it into a table. `categories` becomes `categories.0`, `categories.1`, `categories.2`, one column per array slot. `hours.Monday` and `attributes.WiFi` become top-level columns. Records missing a key get a blank cell. The resulting representation is wide, sparse, and awkward for many ML algorithms.
 
 We flattened the 150,000-record Yelp business listings dataset this way. The result was a table with **142 columns and 78% empty cells**.
 
@@ -51,13 +51,13 @@ Even on flat tables, there's a fundamental tension in how synthesizers handle di
 
 Autoregressive and LLM-based methods have the opposite problem. They treat everything as tokens, so categories are easy. But numeric values with high precision (prices, coordinates, timestamps) would need enormous vocabularies to represent exactly, so they get discretized into bins, losing precision and ordinal structure in the process.
 
-Both camps compromise. ORiGAMi sidesteps this by using a dual-head architecture: one head predicts discrete tokens (keys, categories, structural markers), and a separate head models numeric values as continuous distributions. Each data type stays in its native representation.
+Both camps compromise. ORiGAMi sidesteps this by using a dual-head architecture: one head predicts discrete tokens (keys, categories, structural markers), and a separate head models high-precision numeric values as continuous distributions. Each data type stays in its native representation.
 
 ## What breaks with sparsity
 
-We benchmarked synthesizers from all the major architecture families on five datasets, ranging from standard dense benchmarks to large-scale JSON collections. As the data gets less tabular and sparser, three things go wrong.
+We benchmarked synthesizers from all the major architecture families on six datasets, ranging from standard dense benchmarks to large-scale JSON collections. As the data gets less tabular and sparser, three things go wrong.
 
-First, many methods simply can't run. TVAE and CTGAN one-hot encode categorical values — each unique value becomes its own column. On Yelp, that's 27,000 unique values across 261 categorical columns, and they simply cannot fit in memory. GReaT and Tabby, the language model-based variants, default to GPT-2 under the hood, which has a 1,024-token context window. Flattened Yelp records need around 2,900 tokens with standard sub-word tokenizers. On our largest dataset (1 million medical records, 230 columns after flattening), only two of six baselines could even start training on a single V100 GPU with 16GB of memory.
+First, many methods simply can't run. TVAE and CTGAN one-hot encode categorical values — each unique value becomes its own column. On Yelp, the flattened representation contains roughly 27,000 discrete values, and these models cannot fit in memory. GReaT and Tabby, the language model-based variants, default to GPT-2 under the hood, which has a 1,024-token context window. Flattened Yelp records need around 2,900 tokens with standard sub-word tokenizers. On our largest dataset (1.16 million medical records), only two of six baselines could even start training on a single V100 GPU with 16GB of memory.
 
 Second, imputation corrupts sparse columns. The standard approach to fill missing numeric values is to replace them with the column mean. But if 95% of a column's values are missing, the model learns a distribution dominated by that artificial spike rather than the actual data. A classifier trained to detect synthetic data picks this up immediately.
 
@@ -83,17 +83,18 @@ never sees the same record twice, and it learns to generalize the structure and 
 
 ## Results
 
-We evaluated on five datasets with increasing complexity: Adult and Diabetes (standard dense benchmarks, 49K and 81K records respectively), Electric Vehicles (210K records, 11% sparsity), Yelp (150K records, 78% sparsity), and DDXPlus (1.16M records, 67% sparsity).
+We evaluated on six datasets with increasing complexity: Adult and Diabetes (standard dense benchmarks, 49K and 81K records respectively), Electric Vehicles (210K records, 11% sparsity), Yelp (150K records, 78% sparsity), DDXPlus (1.16M records, 67% sparsity), and GitHub Issues (642K records, 93% sparsity).
 
 The first thing to look at is which methods could run at all:
 
-| | Tabby | TVAE | CTGAN | REaLTabformer | TabularARGN | TabDiff | ORiGAMi |
+| | Tabby | TVAE | CTGAN | REaLTabFormer | TabularARGN | TabDiff | ORiGAMi |
 |---|---|---|---|---|---|---|---|
 | Adult | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | Diabetes | OOM | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | Electric | OOM | OOM | OOM | ✓ | ✓ | ✓ | ✓ |
 | Yelp | OOM | OOM | OOM | ✓ | ✓ | ✓ | ✓ |
 | DDXPlus | OOM | OOM | OOM | OOM | ✓ | ✓ | ✓ |
+| GitHub Issues | OOM | OOM | OOM | OOM | ✓ | ✓ | ✓ |
 
 By the third dataset, half the baselines are out of memory (OOM).
 
@@ -103,36 +104,41 @@ For the methods that did run, we measured how hard it is for an XGBoost classifi
 {
   type: 'bar',
   data: {
-    labels: ['Adult (0%)', 'Diabetes (0%)', 'Electric (11%)', 'Yelp (78%)', 'DDXPlus (67%)'],
+    labels: ['Adult (0%)', 'Diabetes (0%)', 'Electric (11%)', 'Yelp (78%)', 'DDXPlus (67%)', 'GitHub Issues (93%)'],
     datasets: [
       {
+        label: 'Tabby',
+        data: [0.587, null, null, null, null, null],
+        backgroundColor: 'rgba(127, 127, 127, 0.75)'
+      },
+      {
         label: 'TVAE',
-        data: [0.255, 0.002, null, null, null],
+        data: [0.218, 0.045, null, null, null, null],
         backgroundColor: 'rgba(148, 103, 189, 0.75)'
       },
       {
         label: 'CTGAN',
-        data: [0.220, 0.564, null, null, null],
+        data: [0.112, 0.411, null, null, null, null],
         backgroundColor: 'rgba(140, 86, 75, 0.75)'
       },
       {
-        label: 'REaLTabFormer',
-        data: [0.825, 0.692, 0.394, 0.353, null],
+        label: 'REaLTabF.',
+        data: [0.807, 0.696, 0.417, 0.327, null, null],
         backgroundColor: 'rgba(214, 39, 40, 0.75)'
       },
       {
         label: 'TabularARGN',
-        data: [0.882, 0.904, 0.783, 0.326, 0.411],
+        data: [0.866, 0.896, 0.640, 0.341, 0.400, 0.676],
         backgroundColor: 'rgba(44, 160, 44, 0.75)'
       },
       {
         label: 'TabDiff',
-        data: [0.957, 0.880, 0.940, 0.228, 0.082],
+        data: [0.967, 0.885, 0.937, 0.427, 0.133, 0.449],
         backgroundColor: 'rgba(255, 127, 14, 0.75)'
       },
       {
         label: 'ORiGAMi',
-        data: [0.972, 1.000, 1.000, 0.766, 0.587],
+        data: [0.979, 1.000, 1.000, 0.772, 0.558, 0.687],
         backgroundColor: 'rgba(31, 119, 180, 0.85)'
       }
     ]
@@ -151,9 +157,9 @@ For the methods that did run, we measured how hard it is for an XGBoost classifi
 }
 {{< /chart >}}
 
-On the dense benchmarks (Adult and Diabetes), detection scores among top performers are high and closely bunched. But despite being designed for semi-structured data, ORiGAMi outperforms all competitors even here. TVAE and CTGAN are easily detected regardless of dataset. As sparsity increases, the story gets more dramatic: TabDiff collapses to near-zero on the sparse datasets (0.228 on Yelp, 0.082 on DDXPlus), and TabularARGN follows a similar trajectory. ORiGAMi scores drop as well as data gets sparser, but it leads every dataset and maintains a significant gap over the next-best method.
+On the dense benchmarks (Adult and Diabetes), detection scores among top performers are high and closely bunched. But despite being designed for semi-structured data, ORiGAMi outperforms all competitors even here. TVAE and CTGAN are easily detected on the datasets where they can run. As sparsity increases, the differences become more visible: TabDiff and TabularARGN both degrade on Yelp and DDXPlus, while ORiGAMi remains hardest to distinguish from real data on every dataset. The GitHub Issues dataset is the closest case, with ORiGAMi only slightly ahead of TabularARGN.
 
-Fidelity and utility scores tell a similar story, though with smaller margins. ORiGAMi has the highest fidelity on all five datasets and the best ML utility on four of five (REaLTabFormer edges it out on Yelp). Details are in [the paper](https://arxiv.org/abs/2603.01444).
+Fidelity and utility scores tell a similar story, though with smaller margins. ORiGAMi has the highest fidelity on all six datasets and the best or tied-best ML utility on five of six (REaLTabFormer edges it out on Yelp). Details are in [the paper](https://arxiv.org/abs/2603.01444).
 
 Worth noting: ORiGAMi is also the smallest model. For the Yelp dataset, it has 1.7M parameters, 5x smaller than TabularARGN (9M) and 35x smaller than REaLTabFormer (59M). 
 
@@ -163,9 +169,9 @@ But where does it actually break down? The evaluation metrics don't tell the ful
 
 {{< figure src="kde_electric_vehicles.png" invert="true" caption="Density visualizations comparing real vs. synthetic data distributions for electric vehicle records." >}}
 
-Arrays expose a different failure mode. When a tabular synthesizer generates values for `categories.0`, `categories.1`, `categories.2`, and so on independently, the number of non-null entries in those columns determines the implied array length. There is no mechanism to model that length explicitly. ORiGAMi, operating on JSON sequences directly, learns the length distribution as part of the sequence model. The difference is visible in the Yelp `categories` array: REaLTabFormer has a strong outlier at length 2, and TabularARGN and TabDiff overshoot toward longer arrays. ORiGAMi's array length distribution matches the real data most closely.
+Arrays expose a different failure mode. When a variable-length array is flattened into `categories.0`, `categories.1`, `categories.2`, and so on, the number of non-null entries in those columns determines the implied array length. The length is implicit rather than a directly modeled quantity. ORiGAMi, operating on JSON sequences directly, learns the length distribution as part of the sequence model. The difference is visible in the Yelp `categories` array: REaLTabFormer has a strong outlier at length 2, and TabularARGN and TabDiff overshoot toward longer arrays. ORiGAMi's array length distribution matches the real data most closely.
 
-{{< figure src="yelp_array_length_pmf.png" invert="true" caption="Distribution of the number of categories per business listing in the Yelp dataset." >}}
+{{< figure src="yelp_array_length_dist.png" invert="true" caption="Distribution of the number of categories per business listing in the Yelp dataset." >}}
 
 ## Beyond Synthetic Data Generation
 
@@ -176,4 +182,4 @@ The paper preprint is available on [arXiv](https://arxiv.org/abs/2603.01444) and
 
 ---
 
-*Thomas Rückstieß is the founder of Relaxed Constraints and former head of ML Research at MongoDB. This work was done in collaboration with Robin Vujanic at MongoDB.*
+*Thomas Rückstieß is the founder of Relaxed Constraints and former head of ML Research at MongoDB. This work was done in collaboration with Robin Vujanic, Staff Research Scientist at MongoDB.*
