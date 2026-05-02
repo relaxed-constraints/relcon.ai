@@ -1,0 +1,33 @@
+{{- printf "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" | safeHTML }}
+{{- $pages := where site.RegularPages "Section" "blog" -}}
+{{- $pages = where $pages "Draft" "ne" true -}}
+{{- $pages = where $pages "Date" "le" now -}}
+{{- $pages = sort $pages "Date" "desc" -}}
+{{- $lastBuildDate := now -}}
+{{- with index $pages 0 -}}
+  {{- $lastBuildDate = .Date -}}
+{{- end }}
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <channel>
+    <title>{{ site.Title }} Blog</title>
+    <link>{{ "/blog/" | absURL }}</link>
+    <description>{{ site.Params.description }}</description>
+    <generator>Hugo</generator>
+    <language>{{ site.Language.LanguageCode }}</language>
+    <lastBuildDate>{{ $lastBuildDate.Format "Mon, 02 Jan 2006 15:04:05 -0700" | safeHTML }}</lastBuildDate>
+    <atom:link href="{{ "/blog/index.xml" | absURL }}" rel="self" type="application/rss+xml" />
+    {{ range $pages }}
+    {{ $description := or .Params.description .Description .Summary }}
+    <item>
+      <title>{{ .Title }}</title>
+      <link>{{ .Permalink }}</link>
+      <pubDate>{{ .Date.Format "Mon, 02 Jan 2006 15:04:05 -0700" | safeHTML }}</pubDate>
+      <guid>{{ .Permalink }}</guid>
+      <description>{{ $description | plainify | html }}</description>
+      {{ with .Params.author }}<dc:creator>{{ . }}</dc:creator>{{ end }}
+      {{ range .Params.categories }}<category>{{ . }}</category>{{ end }}
+      {{ range .Params.tags }}<category>{{ . }}</category>{{ end }}
+    </item>
+    {{ end }}
+  </channel>
+</rss>

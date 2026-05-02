@@ -51,6 +51,13 @@ theme = "relcon-theme"
   description = "An autonomous research lab where humans and AI agents collaborate to build self-improving systems."
   image = "/images/og-default.png"
 
+[outputs]
+  home = ["HTML"]
+  section = ["HTML"]
+  taxonomy = ["HTML"]
+  term = ["HTML"]
+  page = ["HTML"]
+
 [taxonomies]
   category = "categories"
   tag = "tags"
