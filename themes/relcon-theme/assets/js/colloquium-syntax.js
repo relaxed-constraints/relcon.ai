@@ -51,6 +51,7 @@
   // Leading ATX title at the top of the slide body (#, ##). We lift it out
   // before wrapping so it spans the full slide width above columns/rows.
   var LEADING_TITLE_RE = /^\s*(#{1,2})\s+([^\r\n]+)\s*(?:\r?\n|$)/;
+  var ATX_HEADING_RE = /^\s*#{1,6}\s+\S.*$/;
 
   // Fenced block elements. Matched on raw markdown before marked.js runs.
   // Using a non-greedy body with a closing fence anchored to line start.
@@ -250,6 +251,18 @@
     }).filter(Boolean).join('\n\n');
   }
 
+  function isHeadingOnlySlide(text) {
+    var lines = String(text || '').split(/\r?\n/);
+    var hasHeading = false;
+    for (var i = 0; i < lines.length; i++) {
+      var line = lines[i].trim();
+      if (!line) continue;
+      if (!ATX_HEADING_RE.test(line)) return false;
+      hasHeading = true;
+    }
+    return hasHeading;
+  }
+
   function wrapColumns(body, spec) {
     var chunks = body.split(/\n[ \t]*\|\|\|[ \t]*\n/);
     var inner = chunks.map(function (c) {
@@ -330,6 +343,7 @@
     if (dirs['img-valign']) classes.push('img-valign-' + dirs['img-valign']);
     if (dirs['img-fill'] && dirs['img-fill'] !== 'false') classes.push('img-fill');
     if (dirs['img-overflow'] && dirs['img-overflow'] !== 'false') classes.push('img-overflow');
+    if (!dirs.columns && !dirs.rows && isHeadingOnlySlide(body)) classes.push('headings-only');
 
     // Inline footnotes are extracted from raw markdown so bracket counting
     // works on the author's source (before any HTML transformation).
