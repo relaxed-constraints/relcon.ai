@@ -374,9 +374,13 @@
     .reveal:not(.overview) .slides section.has-rows,
     .reveal:not(.overview) .slides section.has-columns,
     .reveal:not(.overview) .slides section.has-footnote,
+    .reveal:not(.overview) .slides section.headings-only,
     .reveal:not(.overview) .slides section.valign-top,
     .reveal:not(.overview) .slides section.valign-center,
-    .reveal:not(.overview) .slides section.valign-bottom {
+    .reveal:not(.overview) .slides section.valign-bottom,
+    .reveal:not(.overview) .slides section.img-valign-top,
+    .reveal:not(.overview) .slides section.img-valign-center,
+    .reveal:not(.overview) .slides section.img-valign-bottom {
       display: flex !important;
       flex-direction: column;
       justify-content: flex-start;
@@ -412,6 +416,26 @@
       object-fit: contain;
       display: block;
       margin: 0 auto;
+    }
+
+    .reveal:not(.overview) .slides section.headings-only {
+      justify-content: center;
+      text-align: center !important;
+    }
+    .reveal .slides section.headings-only h1,
+    .reveal .slides section.headings-only h2,
+    .reveal .slides section.headings-only h3,
+    .reveal .slides section.headings-only h4,
+    .reveal .slides section.headings-only h5,
+    .reveal .slides section.headings-only h6 {
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .reveal .slides section.headings-only h1 { margin-bottom: 0.35em; }
+    .reveal .slides section.headings-only h2 {
+      color: var(--r-text-muted);
+      font-weight: 500;
+      margin-bottom: 0;
     }
 
     /* Inline footnote marker */
@@ -467,9 +491,9 @@
     .reveal .slides section.align-center { text-align: center; }
     .reveal .slides section.align-right  { text-align: right; }
 
-    .reveal .slides section.valign-top    { justify-content: flex-start; }
-    .reveal .slides section.valign-center { justify-content: center; }
-    .reveal .slides section.valign-bottom { justify-content: flex-end; }
+    .reveal:not(.overview) .slides section.valign-top    { justify-content: flex-start !important; }
+    .reveal:not(.overview) .slides section.valign-center { justify-content: center !important; }
+    .reveal:not(.overview) .slides section.valign-bottom { justify-content: flex-end !important; }
 
     .reveal .slides section.size-small  { font-size: 0.85em; }
     .reveal .slides section.size-large  { font-size: 1.15em; }
@@ -595,12 +619,29 @@
     .reveal .slides section.img-align-center img { display: block; margin-left: auto; margin-right: auto; }
     .reveal .slides section.img-align-right  img { display: block; margin-left: auto; margin-right: 0; }
 
-    .reveal .slides section.img-valign-top    .col > p:has(> img:only-child),
-    .reveal .slides section.img-valign-top    .colloquium-row > p:has(> img:only-child) { align-self: start; }
-    .reveal .slides section.img-valign-center .col > p:has(> img:only-child),
-    .reveal .slides section.img-valign-center .colloquium-row > p:has(> img:only-child) { align-self: center; }
-    .reveal .slides section.img-valign-bottom .col > p:has(> img:only-child),
-    .reveal .slides section.img-valign-bottom .colloquium-row > p:has(> img:only-child) { align-self: end; }
+    .reveal:not(.overview) .slides section.img-valign-top    { justify-content: flex-start !important; }
+    .reveal:not(.overview) .slides section.img-valign-center { justify-content: center !important; }
+    .reveal:not(.overview) .slides section.img-valign-bottom { justify-content: flex-end !important; }
+
+    .reveal .slides section[class*="img-valign-"] .col:has(> p > img:only-child),
+    .reveal .slides section[class*="img-valign-"] .col:has(> figure > img:only-child),
+    .reveal .slides section[class*="img-valign-"] .colloquium-row:has(> p > img:only-child),
+    .reveal .slides section[class*="img-valign-"] .colloquium-row:has(> figure > img:only-child) {
+      display: flex;
+      flex-direction: column;
+    }
+    .reveal .slides section.img-valign-top    .col:has(> p > img:only-child),
+    .reveal .slides section.img-valign-top    .col:has(> figure > img:only-child),
+    .reveal .slides section.img-valign-top    .colloquium-row:has(> p > img:only-child),
+    .reveal .slides section.img-valign-top    .colloquium-row:has(> figure > img:only-child) { justify-content: flex-start; }
+    .reveal .slides section.img-valign-center .col:has(> p > img:only-child),
+    .reveal .slides section.img-valign-center .col:has(> figure > img:only-child),
+    .reveal .slides section.img-valign-center .colloquium-row:has(> p > img:only-child),
+    .reveal .slides section.img-valign-center .colloquium-row:has(> figure > img:only-child) { justify-content: center; }
+    .reveal .slides section.img-valign-bottom .col:has(> p > img:only-child),
+    .reveal .slides section.img-valign-bottom .col:has(> figure > img:only-child),
+    .reveal .slides section.img-valign-bottom .colloquium-row:has(> p > img:only-child),
+    .reveal .slides section.img-valign-bottom .colloquium-row:has(> figure > img:only-child) { justify-content: flex-end; }
 
     .reveal .slides section.img-fill .col img,
     .reveal .slides section.img-fill .colloquium-row img {
