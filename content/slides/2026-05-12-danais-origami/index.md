@@ -1,6 +1,6 @@
 ---
 title: "Machine Learning for Semi-Structured Data"
-date: 2026-05-11
+date: 2026-05-12
 draft: false
 type: "slides"
 description: "Bridging tabular ML and foundation models for JSON data"
