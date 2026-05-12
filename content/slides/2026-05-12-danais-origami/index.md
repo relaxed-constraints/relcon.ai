@@ -260,7 +260,7 @@ content: |
 - **Graph- and Tree-based models (e.g. GNNs, Tree-LSTMs, ...)**
   - too restrictive assumptions for schemaless JSON
 - **Train standard transformer on JSON**
-  - memorizes data (bias/variance tradeoff), awkward tokenisation
+  - memorises data (bias/variance trade-off), awkward tokenisation
 - **Throw it into a pre-trained LLM and hope for the best**
   - only works for tiny datasets, no guarantees, expensive
 
