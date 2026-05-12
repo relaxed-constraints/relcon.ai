@@ -1,6 +1,6 @@
 ---
 title: "Machine Learning for Semi-Structured Data"
-date: 2026-05-12
+date: 2026-05-11
 draft: false
 type: "slides"
 description: "Bridging tabular ML and foundation models for JSON data"
@@ -441,8 +441,8 @@ To predict the `stars` rating for a Yelp business:
 
 - 75,000 Java code snippets collected from 250 online programming challenges
 - Predict the challenge from the source code (250 classes)
-- Baselines: dedicated code models based on MLP, CNN, GNN 
 - For ORiGAMi, we parse code into ASTs stored as JSON -> 
+- Baselines: dedicated code models based on MLP, CNN, GNN 
 
 | Metric | MLP | CNN | GNN | ORiGAMi |
 |---|---:|---:|---:|---:|
@@ -1038,6 +1038,8 @@ A query targets a region in this space, e.g. $0.6 < x_1 < 0.8$ and $0.7 < x_2 < 
 
 |||
 
+<!-- step -->
+
 How much of the volume of the probability density falls into the query region?
 
 Multiplied with total number of records gives the cardinality estimate.
@@ -1085,17 +1087,29 @@ Unsolved challenges:
 
 ---
 
+# Embeddings of JSON data
+
+<!-- size: small -->
+<!-- img-align: center -->
+
+- Use the activations of the last hidden layer as a fixed-size embedding
+
+![](assets/embedding-ev.gif)
+
+---
+
 # Query Embeddings for Index Advisor (USyd)
 
 <!-- size: small -->
 <!-- img-align: center -->
 
-- Use the activations of the last hidden layer as a fixed-size embedding for a DB query
+- Train model on MongoDB queries
 - Bao-style RL agent predicts best index given embedding
 
 ![](assets/query-embeddings.png)
 
 ---
+
 
 # Summary
 
