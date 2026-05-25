@@ -29,8 +29,9 @@
  *   <!-- img-fill: true -->                → img-fill
  *   <!-- img-overflow: true -->            → img-overflow
  *   ```box                                 → callout rendered via js-yaml
+ *   ```conversation                        → chat bubbles rendered via js-yaml
  *
- * Out of scope for spike: ```chart/conversation/builtwith fenced elements,
+ * Out of scope for spike: ```chart/builtwith fenced elements,
  * [@bib] citations.
  */
 (function () {
@@ -56,6 +57,7 @@
   // Fenced block elements. Matched on raw markdown before marked.js runs.
   // Using a non-greedy body with a closing fence anchored to line start.
   var BOX_BLOCK_RE = /(^|\n)```box[ \t]*\n([\s\S]*?)\n```[ \t]*(?=\n|$)/g;
+  var CONVERSATION_BLOCK_RE = /(^|\n)```conversation[ \t]*\n([\s\S]*?)\n```[ \t]*(?=\n|$)/g;
 
   function gridTemplate(spec, axis) {
     spec = String(spec || '').trim();
@@ -89,6 +91,13 @@
       .replace(/\*\*([^*\n]+)\*\*/g, '<strong>$1</strong>')
       .replace(/\*([^*\n]+)\*/g, '<em>$1</em>')
       .replace(/_([^_\n]+)_/g, '<em>$1</em>');
+  }
+
+  function blockMd(text) {
+    if (typeof RevealMarkdown !== 'undefined' && RevealMarkdown.marked) {
+      return RevealMarkdown.marked.parse(String(text)).trim();
+    }
+    return '<p>' + inlineMd(text) + '</p>';
   }
 
   function errorPara(message) {
@@ -142,17 +151,73 @@
     return parts.join('\n');
   }
 
+  function renderConversation(yamlStr) {
+    if (typeof jsyaml === 'undefined') {
+      return errorPara('js-yaml not loaded - cannot render ```conversation');
+    }
+    var spec;
+    try {
+      spec = jsyaml.load(yamlStr);
+    } catch (e) {
+      return errorPara('Invalid conversation YAML');
+    }
+    if (!spec || typeof spec !== 'object' || Array.isArray(spec)) {
+      return errorPara('Conversation spec must be a YAML mapping');
+    }
+    if (!Array.isArray(spec.messages) || !spec.messages.length) {
+      return errorPara('Conversation has no messages');
+    }
+
+    var style = '';
+    if (spec.size != null && spec.size !== '') {
+      var scale = parseFloat(spec.size);
+      if (!isNaN(scale) && scale > 0) style = ' style="font-size: ' + scale + 'em"';
+    }
+
+    var ordered = spec.messages.filter(function (msg) {
+      return msg && typeof msg === 'object' && !Array.isArray(msg) && msg.role === 'system';
+    }).concat(spec.messages.filter(function (msg) {
+      return msg && typeof msg === 'object' && !Array.isArray(msg) && msg.role !== 'system';
+    }));
+
+    var parts = ['<div class="colloquium-conversation"' + style + '>'];
+    ordered.forEach(function (msg) {
+      var role = String(msg.role || 'user').trim().toLowerCase();
+      if (role !== 'user' && role !== 'assistant' && role !== 'system') role = 'assistant';
+
+      var label = role.charAt(0).toUpperCase() + role.slice(1);
+      var model = msg.model == null ? '' : String(msg.model).trim();
+      var content = msg.content == null ? '' : String(msg.content).replace(/\\n/g, '\n');
+
+      parts.push('<div class="colloquium-message colloquium-message--' + role + '">');
+      parts.push(
+        '<div class="colloquium-message-role"><span class="colloquium-message-role-name">' +
+        inlineMd(label) +
+        '</span>' +
+        (model ? ' <span class="colloquium-message-model">(' + inlineMd(model) + ')</span>' : '') +
+        '</div>'
+      );
+      parts.push('<div class="colloquium-message-content">' + blockMd(content) + '</div>');
+      parts.push('</div>');
+    });
+    parts.push('</div>');
+    return parts.join('\n');
+  }
+
   function processFencedElements(markdown) {
-    return markdown.replace(BOX_BLOCK_RE, function (_, lead, body) {
+    markdown = markdown.replace(BOX_BLOCK_RE, function (_, lead, body) {
       return lead + renderBox(body);
+    });
+    return markdown.replace(CONVERSATION_BLOCK_RE, function (_, lead, body) {
+      return lead + renderConversation(body);
     });
   }
 
   /**
    * Replace remaining fenced code blocks and inline code spans with opaque
    * placeholders so our directive / footnote / step / slide-split regexes
-   * can't reach into them. Call AFTER processFencedElements (so ```box
-   * survives) and restore before handing back to Reveal.
+   * can't reach into them. Call AFTER processFencedElements (so ```box and
+   * ```conversation survive) and restore before handing back to Reveal.
    *
    * Uses \x00 as the sentinel character — it never appears in authored
    * markdown. Fences match first (greedy non-greedy) so triple-backtick

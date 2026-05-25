@@ -1,6 +1,6 @@
 ---
 name: colloquium-slide-syntax
-description: Use this skill when writing or modifying slide-deck markdown under content/slides/ on the relcon.ai Hugo site, editing the slide-syntax preprocessor at themes/relcon-theme/assets/js/colloquium-syntax.js or the slide layouts in themes/relcon-theme/layouts/slides/, or answering questions about supported slide syntax. Covers colloquium-style directives (columns, rows, row-columns, animate, step, align, valign, size, padding, layout, footnote, footnote-right, footnotes, img-align, img-valign, img-fill, img-overflow), inline markers (|||, ===, ^[..] footnotes, <!-- step --> fragment groups), fenced ```box callouts with YAML, alt-text figure captions, text size and spacer utility classes, and how colloquium markdown maps onto reveal.js v5 behavior.
+description: Use this skill when writing or modifying slide-deck markdown under content/slides/ on the relcon.ai Hugo site, editing the slide-syntax preprocessor at themes/relcon-theme/assets/js/colloquium-syntax.js or the slide layouts in themes/relcon-theme/layouts/slides/, or answering questions about supported slide syntax. Covers colloquium-style directives (columns, rows, row-columns, animate, step, align, valign, size, padding, layout, footnote, footnote-right, footnotes, img-align, img-valign, img-fill, img-overflow), inline markers (|||, ===, ^[..] footnotes, <!-- step --> fragment groups), fenced ```box callouts and ```conversation chat bubbles with YAML, alt-text figure captions, text size and spacer utility classes, and how colloquium markdown maps onto reveal.js v5 behavior.
 ---
 
 # Colloquium slide syntax on relcon.ai
@@ -126,6 +126,23 @@ Fields: `title` (inline-markdown rendered), `content` (block markdown), `tone` (
 
 Title-only box is valid: omit `content`. The single-line title vertically centers.
 
+### Fenced `conversation` chat bubbles
+
+```markdown
+```conversation
+messages:
+  - role: user
+    content: "What is RLHF?"
+  - role: assistant
+    model: "GPT-5"
+    content: "**RLHF** is reinforcement learning from human feedback."
+```
+```
+
+Fields: `messages` (required array of `{role, content, model?}`), `size` (optional numeric em scale). Roles `user`, `assistant`, and `system` are styled specially; system messages are displayed first, matching upstream colloquium. User bubbles align right and assistant bubbles align left. Markdown in `content` is rendered with Reveal's markdown parser.
+
+Because fenced elements are expanded before the slide is split into cells, a `conversation` block can be placed directly in a `columns:` or `row-columns:` cell.
+
 ### Figure captions
 
 Alt text becomes the caption automatically — no frontmatter flag needed.
@@ -171,7 +188,7 @@ Pre-spike decks use reveal-specific syntax that still renders — don't rewrite 
 - **`===` is CommonMark setext H1.** Row splitting must happen in the preprocessor before marked sees it. Adding another DOM pass after render won't work.
 - **Images in rows need explicit height constraints.** `max-height: 100%` on an `<img>` resolves against its containing block's definite height. The `<p>` wrapper marked emits has content-sized height — circular. Our CSS uses `display: contents` on `<p>` / `<figure>` wrappers via `:has()` to pull the image up to be a direct child of the row cell. `:has()` is modern-browser-only (Chrome 105+, Safari 15.4+, Firefox 121+).
 - **`animate: blocks` with columns/rows** — the post-render selector uses `:scope > p, ul, ol, pre, blockquote, table`; inside a columns/rows wrapper the direct children are `.col` / `.colloquium-row` divs, so the selector misses them. Untested edge case.
-- **Fenced elements inside a slide that also has `<!-- columns -->`**: box processing happens BEFORE the slide split, so boxes always work. But the resulting HTML is block-level and needs blank lines around it inside a column cell or marked won't render surrounding markdown.
+- **Fenced elements inside a slide that also has `<!-- columns -->`**: `box` and `conversation` processing happens BEFORE the slide split, so both work. But the resulting HTML is block-level and needs blank lines around it inside a column cell or marked won't render surrounding markdown.
 - **Directive allowlist is strict.** Adding a new directive keyword means updating both the `DIRECTIVE_RE` regex in `colloquium-syntax.js` AND a corresponding `classes.push(...)` (or other handling) in `processSlide`. Miss either and the directive becomes a silent no-op.
 - **Code is protected during preprocessing.** `` `<!-- title: hidden -->` `` inside an inline span or ` ```…``` ` fence must not be stripped as a directive. The `protectCode` pass replaces code with `\x00CODEN\x00` placeholders before directive / footnote / step / split regexes run, and `restoreCode` puts it back before handing to Reveal. Any new regex-based transform belongs inside this protected window, not outside.
 
@@ -179,7 +196,7 @@ Pre-spike decks use reveal-specific syntax that still renders — don't rewrite 
 
 Pipeline in `preprocessColloquiumSyntax(markdown)`:
 
-1. `processFencedElements` — regex-replace ` ```box` blocks with rendered HTML (runs on whole deck before split)
+1. `processFencedElements` — regex-replace ` ```box` and ` ```conversation` blocks with rendered HTML (runs on whole deck before split)
 2. `protectCode` — replace remaining ` ```…``` ` fences and `` `…` `` inline spans with opaque `\x00CODEN\x00` placeholders so nothing inside authored code examples gets matched by subsequent regexes
 3. Split on `\n---\s*\n` into slides
 4. Per slide in `processSlide`:
@@ -195,13 +212,13 @@ Post-render hooks (fire in `single.html` after `Reveal.initialize().then(...)`):
 - `applyColloquiumFigureCaptions` — rewrites single-image `<p>` to `<figure>`
 - `applyColloquiumAnimations` — adds `.fragment` class to `<li>` / block children on sections with `data-animate`
 
-To add a new directive, update the allowlist in `DIRECTIVE_RE` (longer names before shorter in alternation), add the class/attr mapping in `processSlide`, and add the CSS in `baseof.html`. To add a fenced element (e.g. `conversation`), mirror the `BOX_BLOCK_RE` pattern and add a `render*` function that returns HTML.
+To add a new directive, update the allowlist in `DIRECTIVE_RE` (longer names before shorter in alternation), add the class/attr mapping in `processSlide`, and add the CSS in `baseof.html`. To add a fenced element, mirror the `BOX_BLOCK_RE` pattern and add a `render*` function that returns HTML.
 
 ## Out of scope
 
 These colloquium features are **intentionally not ported** — do not add them without discussion:
 
-- `` ```chart `` / `` ```conversation `` / `` ```builtwith `` fenced elements
+- `` ```chart `` / `` ```builtwith `` fenced elements
 - `[@key]` citations, bibliography frontmatter, References slides
 - Frontmatter `theme` / `fonts` / `footer` / `custom_css` / `aspect_ratio` (relcon has its own fixed theme, footer, fonts, and 1728×1117 deck size)
 
