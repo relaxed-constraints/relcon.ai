@@ -139,9 +139,19 @@ messages:
 ```
 ```
 
-Fields: `messages` (required array of `{role, content, model?}`), `size` (optional numeric em scale). Roles `user`, `assistant`, and `system` are styled specially; system messages are displayed first, matching upstream colloquium. User bubbles align right and assistant bubbles align left. Markdown in `content` is rendered with Reveal's markdown parser.
+Fields: `messages` (required array of `{role, content, model?}`), `size` (optional numeric em scale). Roles `user`, `assistant`, and `system` are styled specially; system messages are displayed first, matching upstream colloquium. User bubbles align right and assistant bubbles align left. Markdown in `content` is rendered with Reveal's markdown parser, but backticked code is protected before both YAML and Markdown processing: strings such as `` `get_current_weather(location)` `` or `` `<|start|>assistant<|message|>{"location": "Sydney"}<|call|>` `` render literally.
+
+Backticked code may contain YAML-sensitive punctuation such as `: ` directly. For YAML-sensitive plain text outside backticks, use a quoted string or a block scalar:
+
+```yaml
+- role: assistant
+  content: >-
+    `<|start|>assistant<|channel|>commentary to=functions.get_current_weather<|message|>{"location": "Sydney"}<|call|>`
+```
 
 Because fenced elements are expanded before the slide is split into cells, a `conversation` block can be placed directly in a `columns:` or `row-columns:` cell.
+
+Separate consecutive `conversation` blocks with `<!-- step -->` to reveal a chat progressively. Each block retains one message-gap of trailing space so the assembled fragments read as one continuous conversation.
 
 ### Figure captions
 

@@ -74,28 +74,60 @@
     return '';
   }
 
-  /**
-   * Minimal inline markdown for box/conversation titles. Handles the common
-   * `code`, **bold**, *italic*, _italic_ patterns so titles can carry
-   * emphasis without being run through marked (they're inside block HTML
-   * that marked won't recurse into).
-   */
-  function inlineMd(text) {
-    // Escape HTML first so user content can't inject markup.
-    var escaped = String(text)
+  function escapeHtml(text) {
+    return String(text)
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;');
-    return escaped
-      .replace(/`([^`]+)`/g, '<code>$1</code>')
+  }
+
+  function protectInlineCode(text, store) {
+    return String(text).replace(/`([^`\n]+)`/g, function (_, code) {
+      store.push('<code>' + escapeHtml(code) + '</code>');
+      return 'COLLOQUIUMCODEPLACEHOLDER' + (store.length - 1) + 'X';
+    });
+  }
+
+  function restoreInlineCode(text, store) {
+    return text.replace(/COLLOQUIUMCODEPLACEHOLDER(\d+)X/g, function (_, i) {
+      return store[parseInt(i, 10)];
+    });
+  }
+
+  function protectYamlCodeSpans(text) {
+    return String(text).replace(/`([^`\n]+)`/g, function (_, code) {
+      return 'COLLOQUIUMYAMLCODE' + encodeURIComponent(code) + 'COLLOQUIUMYAMLEND';
+    });
+  }
+
+  function restoreYamlCodeSpans(text) {
+    return text.replace(/COLLOQUIUMYAMLCODE(.*?)COLLOQUIUMYAMLEND/g, function (_, code) {
+      return '`' + decodeURIComponent(code) + '`';
+    });
+  }
+
+  /**
+   * Minimal inline markdown for box/conversation labels. Handles the common
+   * `code`, **bold**, *italic*, _italic_ patterns so short inline strings can
+   * carry emphasis without being run through marked (they're inside block
+   * HTML that marked won't recurse into).
+   */
+  function inlineMd(text) {
+    var codeSpans = [];
+    var protectedText = protectInlineCode(text, codeSpans);
+    var rendered = escapeHtml(protectedText)
       .replace(/\*\*([^*\n]+)\*\*/g, '<strong>$1</strong>')
       .replace(/\*([^*\n]+)\*/g, '<em>$1</em>')
       .replace(/_([^_\n]+)_/g, '<em>$1</em>');
+    return restoreInlineCode(rendered, codeSpans);
   }
 
   function blockMd(text) {
     if (typeof RevealMarkdown !== 'undefined' && RevealMarkdown.marked) {
-      return RevealMarkdown.marked.parse(String(text)).trim();
+      var codeSpans = [];
+      var protectedText = protectInlineCode(text, codeSpans);
+      var rendered = RevealMarkdown.marked.parse(protectedText).trim();
+      return restoreInlineCode(rendered, codeSpans);
     }
     return '<p>' + inlineMd(text) + '</p>';
   }
@@ -157,7 +189,7 @@
     }
     var spec;
     try {
-      spec = jsyaml.load(yamlStr);
+      spec = jsyaml.load(protectYamlCodeSpans(yamlStr));
     } catch (e) {
       return errorPara('Invalid conversation YAML');
     }
@@ -187,7 +219,7 @@
 
       var label = role.charAt(0).toUpperCase() + role.slice(1);
       var model = msg.model == null ? '' : String(msg.model).trim();
-      var content = msg.content == null ? '' : String(msg.content).replace(/\\n/g, '\n');
+      var content = msg.content == null ? '' : restoreYamlCodeSpans(String(msg.content)).replace(/\\n/g, '\n');
 
       parts.push('<div class="colloquium-message colloquium-message--' + role + '">');
       parts.push(

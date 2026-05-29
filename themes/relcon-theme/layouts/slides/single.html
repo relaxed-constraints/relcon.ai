@@ -59,7 +59,7 @@
 <script src="https://cdn.jsdelivr.net/npm/reveal.js@5/plugin/math/math.min.js"></script>
 
 {{/* Colloquium-compatible syntax preprocessor (spike) */}}
-{{ $colloquium := resources.Get "js/colloquium-syntax.js" }}
+{{ $colloquium := resources.Get "js/colloquium-syntax.js" | fingerprint }}
 <script src="{{ $colloquium.RelPermalink }}"></script>
 
 <script>
