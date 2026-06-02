@@ -1,6 +1,6 @@
 ---
 title: "Building with AI"
-date: 2026-06-02
+date: 2026-06-03
 draft: false
 type: "slides"
 description: "How to use coding agents and integrate AI into research projects"
