@@ -570,6 +570,115 @@
     }
     .reveal .colloquium-box--compact li { margin-bottom: 0.05em; line-height: 1.2; }
 
+    /* ── Conversation bubbles ────────────────────────────────────── */
+    .reveal .colloquium-conversation {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6em;
+      width: 100%;
+      font-size: 0.82em;
+      padding-bottom: 0.6em;
+    }
+    .reveal .colloquium-message {
+      position: relative;
+      max-width: 86%;
+      padding: 0.6em 0.85em 0.68em;
+      border-radius: 16px;
+      box-sizing: border-box;
+      line-height: 1.35;
+    }
+    .reveal .colloquium-message--user {
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+      background: var(--c-cyan);
+      color: var(--r-bg);
+    }
+    .reveal .colloquium-message--user::after {
+      content: "";
+      position: absolute;
+      right: -0.3em;
+      bottom: 0;
+      width: 0.58em;
+      height: 0.62em;
+      background: var(--c-cyan);
+      clip-path: polygon(0 0, 100% 100%, 0 100%);
+    }
+    html.light .reveal .colloquium-message--user,
+    html.light .reveal .colloquium-message--user::after {
+      background: var(--c-accent-dark);
+    }
+    html.dark .reveal .colloquium-message--user,
+    html.dark .reveal .colloquium-message--user::after {
+      background: var(--c-accent-light);
+    }
+    .reveal .colloquium-message--assistant {
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+      background: var(--c-muted);
+      color: var(--r-text);
+    }
+    .reveal .colloquium-message--assistant::after {
+      content: "";
+      position: absolute;
+      left: -0.3em;
+      bottom: 0;
+      width: 0.58em;
+      height: 0.62em;
+      background: var(--c-muted);
+      clip-path: polygon(100% 0, 100% 100%, 0 100%);
+    }
+    html.dark .reveal .colloquium-message--assistant,
+    html.dark .reveal .colloquium-message--assistant::after {
+      background: var(--c-gray-400);
+    }
+    .reveal .colloquium-message--system {
+      align-self: center;
+      max-width: 92%;
+      background: var(--r-surface);
+      border: 1px solid var(--r-border);
+      color: var(--r-text-muted);
+      font-size: 0.9em;
+    }
+    .reveal .colloquium-message-role {
+      margin-bottom: 0.2em;
+      font-family: 'IBM Plex Mono', ui-monospace, monospace;
+      font-size: 0.55em;
+      font-weight: 500;
+      line-height: 1.3;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      opacity: 0.8;
+    }
+    .reveal .colloquium-message-model {
+      text-transform: none;
+      letter-spacing: 0.03em;
+    }
+    .reveal .colloquium-message-content p { margin: 0 0 0.28em; }
+    .reveal .colloquium-message-content p:last-child { margin-bottom: 0; }
+    .reveal .colloquium-message-content ul,
+    .reveal .colloquium-message-content ol {
+      margin: 0.2em 0 0.1em;
+      padding-left: 1.05em;
+    }
+    .reveal .colloquium-message-content li {
+      margin-bottom: 0.12em;
+      line-height: 1.3;
+    }
+    .reveal .colloquium-message-content strong,
+    .reveal .colloquium-message-content em {
+      color: inherit;
+    }
+    .reveal .colloquium-message-content code {
+      color: inherit;
+    }
+    .reveal .colloquium-message--user .colloquium-message-content code {
+      background: rgba(0, 0, 0, 0.14);
+      border-color: rgba(255, 255, 255, 0.24);
+    }
+    .reveal .colloquium-message--user .colloquium-message-content li::marker {
+      color: currentColor;
+    }
+
     /* ── Text size utilities ─────────────────────────────────────── */
     .reveal .text-xs   { font-size: 0.65em; }
     .reveal .text-sm   { font-size: 0.80em; }
