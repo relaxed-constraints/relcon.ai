@@ -1,6 +1,6 @@
 ---
 title: "Building with AI"
-date: 2026-06-03
+date: 2026-06-02
 draft: false
 type: "slides"
 description: "How to use coding agents and integrate AI into research projects"
@@ -66,7 +66,6 @@ $$
 $$
 
 - All other capabilities are built on top of this basic functionality
-- Hallucinations and mistakes are still common
 
 |||
 
@@ -81,7 +80,7 @@ messages:
       Truth waits to be found
 ```
 
----
+----
 
 # LLMs + Thinking
 
@@ -230,7 +229,7 @@ messages:
 
 ![Codex MCP Settings](assets/codex-mcp-settings.png)
 
----
+----
 
 # Skills
 
@@ -261,7 +260,7 @@ custom-pdf-analyzer/
 
 # Harness
 
-<!-- footnote-right: Blog post on Coding Harnesses: https://thoughts.jock.pl/p/ai-coding-harness-agents-2026 -->
+<!-- footnote: Blog post on Coding Harnesses: https://thoughts.jock.pl/p/ai-coding-harness-agents-2026 -->
 
 - A harness is the wrapper around an LLM + tools + prompts + skills
 - Common tools: file system access (bash), web search, code execution, ...
@@ -377,7 +376,7 @@ Notes:
 
 ---
 
-# Context fills up fast!
+# Agent context fills up fast!
 
 <!-- size: small -->
 <!-- img-align: center -->
