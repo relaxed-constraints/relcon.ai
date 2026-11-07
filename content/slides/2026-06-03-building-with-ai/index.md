@@ -75,9 +75,9 @@ messages:
     content: Write a haiku about databases
   - role: assistant
     content: |
-      Silent rows of data\n
-      Queries drift through midnight disks\n
-      Truth waits to be found
+      Silent tables hum\n
+      Queries wander through dark shards\n
+      Answers bloom at dawn
 ```
 
 ----
@@ -817,7 +817,7 @@ print(response.response)
 
 ---
 
-# Evals 
+# Evaluations ("Evals")
 
 <!-- footnote: See also https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents -->
 
@@ -886,3 +886,8 @@ Higher level libraries for building agentic systems
 > "You can outsource [thinking] coding, but you can't outsource understanding!"
 
 </span>
+
+
+<div class="colloquium-spacer-lg"></div>
+
+Link to slides: [https://relcon.ai/slides/2026-06-03-building-with-ai/](https://relcon.ai/slides/2026-06-03-building-with-ai/)
