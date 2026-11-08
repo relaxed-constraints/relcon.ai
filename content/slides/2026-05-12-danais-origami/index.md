@@ -35,7 +35,7 @@ author: "Thomas Rückstieß"
 <div class="colloquium-spacer-md"></div>
 
 - 2026+: Independent Researcher
-  - Founded my own "research lab" _Relaxed Constraints_ ([relcon.ai](https://relcon.ai))
+  - Independent research at _Relaxed Constraints_ ([relcon.ai](https://relcon.ai))
   - Collaborations with Sydney University, MongoDB
   - Looking for more collaboration opportunities! 👋
 

@@ -15,18 +15,18 @@
   <section class="relative max-w-6xl mx-auto px-6 lg:px-10 pt-12 pb-28" style="z-index: 1;">
     <div class="mono-eyebrow-accent mb-5 flex items-center gap-2.5">
       <span aria-hidden>&#x25E2;</span>
-      <span>Entry 001 &mdash; The lab is the experiment</span>
+      <span>Independent research &middot; Machine learning &amp; databases</span>
     </div>
     <h1 class="font-display font-bold text-balance"
       style="font-size: clamp(44px, 6.2vw, 84px); line-height: 0.98; letter-spacing: -0.04em; margin: 0;">
       <span style="background: linear-gradient(transparent 62%, var(--c-accent-soft) 62%);">Relaxed Constraints</span>.
     </h1>
     <p class="mt-7 max-w-[680px] text-[1.06rem] leading-[1.55]" style="color: var(--c-gray-300);">
-      A lab wired to improve itself: AI runs as much of the research loop as possible, and every trace feeds the next iteration.
+      An independent research lab exploring machine learning and databases. We embrace AI agents to investigate ideas, build open-source tools, and make research easier to reproduce and extend.
     </p>
     <div class="mt-9 flex flex-wrap gap-3">
       <a href="/research/" class="btn-primary">&rarr; research</a>
-      <a href="/blog/" class="btn-ghost">&darr; blog</a>
+      <a href="/about/" class="btn-ghost">&rarr; about</a>
     </div>
   </section>
 </div>
@@ -39,12 +39,12 @@
   </div>
   <div class="grid grid-cols-1 md:grid-cols-3">
     {{ $pillars := slice
-      (dict "num" "01" "meta" "ops"      "title" "Autonomous agents"
-            "body" "Agent systems that plan multi-step workflows, evaluate their own outputs, and operate under human oversight. Humans drive prioritisation and interpretation. Mechanical work is delegated.")
-      (dict "num" "02" "meta" "loop"     "title" "Self-improving systems"
-            "body" "Every agent action and routing decision produces a trace. Those traces are data: analysed by other agents, fed back into process. The lab learns from its own behaviour.")
-      (dict "num" "03" "meta" "ML" "title" "ML & data systems"
-            "body" "Neural architectures for semi-structured data &mdash; density estimation, representation learning, and generative models that work natively with nested JSON. Applied to cardinality estimation, query optimisation, and learned indexes.")
+      (dict "num" "01" "meta" "research" "title" "Machine learning & databases"
+            "body" "Learning from semi-structured data and improving how databases work. Our research explores generative models for nested data, synthetic data generation, and workload-driven query optimisation.")
+      (dict "num" "02" "meta" "tools" "title" "Open-source research tools"
+            "body" "Reusable foundations for experiments, from database deployment and query workloads to tracking and analysis. BONDI and Yanex help researchers build on existing work and leave useful artefacts for the next project.")
+      (dict "num" "03" "meta" "practice" "title" "AI-assisted research"
+            "body" "Using AI agents to move faster and spend more time on research questions, design, and interpretation. We develop workflows and teaching resources that help researchers direct agents, understand their outputs, and validate the work.")
     }}
     {{ range $i, $p := $pillars }}
     <article class="p-7 border-l md:border-r-0 {{ if eq $i 2 }}md:border-r{{ end }}" style="border-color: var(--c-border);">

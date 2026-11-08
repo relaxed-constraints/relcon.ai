@@ -4,32 +4,36 @@ title: "About"
 
 ## What is Relaxed Constraints?
 
-Relaxed Constraints is an autonomous research lab where humans and AI agents collaborate to build self-improving systems. We design our processes, workflows, and culture around the capabilities of AI agents rather than retrofitting automation onto human processes. The lab itself is the experiment: a self-improving digital organism that gets better at what it does with every iteration.
+Relaxed Constraints is an independent research lab founded by [Thomas Rückstieß](https://www.linkedin.com/in/rueckstiess/), working at the intersection of machine learning and databases. It brings together research collaborations, open-source software, and practical experiments with AI-assisted ways of working.
 
-The name _Relaxed Constraints_ reflects how we operate. We relax the constraints of traditional organisations — rigid hierarchies, manual approvals, human-speed decision making — and replace them with agent-driven processes under human oversight. We also relax the constraints of fixed schemas in our ML research, working with data that is messy, nested, and inter-connected.
+Our interests include learning from semi-structured data, improving database query performance, and building the tools needed to study these problems. We use AI agents throughout the work—from exploring ideas and implementing prototypes to analysing results and developing research software.
 
-## What We Do
+The name reflects a willingness to revisit assumptions: about how data should be represented, how research software should be built, and what an individual researcher or small collaboration can accomplish with the tools available.
 
-**Autonomous agents.** We build AI agent systems that plan multi-step workflows, evaluate their own outputs, and operate with minimal human intervention. Every process that can be delegated to an agent is. Humans drive prioritisation, design decisions, and interpretation — the mechanical work is handled by agents.
+## Research and tools
 
-**Self-improving systems.** Every agent action, experiment run, and routing decision produces a trace. These traces are themselves data: analysed by other agents, used to improve processes, and fed back into the system. The lab learns from its own behaviour and gets better over time.
+Much of our research starts with data that does not fit neatly into tables. [ORiGAMi](/research/origami/) explores models that work directly with nested, semi-structured data, with applications in synthetic data generation, prediction, and density estimation. [Mindexer](/research/mindexer/) investigates workload-driven index recommendation for document databases.
 
-**ML & data systems.** We develop neural network architectures for semi-structured data — density estimation, representation learning, and generative models that work natively with hierarchical JSON-like structures. We apply these to practical database problems: cardinality estimation, query optimisation, learned indexes, and synthetic data generation for document databases.
+Alongside these research questions, we build reusable infrastructure. [Yanex](/research/yanex/) tracks experiments and makes their records accessible to researchers and AI agents. [BONDI](/research/bondi/) provides common components for document-database research, together with starter projects and guided examples.
 
-## Background
+These tools grow out of practical research needs. The aim is to make experiments easier to run, inspect, reproduce, and extend—and to leave useful foundations for the next project.
 
-Relaxed Constraints was founded by [Thomas Rückstieß](https://www.linkedin.com/in/rueckstiess/), who holds a PhD in Machine Learning from the Technical University of Munich and spent 13 years at MongoDB, most recently as Head of Machine Learning Research.
+## Working with AI
 
-We have an ongoing collaboration with the [University of Sydney](https://www.sydney.edu.au), where Thomas works with the databases group and supervises PhD and Honours students working on learned query optimization, index recommendation, and AI-assisted experimentation.
+AI agents are part of our everyday research workflow. Used responsibly, they allow us to test ideas sooner and spend more time on research questions, experimental design, and interpretation, while reducing the effort spent on recurring engineering tasks.
 
-## Principles
+Learning to direct these agents is becoming an important research skill. Students need practice turning ideas into clear specifications, questioning proposed approaches, inspecting generated code, and checking whether an experiment actually answers the question they set out to investigate. They should be able to explain their methods, assumptions, and results, including the work carried out with AI assistance. Delegating implementation should leave more room for intellectual engagement, while preserving ownership of the reasoning.
 
-<strong class="text-accent">Agents are first-class citizens.</strong> We use AI agents unapologetically — for content creation, code reviews, research, and decision making. They're not assistants waiting for instructions; they're active participants in how the lab operates. If an agent can do it well, we let it.
+That approach needs solid foundations: well-structured code, meaningful tests, documentation, and experiments whose results can be traced back to their inputs. Tutorials, worked examples, and reusable project templates help students understand those foundations and give the next person a clearer starting point.
 
-<strong class="text-accent">No task is human-only.</strong> Every task in the lab can be done by a human, an agent, or both working together. Every resource (code, data, documentation, website, infrastructure) is accessible to AI. This isn't about replacing humans; it's about removing the artificial boundary between what humans can touch and what agents can touch, so work flows to whoever or whatever is best suited for it.
+Producing and maintaining this supporting material has traditionally taken substantial time. LLMs and coding agents can reduce that effort considerably, making it practical to build documentation, tests, and teaching resources alongside the research itself. These still need review, but the lower cost creates an opportunity to make each project's outputs more useful to others and help new students get started faster.
 
-<strong class="text-accent">Everything is observable.</strong> Every agent action, every experiment run, every routing decision produces a trace. These traces are measured, analysed, and fed back into the system — so the lab learns from its own behaviour and improves over time. Nothing is a black box.
+We share what we learn through open-source packages, tutorials, writing, and talks. The aim is to move faster while keeping the work understandable, open to scrutiny, and useful beyond a single project.
 
-## Get Involved
+## Background and collaboration
 
-While we're not currently hiring, we're always looking to connect with researchers, students, and engineers who share these interests. We value curious and self-motivated people who want to exchange ideas, challenge assumptions, and learn from each other. If that sounds like you, [get in touch](/contact/).
+Thomas holds a PhD in Machine Learning from the Technical University of Munich and spent 13 years at MongoDB, most recently as Head of Machine Learning Research.
+
+Relaxed Constraints provides a home for his independent research and collaborations, including work with researchers at MongoDB and the [University of Sydney](https://www.sydney.edu.au). At Sydney, he works with the databases group and co-supervises PhD and Honours research.
+
+If you work on related questions, would like to build on these tools, or have an idea for a collaboration, [get in touch](/contact/).

@@ -48,7 +48,7 @@ theme = "relcon-theme"
     weight = 5
 
 [params]
-  description = "An autonomous research lab where humans and AI agents collaborate to build self-improving systems."
+  description = "An independent research lab exploring machine learning and databases through open-source tools, collaborative research, and AI-assisted experimentation."
   image = "/images/og-default.png"
 
 [outputs]

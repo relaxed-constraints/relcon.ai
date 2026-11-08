@@ -59,9 +59,12 @@ There's an irony here that I don't think gets acknowledged enough. The same tool
 
 I don't have a neat conclusion. I don't think anyone does right now. But I'd rather be building at the frontier, with my eyes open and my hands still on the reins, however loosely, than pretending I can sit this one out.
 
-That's why I have started [Relaxed Constraints](https://relcon.ai). If you're reading this, you're already on our website. It's an experiment: a self-improving digital organism that could turn into a startup, a research lab, and open source project or something else. Only Claude will tell. But week by week it's taking more shape and I haven't been so excited about an idea in a long time. I have no funding, no company backing me, it's just me and my staff
-of AI agents, but all of us highly motivated. The point I'm trying
-to prove is that you don't need that kind of support anymore. An idea 
-is all it takes.  
+That's why I started [Relaxed Constraints](https://relcon.ai): an independent research lab and a home for my work in machine learning and databases, where I explore what becomes possible when AI agents are part of the everyday workflow. I'm pursuing research questions with collaborators and building open-source tools that help us carry out the work.
 
-If any of this resonates with you, I'd love to hear from you — [get in touch](https://relcon.ai/contact). 
+I'm interested in how much further an individual researcher or a small group can get with these tools: which ideas become practical to test, what we can automate reliably, and how we keep the results understandable and reproducible. That feels like a worthwhile experiment in its own right.
+
+If you're exploring similar questions, I'd love to compare notes—[get in touch](https://relcon.ai/contact).
+
+---
+
+*Updated 8 November 2026: the closing paragraphs have been revised to reflect the current direction of Relaxed Constraints. The rest of this essay reflects my perspective in March 2026.*

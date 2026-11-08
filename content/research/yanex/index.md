@@ -74,15 +74,12 @@ substitution. The bundled **Claude Code skill** wires this into a
 concrete workflow: agents kick off experiments, poll for progress,
 extract the best run, and summarise the results.
 
-Yanex also serves a pedagogical role. Students working on Yanex-based
-projects learn production-grade code structure, test-driven development,
-and documentation practices while producing experimental results that
-are reproducible and ready to be lifted straight into a paper. The
-working assumption behind all of it: in a few years, essentially no one
-will write research code without AI assistance — and graduating
-researchers need foundations solid enough to architect systems AI can
-extend, write specifications AI can implement, and validate AI-generated
-code through testing.
+Yanex also supports teaching reproducible research practices. Students can
+use its experiment records to inspect how configurations, code changes,
+and dependencies affect their results. When working with AI agents, those
+records provide a shared basis for checking what ran and why. The aim is
+to help students specify experiments clearly, examine the implementation,
+and explain the evidence behind their conclusions.
 
 Current capabilities:
 
@@ -94,7 +91,8 @@ Current capabilities:
 - **Machine-readable everything** — JSON, CSV, Markdown, or `get <field>` for single-value extraction
 - **Safe by default** — archive is reversible; delete requires confirmation; agents never destroy data unsupervised
 
-This project sits under the lab's broader thread of *self-improving
-systems*. Every experiment Yanex records is itself a trace the next
-iteration can read, compare, and learn from — and every contribution to
-the tool itself raises the floor for everyone building on top of it.
+Yanex is part of the lab’s work on reusable research infrastructure.
+Alongside [BONDI’s database components](/research/bondi/), it helps connect
+individual experiments into workflows that researchers and AI agents can
+inspect and extend. Each project can leave a clearer starting point for
+the next.
